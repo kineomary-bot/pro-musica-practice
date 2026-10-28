@@ -28,7 +28,7 @@ $ErrorActionPreference = 'Stop'
 [System.Threading.Thread]::CurrentThread.CurrentCulture = [System.Globalization.CultureInfo]::InvariantCulture
 Add-Type -AssemblyName System.IO.Compression
 Add-Type -AssemblyName System.IO.Compression.FileSystem
-$BuildVersion = 'ps1-6-preserved-score-isolated-stems'
+$BuildVersion = 'ps1-7-musescore-cli-diagnostics'
 $Utf8 = New-Object System.Text.UTF8Encoding($false)
 
 # ------------------------------------------------------------ MuseScore
@@ -52,11 +52,38 @@ function Find-MuseScore {
 
 function Invoke-MuseScore([string[]]$ArgList) {
     # Start-Process needs one properly quoted argument string on Windows PowerShell 5.1.
-    # Return the exit code so callers can report failures; output-file checks remain authoritative
-    # because some MuseScore versions have returned success while producing unusable exports.
+    # Capture stdout/stderr separately for every CLI operation so a failed export can be
+    # diagnosed from the preserved temporary build folder instead of relying on a generic error.
     $q = ($ArgList | ForEach-Object { '"' + ($_ -replace '"', '\"') + '"' }) -join ' '
-    $proc = Start-Process -FilePath $script:Mscore -ArgumentList $q -Wait -NoNewWindow -PassThru -ErrorAction Stop
-    return $proc.ExitCode
+    $logDir = $script:DiagnosticDir
+    if (-not $logDir -or -not (Test-Path -LiteralPath $logDir)) {
+        $logDir = [IO.Path]::GetTempPath()
+    }
+
+    $name = 'command'
+    if ($ArgList.Count -ge 2 -and ($ArgList[0] -eq '-o' -or $ArgList[0] -eq '--export-to')) {
+        $name = [IO.Path]::GetFileName($ArgList[1])
+    } elseif ($ArgList.Count -ge 2 -and $ArgList[0] -eq '-j') {
+        $name = [IO.Path]::GetFileNameWithoutExtension($ArgList[1])
+    }
+    $name = $name -replace '[^a-zA-Z0-9._-]', '_'
+    $prefix = Join-Path $logDir ('musescore-' + $name)
+    $stdoutLog = $prefix + '.stdout.txt'
+    $stderrLog = $prefix + '.stderr.txt'
+    $commandLog = $prefix + '.command.txt'
+    foreach ($log in @($stdoutLog, $stderrLog, $commandLog)) {
+        Remove-Item -LiteralPath $log -Force -ErrorAction SilentlyContinue
+    }
+    [IO.File]::WriteAllText($commandLog, ("Executable: " + $script:Mscore + "`r`nArguments: " + $q + "`r`n"), $Utf8)
+
+    try {
+        $proc = Start-Process -FilePath $script:Mscore -ArgumentList $q -Wait -NoNewWindow -PassThru -RedirectStandardOutput $stdoutLog -RedirectStandardError $stderrLog -ErrorAction Stop
+        [IO.File]::AppendAllText($commandLog, ("Exit code: " + $proc.ExitCode + "`r`n"), $Utf8)
+        return $proc.ExitCode
+    } catch {
+        [IO.File]::AppendAllText($commandLog, ("Start/export exception: " + $_.Exception.Message + "`r`n"), $Utf8)
+        throw
+    }
 }
 
 function Test-Output([string]$path) {
@@ -94,7 +121,8 @@ function Export-Audio([string]$inputScore, [string]$outputAudio) {
     try { $exitCode = Invoke-MuseScore @('-o', $outputAudio, $inputScore) }
     catch { throw ("MuseScore could not start or complete audio export for ${outputAudio}: " + $_.Exception.Message) }
     if (-not (Test-Output $outputAudio)) {
-        throw ("MuseScore did not produce a non-empty audio file: " + $outputAudio + "`n(from " + $inputScore + "). Check that the score plays in MuseScore 4 and that its sound profile is available.")
+        $stderrLog = Join-Path $script:DiagnosticDir ('musescore-' + ([IO.Path]::GetFileName($outputAudio) -replace '[^a-zA-Z0-9._-]', '_') + '.stderr.txt')
+        throw ("MuseScore did not produce a non-empty audio file: " + $outputAudio + "`n(from " + $inputScore + "). See the MuseScore command/stderr logs in: " + $script:DiagnosticDir + "`nExpected stderr log: " + $stderrLog)
     }
     if ($exitCode -ne 0) {
         throw ("MuseScore returned exit code $exitCode while exporting ${outputAudio}. The file may be incomplete; fix the export error and run the build again.")
@@ -474,6 +502,7 @@ function Build-Piece([IO.FileInfo]$src, [string]$outdir) {
 
     $td = Join-Path ([IO.Path]::GetTempPath()) ('choir-' + [guid]::NewGuid().ToString('N'))
     New-Item -ItemType Directory -Path $td | Out-Null
+    $script:DiagnosticDir = $td
     $buildSucceeded = $false
     try {
         $jobs = @()
