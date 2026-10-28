@@ -159,7 +159,8 @@ function Get-MuseNoteName([int]$pitch, [int]$tpc) {
         if ($spelling -match '^([A-G])([#b]{0,2})$') {
             $letter = $Matches[1]
             $accidental = $Matches[2]
-            $natural = @{ C=0; D=2; E=4; F=5; G=7; A=9; B=11 }[$letter]
+            $naturalPitches = @{ C=0; D=2; E=4; F=5; G=7; A=9; B=11 }
+            $natural = $naturalPitches[$letter]
             $offset = ([regex]::Matches($accidental, '#').Count) - ([regex]::Matches($accidental, 'b').Count)
             $octave = [int][math]::Floor(($pitch - ($natural + $offset)) / 12) - 1
             return ($spelling + $octave)
