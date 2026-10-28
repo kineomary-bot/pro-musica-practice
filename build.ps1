@@ -28,7 +28,7 @@ $ErrorActionPreference = 'Stop'
 [System.Threading.Thread]::CurrentThread.CurrentCulture = [System.Globalization.CultureInfo]::InvariantCulture
 Add-Type -AssemblyName System.IO.Compression
 Add-Type -AssemblyName System.IO.Compression.FileSystem
-$BuildVersion = 'ps1-3-stem-mix'
+$BuildVersion = 'ps1-4-validated-stem-mix'
 $Utf8 = New-Object System.Text.UTF8Encoding($false)
 
 # ------------------------------------------------------------ MuseScore
@@ -188,14 +188,19 @@ function New-Variant([string]$src, [string]$dst, [string]$mode, [string]$targetI
         $sr = New-Object IO.StreamReader($e.Open(), $Utf8)
         try { $json = $sr.ReadToEnd() } finally { $sr.Dispose() }
         $s = ConvertFrom-Json -InputObject $json
+        $matchedParts = @{}
+        $matchedTarget = $false
         foreach ($tr in $s.tracks) {
             if ([string]$tr.instrumentId -eq 'metronome' -or [string]$tr.partId -eq '999') {
                 if (-not $tr.soloMuteState) { Set-Prop $tr 'soloMuteState' ([pscustomobject]@{}) }
                 Set-Prop $tr.soloMuteState 'mute' $true
                 continue
             }
-            if ($partIds -notcontains [string]$tr.partId) { continue }
-            $mine = ([string]$tr.partId -eq $targetId)
+            $trackPartId = [string]$tr.partId
+            if ($partIds -notcontains $trackPartId) { continue }
+            $matchedParts[$trackPartId] = $true
+            $mine = ($trackPartId -eq [string]$targetId)
+            if ($mine) { $matchedTarget = $true }
             if (-not $tr.out) { Set-Prop $tr 'out' ([pscustomobject]@{}) }
             if (-not $tr.soloMuteState) { Set-Prop $tr 'soloMuteState' ([pscustomobject]@{}) }
             Set-Prop $tr.out 'volumeDb' 0
@@ -203,6 +208,13 @@ function New-Variant([string]$src, [string]$dst, [string]$mode, [string]$targetI
             Set-Prop $tr.soloMuteState 'solo' $false
             if ($mode -eq 'loud' -and -not $mine) { Set-Prop $tr.out 'volumeDb' $BackgroundDb }
             elseif ($mode -eq 'only' -and -not $mine) { Set-Prop $tr.soloMuteState 'mute' $true }
+        }
+        if ($mode -ne 'all' -and -not $matchedTarget) {
+            throw ("Could not match requested voice part '$targetId' to a MuseScore audio track. Available audio track part IDs: " + (($s.tracks | ForEach-Object { [string]$_.partId } | Sort-Object -Unique) -join ', ') + ". No practice audio was exported.")
+        }
+        $missingParts = @($partIds | Where-Object { -not $matchedParts.ContainsKey([string]$_) })
+        if ($missingParts.Count -gt 0) {
+            throw ("These score part IDs were not found in audiosettings.json: " + ($missingParts -join ', ') + ". No practice audio was exported.")
         }
         $e.Delete()
         $ne = $z.CreateEntry('audiosettings.json')
@@ -443,6 +455,16 @@ function Build-Piece([IO.FileInfo]$src, [string]$outdir) {
 
     if ($script:Ffmpeg -and $Bitrate -ne 'off') {
         foreach ($mp3 in (Get-ChildItem -LiteralPath $outdir -Filter '*.mp3')) { Compress-Mp3 $mp3.FullName }
+    }
+
+    # Never publish a nominally isolated voice file if MuseScore exported the full mix again.
+    $allHash = (Get-FileHash -LiteralPath (Join-Path $outdir 'all.mp3') -Algorithm SHA256).Hash
+    foreach ($v in $voices) {
+        if ($NoOnly) { continue }
+        $onlyFile = Join-Path $outdir ('only-' + $v.Id + '.mp3')
+        if ((Get-FileHash -LiteralPath $onlyFile -Algorithm SHA256).Hash -eq $allHash) {
+            throw ("The isolated track for '$($v.Name)' is byte-for-byte identical to all.mp3. The build has stopped rather than publishing a misleading voice track. Check the score's MuseScore mixer/audio settings and rebuild.")
+        }
     }
 
     $voiceList = @()
