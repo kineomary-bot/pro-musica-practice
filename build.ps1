@@ -179,24 +179,60 @@ function Set-Prop($obj, [string]$name, $value) {
     else { $obj | Add-Member -NotePropertyName $name -NotePropertyValue $value }
 }
 
-# Copy a .mscz with the mixer changed. Mode: all | loud | only
+# Copy a .mscz and prepare its audio variant. Mode: all | loud | only
+# MuseScore 4's CLI has a known bug: mixer mute states can be ignored during MP3 export.
+# For "only", remove the other score parts and their staves from the temporary score itself.
 function New-Variant([string]$src, [string]$dst, [string]$mode, [string]$targetId, [string[]]$partIds) {
     Copy-Item -LiteralPath $src -Destination $dst -Force
     $z = [IO.Compression.ZipFile]::Open($dst, [IO.Compression.ZipArchiveMode]::Update)
     try {
+        if ($mode -eq 'only') {
+            $scoreEntry = $z.Entries | Where-Object { $_.FullName.EndsWith('.mscx') -and ($_.FullName -notlike '*/*') } | Select-Object -First 1
+            if (-not $scoreEntry) { throw "Could not find the score XML inside '$dst'." }
+            $srScore = New-Object IO.StreamReader($scoreEntry.Open(), $Utf8)
+            try { $scoreText = $srScore.ReadToEnd() } finally { $srScore.Dispose() }
+            $xml = New-Object System.Xml.XmlDocument
+            $xml.PreserveWhitespace = $true
+            $xml.LoadXml($scoreText)
+            $targetPart = $xml.SelectSingleNode("/museScore/Score/Part[@id='$targetId']")
+            if (-not $targetPart) { throw "Could not find score part '$targetId' while creating an isolated voice track." }
+            $targetStaffEidNode = $targetPart.SelectSingleNode('Staff/eid')
+            if (-not $targetStaffEidNode) { throw "Score part '$targetId' has no staff identifier; cannot safely isolate it." }
+            $targetStaffEid = $targetStaffEidNode.InnerText
+            $targetStaff = $xml.SelectSingleNode("/museScore/Score/Staff[eid='$targetStaffEid']")
+            if (-not $targetStaff) { throw "Could not map score part '$targetId' to its music staff; refusing to export a potentially incorrect track." }
+
+            # Remove every non-target part and its corresponding music staff. Map via the
+            # staff EID rather than assuming part IDs and staff IDs are interchangeable.
+            foreach ($part in @($xml.SelectNodes('/museScore/Score/Part'))) {
+                if ($part.GetAttribute('id') -ne $targetId) { [void]$part.ParentNode.RemoveChild($part) }
+            }
+            foreach ($staff in @($xml.SelectNodes('/museScore/Score/Staff'))) {
+                if ($staff.SelectSingleNode('eid') -and $staff.SelectSingleNode('eid').InnerText -ne $targetStaffEid) {
+                    [void]$staff.ParentNode.RemoveChild($staff)
+                }
+            }
+            $scoreEntry.Delete()
+            $newScoreEntry = $z.CreateEntry($scoreEntry.FullName)
+            $swScore = New-Object IO.StreamWriter($newScoreEntry.Open(), $Utf8)
+            try { $xml.Save($swScore) } finally { $swScore.Dispose() }
+        }
+
         $e = $z.GetEntry('audiosettings.json')
+        if (-not $e) { throw "Could not find audiosettings.json inside '$dst'." }
         $sr = New-Object IO.StreamReader($e.Open(), $Utf8)
         try { $json = $sr.ReadToEnd() } finally { $sr.Dispose() }
         $s = ConvertFrom-Json -InputObject $json
         $matchedParts = @{}
         $matchedTarget = $false
-        foreach ($tr in $s.tracks) {
-            if ([string]$tr.instrumentId -eq 'metronome' -or [string]$tr.partId -eq '999') {
+        foreach ($tr in @($s.tracks)) {
+            $trackPartId = [string]$tr.partId
+            if ($trackPartId -eq '999' -or [string]$tr.instrumentId -eq 'metronome') {
+                if ($mode -eq 'only') { continue }
                 if (-not $tr.soloMuteState) { Set-Prop $tr 'soloMuteState' ([pscustomobject]@{}) }
                 Set-Prop $tr.soloMuteState 'mute' $true
                 continue
             }
-            $trackPartId = [string]$tr.partId
             if ($partIds -notcontains $trackPartId) { continue }
             $matchedParts[$trackPartId] = $true
             $mine = ($trackPartId -eq [string]$targetId)
@@ -213,8 +249,12 @@ function New-Variant([string]$src, [string]$dst, [string]$mode, [string]$targetI
             throw ("Could not match requested voice part '$targetId' to a MuseScore audio track. Available audio track part IDs: " + (($s.tracks | ForEach-Object { [string]$_.partId } | Sort-Object -Unique) -join ', ') + ". No practice audio was exported.")
         }
         $missingParts = @($partIds | Where-Object { -not $matchedParts.ContainsKey([string]$_) })
-        if ($missingParts.Count -gt 0) {
+        if ($mode -ne 'only' -and $missingParts.Count -gt 0) {
             throw ("These score part IDs were not found in audiosettings.json: " + ($missingParts -join ', ') + ". No practice audio was exported.")
+        }
+        if ($mode -eq 'only') {
+            # The score itself now contains only the target part; remove other mixer tracks too.
+            $s.tracks = @($s.tracks | Where-Object { [string]$_.partId -eq [string]$targetId })
         }
         $e.Delete()
         $ne = $z.CreateEntry('audiosettings.json')
