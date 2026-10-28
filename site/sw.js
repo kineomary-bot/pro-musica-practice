@@ -1,4 +1,4 @@
-const SHELL_CACHE = 'pro-musica-shell-v9';
+const SHELL_CACHE = 'pro-musica-shell-v10';
 const OFFLINE_CACHE = 'pro-musica-offline-songs-v1';
 const SHELL = ['./', './index.html', './manifest.webmanifest', './icon-192.png', './icon-512.png', './apple-touch-icon.png', './choir-logo.svg'];
 self.addEventListener('install', event => {
@@ -32,11 +32,16 @@ self.addEventListener('fetch', event => {
     }
     if (req.mode === 'navigate' || /\.(?:html|webmanifest|png)$/.test(url.pathname)) {
       const shell = await caches.open(SHELL_CACHE);
-      const cached = await shell.match(req);
-      if (cached) return cached;
-      const response = await fetch(req);
-      if (response.ok) await shell.put(req, response.clone());
-      return response;
+      // Prefer the latest site version; use the cached shell only when offline.
+      try {
+        const response = await fetch(req, {cache: 'no-cache'});
+        if (response.ok) await shell.put(req, response.clone());
+        return response;
+      } catch (error) {
+        const cached = await shell.match(req);
+        if (cached) return cached;
+        throw error;
+      }
     }
     return fetch(req);
   })());
