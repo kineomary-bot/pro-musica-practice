@@ -28,7 +28,7 @@ $ErrorActionPreference = 'Stop'
 [System.Threading.Thread]::CurrentThread.CurrentCulture = [System.Globalization.CultureInfo]::InvariantCulture
 Add-Type -AssemblyName System.IO.Compression
 Add-Type -AssemblyName System.IO.Compression.FileSystem
-$BuildVersion = 'ps1-4-validated-stem-mix'
+$BuildVersion = 'ps1-5-xml-isolated-stems'
 $Utf8 = New-Object System.Text.UTF8Encoding($false)
 
 # ------------------------------------------------------------ MuseScore
@@ -194,23 +194,25 @@ function New-Variant([string]$src, [string]$dst, [string]$mode, [string]$targetI
             $xml = New-Object System.Xml.XmlDocument
             $xml.PreserveWhitespace = $true
             $xml.LoadXml($scoreText)
-            $targetPart = $xml.SelectSingleNode("/museScore/Score/Part[@id='$targetId']")
-            if (-not $targetPart) { throw "Could not find score part '$targetId' while creating an isolated voice track." }
-            $targetStaffEidNode = $targetPart.SelectSingleNode('Staff/eid')
-            if (-not $targetStaffEidNode) { throw "Score part '$targetId' has no staff identifier; cannot safely isolate it." }
-            $targetStaffEid = $targetStaffEidNode.InnerText
-            $targetStaff = $xml.SelectSingleNode("/museScore/Score/Staff[eid='$targetStaffEid']")
-            if (-not $targetStaff) { throw "Could not map score part '$targetId' to its music staff; refusing to export a potentially incorrect track." }
-
-            # Remove every non-target part and its corresponding music staff. Map via the
-            # staff EID rather than assuming part IDs and staff IDs are interchangeable.
-            foreach ($part in @($xml.SelectNodes('/museScore/Score/Part'))) {
-                if ($part.GetAttribute('id') -ne $targetId) { [void]$part.ParentNode.RemoveChild($part) }
+            $partNodes = @($xml.SelectNodes('/museScore/Score/Part'))
+            $staffNodes = @($xml.SelectNodes('/museScore/Score/Staff'))
+            if ($partNodes.Count -ne $staffNodes.Count) {
+                throw "This score has $($partNodes.Count) parts but $($staffNodes.Count) music staves. Automatic stem isolation only supports one staff per part; refusing to risk exporting the wrong voice."
             }
-            foreach ($staff in @($xml.SelectNodes('/museScore/Score/Staff'))) {
-                if ($staff.SelectSingleNode('eid') -and $staff.SelectSingleNode('eid').InnerText -ne $targetStaffEid) {
-                    [void]$staff.ParentNode.RemoveChild($staff)
-                }
+            $targetIndex = -1
+            for ($i = 0; $i -lt $partNodes.Count; $i++) {
+                if ($partNodes[$i].GetAttribute('id') -eq $targetId) { $targetIndex = $i; break }
+            }
+            if ($targetIndex -lt 0) { throw "Could not find score part '$targetId' while creating an isolated voice track." }
+
+            # MuseScore stores music staves separately from part metadata. In this
+            # one-staff-per-part choir score, the collections are in matching order.
+            # Remove all non-target parts and their music staves from the temporary score.
+            for ($i = $partNodes.Count - 1; $i -ge 0; $i--) {
+                if ($i -ne $targetIndex) { [void]$partNodes[$i].ParentNode.RemoveChild($partNodes[$i]) }
+            }
+            for ($i = $staffNodes.Count - 1; $i -ge 0; $i--) {
+                if ($i -ne $targetIndex) { [void]$staffNodes[$i].ParentNode.RemoveChild($staffNodes[$i]) }
             }
             $scoreEntry.Delete()
             $newScoreEntry = $z.CreateEntry($scoreEntry.FullName)
