@@ -105,6 +105,39 @@ input,select,textarea,.section-card,.bookmark-card,.modal,.sheet,.screen-card{
 .home-intro-mark{position:absolute;z-index:0;right:13px;bottom:-29px;color:#80c4b7;font-family:Georgia,"Times New Roman",serif;font-size:148px;line-height:1;transform:rotate(-9deg);opacity:.55;pointer-events:none}
 .footer-note{color:#367f79;font-family:Georgia,"Times New Roman",serif;font-size:14px;font-style:italic}
 @media(max-width:360px){.home-intro{padding:18px 14px}.home-intro .heading{font-size:29px}.home-intro-mark{right:2px;font-size:120px}}
+
+
+/* High-contrast colour pass: bright accents, readable text, no pale-on-pale copy */
+:root{--bg:#fffdf7;--paper:#ffffff;--ink:#172b30;--muted:#465b60;--line:#c8d9d7;--teal:#006b67;--teal2:#42c7b4;--soft:#e0f7f2;--coral:#c94716;--sand:#ffbf47;--shadow:0 4px 12px rgba(12,55,58,.09)}
+.home-intro{background:#064750;border-left-color:#ff8a3d}
+.home-intro .eyebrow{color:#72f0d6}
+.home-intro .heading{color:#ffffff}
+.home-intro .heading span{color:#ffb45e}
+.home-intro .subtext{color:#ffffff}
+.home-intro-mark{color:#72f0d6;opacity:.22}
+.footer-note{color:#005e59}
+.topbar{background:#064750;color:#ffffff}
+.eyebrow{color:#005e59}
+.muted,.subtext,.songmeta,.controlhint,.helper-note{color:#465b60}
+.quietbtn,.chev,.controlicon{color:#006b67}
+.search{background:#ffffff;border-color:#9bbab5}
+.song{background:#ffffff;border-color:#b7ceca}
+.song.selected{background:#e0f7f2;border-color:#006b67}
+.cover{background:#006b67;color:#ffffff}
+.offlinebtn{background:#ffffff;border-color:#7aa9a2;color:#005e59}
+.offlinebtn.saved{background:#d6f5e9;border-color:#007b58;color:#005c43}
+.primarybtn,.partchip[aria-pressed=true],.tab[aria-current=page]{background:#006b67;color:#ffffff}
+.playbtn{background:#c94716;color:#ffffff}
+.playhero{background:#ffffff;color:#005e59}
+.controlcard,.panel,.smallbtn,.profile-field input,.profile-field select{background:#ffffff;color:#172b30;border-color:#b7ceca}
+.smallbtn:focus-visible,.partchip:focus-visible,.playmode-select:focus-visible{outline:3px solid #c94716;outline-offset:2px}
+.song.status-learning{background:#fff0df;border-color:#c94716}
+.song.status-practising{background:#fff8c9;border-color:#a27a00}
+.song.status-ready{background:#e2f4e5;border-color:#24783c}
+.song.status-learning .song-status{color:#87300d}
+.song.status-practising .song-status{color:#624900}
+.song.status-ready .song-status{color:#17572b}
+@media(prefers-contrast:more){:root{--ink:#000000;--muted:#26383c;--line:#667d80}.home-intro{border-left-width:6px}.home-intro .heading span{color:#ffd166}}
 </style>
 </head>
 <body>
