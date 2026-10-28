@@ -673,8 +673,39 @@ foreach ($f in $files) {
         Copy-Item -LiteralPath $origSrc -Destination $origDst -Force
         $entry['original'] = 'original.pdf'
     } elseif (Test-Path -LiteralPath $origDst) { Remove-Item -LiteralPath $origDst }
-    $txtSrc = Join-Path $Songs ($stem + '.txt')
-    if (Test-Path -LiteralPath $txtSrc) { $entry['lyrics'] = ([IO.File]::ReadAllText($txtSrc)).Trim() }
+    # Shared lyrics remain supported as <score filename>.txt or <clean song title>.txt.
+    $sharedLyricsCandidates = @(
+        (Join-Path $Songs ($stem + '.txt')),
+        (Join-Path $Songs ($title + '.txt'))
+    )
+    foreach ($txtSrc in $sharedLyricsCandidates) {
+        if (Test-Path -LiteralPath $txtSrc) {
+            $sharedText = ([IO.File]::ReadAllText($txtSrc)).Trim()
+            if ($sharedText) { $entry['lyrics'] = $sharedText }
+            break
+        }
+    }
+
+    # Optional part-specific lyrics override the shared lyrics for that singer.
+    # Preferred filenames: "<clean song title> - <part name>.txt", for example
+    # "Joy to the World - Alto.txt" or "Joy to the World - Soprano 1.txt".
+    # Also accept the exact score filename stem for songs that include an ordering prefix.
+    $lyricsByVoice = [ordered]@{}
+    foreach ($v in @($info.voices)) {
+        $partName = [string]$v.name
+        $partLyricsCandidates = @(
+            (Join-Path $Songs ($title + ' - ' + $partName + '.txt')),
+            (Join-Path $Songs ($stem + ' - ' + $partName + '.txt'))
+        )
+        foreach ($partLyricsSrc in $partLyricsCandidates) {
+            if (Test-Path -LiteralPath $partLyricsSrc) {
+                $partText = ([IO.File]::ReadAllText($partLyricsSrc)).Trim()
+                if ($partText) { $lyricsByVoice[[string]$v.id] = $partText }
+                break
+            }
+        }
+    }
+    if ($lyricsByVoice.Count -gt 0) { $entry['lyricsByVoice'] = $lyricsByVoice }
     $pieces.Add($entry)
 }
 
