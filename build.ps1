@@ -28,7 +28,7 @@ $ErrorActionPreference = 'Stop'
 [System.Threading.Thread]::CurrentThread.CurrentCulture = [System.Globalization.CultureInfo]::InvariantCulture
 Add-Type -AssemblyName System.IO.Compression
 Add-Type -AssemblyName System.IO.Compression.FileSystem
-$BuildVersion = 'ps1-9-starting-note-metadata'
+$BuildVersion = 'ps1-8-volume-based-voice-isolation'
 $Utf8 = New-Object System.Text.UTF8Encoding($false)
 
 # ------------------------------------------------------------ MuseScore
@@ -517,8 +517,19 @@ function Build-Piece([IO.FileInfo]$src, [string]$outdir) {
     $infoFile = Join-Path $outdir 'info.json'
     if ((Test-Path -LiteralPath $stampFile) -and (Test-Path -LiteralPath $infoFile) -and
         ([IO.File]::ReadAllText($stampFile) -eq $stamp)) {
-        Write-Host '  unchanged, skipping'
-        return (ConvertFrom-Json -InputObject ([IO.File]::ReadAllText($infoFile)))
+        # Audio exports are already valid and unchanged. Refresh score-derived metadata in
+        # the cached info file without needlessly re-exporting every MP3.
+        $cached = ConvertFrom-Json -InputObject ([IO.File]::ReadAllText($infoFile))
+        foreach ($cachedVoice in @($cached.voices)) {
+            $voiceDetails = $voices | Where-Object { $_.Id -eq [string]$cachedVoice.id } | Select-Object -First 1
+            if ($voiceDetails) {
+                Set-Prop $cachedVoice 'startingMidi' $voiceDetails.StartingMidi
+                Set-Prop $cachedVoice 'startingNote' $voiceDetails.StartingNote
+            }
+        }
+        [IO.File]::WriteAllText($infoFile, (ConvertTo-Json -InputObject $cached -Depth 10 -Compress), $Utf8)
+        Write-Host '  audio unchanged; refreshed starting-note metadata'
+        return $cached
     }
 
     if (Test-Path -LiteralPath $outdir) { Remove-Item -LiteralPath $outdir -Recurse -Force }
