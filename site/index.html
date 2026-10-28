@@ -94,6 +94,17 @@ input,select,textarea,.section-card,.bookmark-card,.modal,.sheet,.screen-card{
   border-radius:3px;
 }
 .iconbtn{border-radius:3px}
+
+
+/* Pro Musica personality: confident editorial headline, teal field and tangerine accent */
+.home-intro{position:relative;isolation:isolate;overflow:hidden;margin:0 -2px 20px;padding:21px 18px 18px;background:#e4f1ee;border-left:4px solid #e3856b}
+.home-intro .eyebrow{position:relative;z-index:1;margin-bottom:10px;color:#367f79;font-size:10px;letter-spacing:.16em}
+.home-intro .heading{position:relative;z-index:1;max-width:360px;margin:0 0 10px;color:#26343a;font-family:Georgia,"Times New Roman",serif;font-size:clamp(30px,8vw,39px);line-height:1.04;letter-spacing:-.04em}
+.home-intro .heading span{color:#367f79}
+.home-intro .subtext{position:relative;z-index:1;max-width:270px;margin:0;color:#425c5d;font-size:14px;line-height:1.5}
+.home-intro-mark{position:absolute;z-index:0;right:13px;bottom:-29px;color:#80c4b7;font-family:Georgia,"Times New Roman",serif;font-size:148px;line-height:1;transform:rotate(-9deg);opacity:.55;pointer-events:none}
+.footer-note{color:#367f79;font-family:Georgia,"Times New Roman",serif;font-size:14px;font-style:italic}
+@media(max-width:360px){.home-intro{padding:18px 14px}.home-intro .heading{font-size:29px}.home-intro-mark{right:2px;font-size:120px}}
 </style>
 </head>
 <body>
@@ -101,12 +112,12 @@ input,select,textarea,.section-card,.bookmark-card,.modal,.sheet,.screen-card{
 <header class="topbar"><div class="brandline"><img class="brandmark-img" src="choir-logo.svg" alt="Pro Musica Choir logo"><div><div class="brandname" id="brandName">Pro Musica Choir</div><div class="tagline" id="profileSummary">Your name · Your vocal part</div></div></div></header>
 <main class="content">
 <section class="screen active" id="screen-home">
- <p class="eyebrow" id="homeGreeting">Welcome back</p><h1 class="heading">Find your harmony.</h1><p class="subtext">Choose a song and make your practice time count.</p>
+ <section class="home-intro" aria-labelledby="homeHeadline"><p class="eyebrow" id="homeGreeting">PRO MUSICA · PRACTICE ROOM</p><h1 class="heading" id="homeHeadline">Know your notes.<br><span>Own your part.</span></h1><p class="subtext">Practise with purpose. Sing with confidence.</p><span class="home-intro-mark" aria-hidden="true">♪</span></section>
  <label class="search"><span aria-hidden="true">⌕</span><input id="search" type="search" placeholder="Search all songs…" autocomplete="off" aria-label="Search songs"></label>
  <div class="library-tools"><label for="collectionFilter">Concert / collection</label><select id="collectionFilter" aria-label="Filter songs by concert"><option value="all">All songs</option></select><button class="smallbtn" id="downloadCollection">Download collection</button></div>
  <div class="sectionrow"><h2 id="libraryHeading">All songs</h2><span class="muted" id="songCount"></span></div><div class="songlist" id="songList"></div><p class="empty hidden" id="empty">Your song library will appear here after practice tracks are created.</p>
  <div class="panel"><div class="panelhead"><h2>Recently practised</h2></div><div id="recentSongs" class="compact-list"><p class="muted">Songs you open will appear here.</p></div></div>
- <p class="footer-note">A little practice. A lot more harmony.</p>
+ <p class="footer-note">A little practice. A fuller sound.</p>
 </section>
 <section class="screen" id="screen-practice">
  <button class="quietbtn" id="backSongs">‹ All songs</button>
