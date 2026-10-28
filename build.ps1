@@ -28,7 +28,7 @@ $ErrorActionPreference = 'Stop'
 [System.Threading.Thread]::CurrentThread.CurrentCulture = [System.Globalization.CultureInfo]::InvariantCulture
 Add-Type -AssemblyName System.IO.Compression
 Add-Type -AssemblyName System.IO.Compression.FileSystem
-$BuildVersion = 'ps1-5-xml-isolated-stems'
+$BuildVersion = 'ps1-6-preserved-score-isolated-stems'
 $Utf8 = New-Object System.Text.UTF8Encoding($false)
 
 # ------------------------------------------------------------ MuseScore
@@ -205,14 +205,16 @@ function New-Variant([string]$src, [string]$dst, [string]$mode, [string]$targetI
             }
             if ($targetIndex -lt 0) { throw "Could not find score part '$targetId' while creating an isolated voice track." }
 
-            # MuseScore stores music staves separately from part metadata. In this
-            # one-staff-per-part choir score, the collections are in matching order.
-            # Remove all non-target parts and their music staves from the temporary score.
-            for ($i = $partNodes.Count - 1; $i -ge 0; $i--) {
-                if ($i -ne $targetIndex) { [void]$partNodes[$i].ParentNode.RemoveChild($partNodes[$i]) }
-            }
-            for ($i = $staffNodes.Count - 1; $i -ge 0; $i--) {
-                if ($i -ne $targetIndex) { [void]$staffNodes[$i].ParentNode.RemoveChild($staffNodes[$i]) }
+            # Preserve all Part/Staff definitions and score layout. Removing complete
+            # parts/staves can leave references inconsistent and make MuseScore close the
+            # generated score. Instead, remove only Chord/Rest events from each non-target
+            # music staff. Empty staves and measures remain structurally intact.
+            for ($i = 0; $i -lt $staffNodes.Count; $i++) {
+                if ($i -eq $targetIndex) { continue }
+                $events = @($staffNodes[$i].SelectNodes('.//Chord | .//Rest'))
+                foreach ($event in $events) {
+                    [void]$event.ParentNode.RemoveChild($event)
+                }
             }
             $scoreEntry.Delete()
             $newScoreEntry = $z.CreateEntry($scoreEntry.FullName)
@@ -255,8 +257,12 @@ function New-Variant([string]$src, [string]$dst, [string]$mode, [string]$targetI
             throw ("These score part IDs were not found in audiosettings.json: " + ($missingParts -join ', ') + ". No practice audio was exported.")
         }
         if ($mode -eq 'only') {
-            # The score itself now contains only the target part; remove other mixer tracks too.
-            $s.tracks = @($s.tracks | Where-Object { [string]$_.partId -eq [string]$targetId })
+            # Keep mixer entries for every retained Part. MuseScore CLI may ignore mute
+            # flags, so non-target Chord/Rest events have already been removed from the score.
+            # Drop the special metronome track so it cannot add clicks to the isolated stem.
+            $s.tracks = @($s.tracks | Where-Object {
+                [string]$_.partId -ne '999' -and [string]$_.instrumentId -ne 'metronome'
+            })
         }
         $e.Delete()
         $ne = $z.CreateEntry('audiosettings.json')
