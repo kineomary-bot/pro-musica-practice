@@ -302,6 +302,24 @@ $('#profileSettingsForm').addEventListener('submit',e=>{e.preventDefault();const
 $('#keepAwake').checked=store.get('keepAwake',false);$('#keepAwake').addEventListener('change',async e=>{store.set('keepAwake',e.target.checked);if(e.target.checked&&'wakeLock'in navigator){try{wakeLock=await navigator.wakeLock.request('screen')}catch{}}else if(wakeLock){try{await wakeLock.release()}catch{}wakeLock=null}});
 if('mediaSession'in navigator){navigator.mediaSession.setActionHandler('play',()=>playAll());navigator.mediaSession.setActionHandler('pause',()=>pauseAll());}
 if('serviceWorker' in navigator){addEventListener('load',()=>navigator.serviceWorker.register('./sw.js').catch(()=>{}));}
-fillVoiceSelect($('#welcomeVoice'),voice);fetch('pieces.json').then(r=>{if(!r.ok)throw Error('pieces.json not found');return r.json()}).then(d=>{data=d;init()}).catch(()=>{$('#songList').innerHTML='';$('#empty').classList.remove('hidden');$('#empty').textContent='The song library could not be loaded. Check your connection and reload. Your name and vocal part can still be saved on this device.';$('#songCount').textContent='Not ready';});
+function showStartupError(message){
+  const detail=String(message||'Unknown startup error').slice(0,240);
+  const empty=$('#empty'),list=$('#songList'),count=$('#songCount');
+  if(list)list.innerHTML='';
+  if(empty){empty.classList.remove('hidden');empty.textContent='The app could not finish starting. Diagnostic: '+detail;}
+  if(count)count.textContent='Startup error';
+  console.error('Pro Musica startup error:',detail);
+}
+window.addEventListener('error',event=>showStartupError(event.message||'JavaScript error'));
+window.addEventListener('unhandledrejection',event=>showStartupError(event.reason?.message||event.reason||'Unhandled promise rejection'));
+fillVoiceSelect($('#welcomeVoice'),voice);
+fetch(new URL('pieces.json',document.baseURI),{cache:'no-store'})
+  .then(r=>{if(!r.ok)throw Error('pieces.json returned HTTP '+r.status);return r.json()})
+  .then(d=>{
+    if(!d||!Array.isArray(d.pieces))throw Error('pieces.json loaded, but its pieces list is missing');
+    data=d;
+    init();
+  })
+  .catch(error=>showStartupError(error?.message||error));
 </script>
 </body></html>
