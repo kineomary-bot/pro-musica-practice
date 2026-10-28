@@ -468,6 +468,7 @@ function Build-Piece([IO.FileInfo]$src, [string]$outdir) {
 
     $td = Join-Path ([IO.Path]::GetTempPath()) ('choir-' + [guid]::NewGuid().ToString('N'))
     New-Item -ItemType Directory -Path $td | Out-Null
+    $buildSucceeded = $false
     try {
         $jobs = @()
         $loud = [ordered]@{}; $only = [ordered]@{}
@@ -493,7 +494,16 @@ function Build-Piece([IO.FileInfo]$src, [string]$outdir) {
         $jobs += @{ In = $src.FullName; Out = $mid }
         Invoke-Exports $jobs
         $bm = Get-BeatMap $mid $info.FirstMeasure
-    } finally { Remove-Item -LiteralPath $td -Recurse -Force -ErrorAction SilentlyContinue }
+        $buildSucceeded = $true
+    } catch {
+        Write-Host "`nBuild failed while working with temporary score files. Diagnostics kept at: $td"
+        Write-Host "Please keep this folder until the failure has been diagnosed."
+        throw
+    } finally {
+        if ($buildSucceeded) {
+            Remove-Item -LiteralPath $td -Recurse -Force -ErrorAction SilentlyContinue
+        }
+    }
 
     if ($script:Ffmpeg -and $Bitrate -ne 'off') {
         foreach ($mp3 in (Get-ChildItem -LiteralPath $outdir -Filter '*.mp3')) { Compress-Mp3 $mp3.FullName }
