@@ -149,13 +149,13 @@ function Get-VoiceName([string]$raw) {
 function Get-MuseNoteName([int]$pitch, [int]$tpc) {
     # MuseScore tonal-pitch-class values preserve the score's enharmonic spelling.
     $spellings = @{
-        '-1'='Fbb'; 0='Cbb'; 1='Gbb'; 2='Dbb'; 3='Abb'; 4='Ebb'; 5='Bbb'
-        6='Fb'; 7='Cb'; 8='Gb'; 9='Db'; 10='Ab'; 11='Eb'; 12='Bb'
-        13='F'; 14='C'; 15='G'; 16='D'; 17='A'; 18='E'; 19='B'
-        20='F#'; 21='C#'; 22='G#'; 23='D#'; 24='A#'; 25='E#'; 26='B#'
+        '-1'='Fbb'; '0'='Cbb'; '1'='Gbb'; '2'='Dbb'; '3'='Abb'; '4'='Ebb'; '5'='Bbb'
+        '6'='Fb'; '7'='Cb'; '8'='Gb'; '9'='Db'; '10'='Ab'; '11'='Eb'; '12'='Bb'
+        '13'='F'; '14'='C'; '15'='G'; '16'='D'; '17'='A'; '18'='E'; '19'='B'
+        '20'='F#'; '21'='C#'; '22'='G#'; '23'='D#'; '24'='A#'; '25'='E#'; '26'='B#'
     }
-    if ($spellings.ContainsKey($tpc)) {
-        $spelling = [string]$spellings[$tpc]
+    if ($spellings.ContainsKey([string]$tpc)) {
+        $spelling = [string]$spellings[[string]$tpc]
         if ($spelling -match '^([A-G])([#b]{0,2})$') {
             $letter = $Matches[1]
             $accidental = $Matches[2]
