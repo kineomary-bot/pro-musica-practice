@@ -28,7 +28,7 @@ $ErrorActionPreference = 'Stop'
 [System.Threading.Thread]::CurrentThread.CurrentCulture = [System.Globalization.CultureInfo]::InvariantCulture
 Add-Type -AssemblyName System.IO.Compression
 Add-Type -AssemblyName System.IO.Compression.FileSystem
-$BuildVersion = 'ps1-8-volume-based-voice-isolation'
+$BuildVersion = 'ps1-9-starting-note-metadata'
 $Utf8 = New-Object System.Text.UTF8Encoding($false)
 
 # ------------------------------------------------------------ MuseScore
@@ -146,6 +146,29 @@ function Get-VoiceName([string]$raw) {
     return $s
 }
 
+function Get-MuseNoteName([int]$pitch, [int]$tpc) {
+    # MuseScore tonal-pitch-class values preserve the score's enharmonic spelling.
+    $spellings = @{
+        '-1'='Fbb'; 0='Cbb'; 1='Gbb'; 2='Dbb'; 3='Abb'; 4='Ebb'; 5='Bbb'
+        6='Fb'; 7='Cb'; 8='Gb'; 9='Db'; 10='Ab'; 11='Eb'; 12='Bb'
+        13='F'; 14='C'; 15='G'; 16='D'; 17='A'; 18='E'; 19='B'
+        20='F#'; 21='C#'; 22='G#'; 23='D#'; 24='A#'; 25='E#'; 26='B#'
+    }
+    if ($spellings.ContainsKey($tpc)) {
+        $spelling = [string]$spellings[$tpc]
+        if ($spelling -match '^([A-G])([#b]{0,2})$') {
+            $letter = $Matches[1]
+            $accidental = $Matches[2]
+            $natural = @{ C=0; D=2; E=4; F=5; G=7; A=9; B=11 }[$letter]
+            $offset = ([regex]::Matches($accidental, '#').Count) - ([regex]::Matches($accidental, 'b').Count)
+            $octave = [int][math]::Floor(($pitch - ($natural + $offset)) / 12) - 1
+            return ($spelling + $octave)
+        }
+    }
+    $chromatic = @('C','C#','D','D#','E','F','F#','G','G#','A','A#','B')
+    return ($chromatic[$pitch % 12] + ([int][math]::Floor($pitch / 12) - 1))
+}
+
 function Get-ScoreInfo([string]$mscz) {
     $z = [IO.Compression.ZipFile]::OpenRead($mscz)
     try {
@@ -160,6 +183,8 @@ function Get-ScoreInfo([string]$mscz) {
     $xml = New-Object System.Xml.XmlDocument
     $xml.LoadXml($text)
     $parts = @()
+    $staffNodes = @($xml.SelectNodes('/museScore/Score/Staff'))
+    $partIndex = 0
     foreach ($p in $xml.SelectNodes('/museScore/Score/Part')) {
         $name = ''
         foreach ($tag in 'longName', 'shortName', 'trackName') {
@@ -170,7 +195,33 @@ function Get-ScoreInfo([string]$mscz) {
             $n = $p.SelectSingleNode('trackName')
             if ($n) { $name = $n.InnerText } else { $name = 'Part ' + $p.GetAttribute('id') }
         }
-        $parts += [pscustomobject]@{ Id = $p.GetAttribute('id'); Name = (Get-VoiceName $name) }
+
+        # Use the first pitched note in the matching music staff, skipping opening rests.
+        $partId = $p.GetAttribute('id')
+        $staff = $xml.SelectSingleNode("/museScore/Score/Staff[@id='$partId']")
+        if (-not $staff -and $partIndex -lt $staffNodes.Count) { $staff = $staffNodes[$partIndex] }
+        $startingMidi = $null
+        $startingNote = $null
+        if ($staff) {
+            $firstNote = $staff.SelectSingleNode('.//Chord/Note')
+            if ($firstNote) {
+                $pitchNode = $firstNote.SelectSingleNode('pitch')
+                $tpcNode = $firstNote.SelectSingleNode('tpc')
+                if ($pitchNode -and $pitchNode.InnerText -match '^\d+$') {
+                    $startingMidi = [int]$pitchNode.InnerText
+                    $tpc = 14
+                    if ($tpcNode -and $tpcNode.InnerText -match '^-?\d+$') { $tpc = [int]$tpcNode.InnerText }
+                    $startingNote = Get-MuseNoteName $startingMidi $tpc
+                }
+            }
+        }
+        $parts += [pscustomobject]@{
+            Id = $partId
+            Name = (Get-VoiceName $name)
+            StartingMidi = $startingMidi
+            StartingNote = $startingNote
+        }
+        $partIndex++
     }
     $first = $null
     $m = $xml.SelectSingleNode('/museScore/Score/Part/Staff/Measure[1]')
@@ -452,7 +503,10 @@ function Build-Piece([IO.FileInfo]$src, [string]$outdir) {
         $base = $id; $n = 2
         while ($seen.ContainsKey($id)) { $id = "$base-$n"; $n++ }
         $seen[$id] = $true
-        $voices += [pscustomobject]@{ Id = $id; Name = $p.Name; Part = $p.Id }
+        $voices += [pscustomobject]@{
+            Id = $id; Name = $p.Name; Part = $p.Id
+            StartingMidi = $p.StartingMidi; StartingNote = $p.StartingNote
+        }
     }
 
     $partIds = @($voices | ForEach-Object { [string]$_.Part })
@@ -524,7 +578,12 @@ function Build-Piece([IO.FileInfo]$src, [string]$outdir) {
     }
 
     $voiceList = @()
-    foreach ($v in $voices) { $voiceList += [ordered]@{ id = $v.Id; name = $v.Name } }
+    foreach ($v in $voices) {
+        $voiceList += [ordered]@{
+            id = $v.Id; name = $v.Name
+            startingMidi = $v.StartingMidi; startingNote = $v.StartingNote
+        }
+    }
     $result = [ordered]@{
         voices = $voiceList
         files = [ordered]@{ all = 'all.mp3'; loud = $loud; only = $only; stems = $only }
