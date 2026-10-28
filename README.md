@@ -6,7 +6,7 @@ This is the upgraded, mobile-first version of the existing choir practice app. T
 
 1. Install MuseScore 4 on the computer that will build the tracks.
 2. Put each choir score (`.mscz`) in the `songs` folder. The sample `Joy to the World` files are included. Number filenames if you want to control song order.
-3. Optional: add a PDF of the choir's original score and a text file of the lyrics with the same base filename as the `.mscz`.
+3. Optional: add a PDF of the choir's original score and a shared lyrics text file with the same base filename as the `.mscz`. For different lyrics by part, add files named `<Song title> - <Part name>.txt` (for example, `Joy to the World - Alto.txt`, `Joy to the World - Soprano 1.txt`, `Joy to the World - Soprano 2.txt`, `Joy to the World - Tenor.txt`, and `Joy to the World - Bass.txt`). Part-specific files override the shared lyrics for that voice; other parts fall back to the shared file.
 4. Double-click **Make practice tracks.bat** and wait for it to finish. This creates `site/pieces.json` and the per-song audio files under `site/audio/`. If FFmpeg is not installed, files may be larger; it is optional.
 5. Open the `site` folder and confirm `pieces.json` and an `audio` folder exist before publishing.
 
