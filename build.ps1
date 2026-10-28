@@ -28,7 +28,7 @@ $ErrorActionPreference = 'Stop'
 [System.Threading.Thread]::CurrentThread.CurrentCulture = [System.Globalization.CultureInfo]::InvariantCulture
 Add-Type -AssemblyName System.IO.Compression
 Add-Type -AssemblyName System.IO.Compression.FileSystem
-$BuildVersion = 'ps1-7-musescore-cli-diagnostics'
+$BuildVersion = 'ps1-8-volume-based-voice-isolation'
 $Utf8 = New-Object System.Text.UTF8Encoding($false)
 
 # ------------------------------------------------------------ MuseScore
@@ -214,41 +214,8 @@ function New-Variant([string]$src, [string]$dst, [string]$mode, [string]$targetI
     Copy-Item -LiteralPath $src -Destination $dst -Force
     $z = [IO.Compression.ZipFile]::Open($dst, [IO.Compression.ZipArchiveMode]::Update)
     try {
-        if ($mode -eq 'only') {
-            $scoreEntry = $z.Entries | Where-Object { $_.FullName.EndsWith('.mscx') -and ($_.FullName -notlike '*/*') } | Select-Object -First 1
-            if (-not $scoreEntry) { throw "Could not find the score XML inside '$dst'." }
-            $srScore = New-Object IO.StreamReader($scoreEntry.Open(), $Utf8)
-            try { $scoreText = $srScore.ReadToEnd() } finally { $srScore.Dispose() }
-            $xml = New-Object System.Xml.XmlDocument
-            $xml.PreserveWhitespace = $true
-            $xml.LoadXml($scoreText)
-            $partNodes = @($xml.SelectNodes('/museScore/Score/Part'))
-            $staffNodes = @($xml.SelectNodes('/museScore/Score/Staff'))
-            if ($partNodes.Count -ne $staffNodes.Count) {
-                throw "This score has $($partNodes.Count) parts but $($staffNodes.Count) music staves. Automatic stem isolation only supports one staff per part; refusing to risk exporting the wrong voice."
-            }
-            $targetIndex = -1
-            for ($i = 0; $i -lt $partNodes.Count; $i++) {
-                if ($partNodes[$i].GetAttribute('id') -eq $targetId) { $targetIndex = $i; break }
-            }
-            if ($targetIndex -lt 0) { throw "Could not find score part '$targetId' while creating an isolated voice track." }
-
-            # Preserve all Part/Staff definitions and score layout. Removing complete
-            # parts/staves can leave references inconsistent and make MuseScore close the
-            # generated score. Instead, remove only Chord/Rest events from each non-target
-            # music staff. Empty staves and measures remain structurally intact.
-            for ($i = 0; $i -lt $staffNodes.Count; $i++) {
-                if ($i -eq $targetIndex) { continue }
-                $events = @($staffNodes[$i].SelectNodes('.//Chord | .//Rest'))
-                foreach ($event in $events) {
-                    [void]$event.ParentNode.RemoveChild($event)
-                }
-            }
-            $scoreEntry.Delete()
-            $newScoreEntry = $z.CreateEntry($scoreEntry.FullName)
-            $swScore = New-Object IO.StreamWriter($newScoreEntry.Open(), $Utf8)
-            try { $xml.Save($swScore) } finally { $swScore.Dispose() }
-        }
+        # Do not modify the score XML. MuseScore's own part/mixer data is retained;
+        # isolated stems are created by lowering unwanted tracks' output volume.
 
         $e = $z.GetEntry('audiosettings.json')
         if (-not $e) { throw "Could not find audiosettings.json inside '$dst'." }
@@ -260,7 +227,11 @@ function New-Variant([string]$src, [string]$dst, [string]$mode, [string]$targetI
         foreach ($tr in @($s.tracks)) {
             $trackPartId = [string]$tr.partId
             if ($trackPartId -eq '999' -or [string]$tr.instrumentId -eq 'metronome') {
-                if ($mode -eq 'only') { continue }
+                if ($mode -eq 'only') {
+                    if (-not $tr.out) { Set-Prop $tr 'out' ([pscustomobject]@{}) }
+                    Set-Prop $tr.out 'volumeDb' -60
+                    continue
+                }
                 if (-not $tr.soloMuteState) { Set-Prop $tr 'soloMuteState' ([pscustomobject]@{}) }
                 Set-Prop $tr.soloMuteState 'mute' $true
                 continue
@@ -275,7 +246,13 @@ function New-Variant([string]$src, [string]$dst, [string]$mode, [string]$targetI
             Set-Prop $tr.soloMuteState 'mute' $false
             Set-Prop $tr.soloMuteState 'solo' $false
             if ($mode -eq 'loud' -and -not $mine) { Set-Prop $tr.out 'volumeDb' $BackgroundDb }
-            elseif ($mode -eq 'only' -and -not $mine) { Set-Prop $tr.soloMuteState 'mute' $true }
+            elseif ($mode -eq 'only' -and -not $mine) {
+                # CLI export may ignore mute/solo states, but changing output gain is an
+                # established workaround. -60 dB makes the non-target voices effectively silent.
+                Set-Prop $tr.out 'volumeDb' -60
+                Set-Prop $tr.soloMuteState 'mute' $false
+                Set-Prop $tr.soloMuteState 'solo' $false
+            }
         }
         if ($mode -ne 'all' -and -not $matchedTarget) {
             throw ("Could not match requested voice part '$targetId' to a MuseScore audio track. Available audio track part IDs: " + (($s.tracks | ForEach-Object { [string]$_.partId } | Sort-Object -Unique) -join ', ') + ". No practice audio was exported.")
@@ -283,14 +260,6 @@ function New-Variant([string]$src, [string]$dst, [string]$mode, [string]$targetI
         $missingParts = @($partIds | Where-Object { -not $matchedParts.ContainsKey([string]$_) })
         if ($mode -ne 'only' -and $missingParts.Count -gt 0) {
             throw ("These score part IDs were not found in audiosettings.json: " + ($missingParts -join ', ') + ". No practice audio was exported.")
-        }
-        if ($mode -eq 'only') {
-            # Keep mixer entries for every retained Part. MuseScore CLI may ignore mute
-            # flags, so non-target Chord/Rest events have already been removed from the score.
-            # Drop the special metronome track so it cannot add clicks to the isolated stem.
-            $s.tracks = @($s.tracks | Where-Object {
-                [string]$_.partId -ne '999' -and [string]$_.instrumentId -ne 'metronome'
-            })
         }
         $e.Delete()
         $ne = $z.CreateEntry('audiosettings.json')
