@@ -83,6 +83,14 @@ for (const marker of requiredHtmlMarkers) {
   if (!html.includes(marker)) errors.push(`site/index.html is missing required startup/app markup: ${marker}`);
 }
 
+const showScreenStart = html.indexOf('function showScreen(');
+const paintNavStart = html.indexOf('function paintNav(', showScreenStart);
+const showScreenSource = showScreenStart >= 0 && paintNavStart > showScreenStart
+  ? html.slice(showScreenStart, paintNavStart)
+  : '';
+if (!showScreenSource.includes("$('.screen').forEach(")) {
+  errors.push('Screen navigation must use querySelectorAll ( $ ) to activate the Practice, Bookmarks and Loop screens.');
+}
 const scripts = [...html.matchAll(/<script\b([^>]*)>([\s\S]*?)<\/script\s*>/gi)];
 let inlineScriptCount = 0;
 for (const [index, match] of scripts.entries()) {
@@ -99,11 +107,40 @@ for (const [index, match] of scripts.entries()) {
 if (inlineScriptCount === 0) errors.push('No inline app script was found in site/index.html.');
 
 const sw = await readFile(path.join(root, 'sw.js'), 'utf8').catch(() => '');
+try {
+  new vm.Script(sw, { filename: 'site/sw.js' });
+} catch (error) {
+  errors.push(`JavaScript syntax error in site/sw.js: ${error.message}`);
+}
+if (!/function\s+respondWithByteRange/.test(sw) ||
+    !/request\.headers\.get\(['"]range['"]\)/.test(sw) ||
+    !/status:\s*206/.test(sw)) {
+  errors.push('site/sw.js must honour byte-range requests for cached audio and PDF files so seeking works.');
+}
+if (!html.includes("$('#seek').addEventListener('input',e=>{seeking=true;const d=seekDuration(),target=Number(e.target.value)/1000*d;$('#timeNow').textContent=fmt(target);if(d>0)seekTo(target)});") ||
+    !html.includes("$('#miniSeek').addEventListener('input',e=>{miniSeeking=true;const d=seekDuration();const target=Number(e.target.value)/1000*d;$('#miniTime').textContent=fmt(target)+' · '+fmt(d);if(d>0)seekTo(target)});")) {
+  errors.push('Both player sliders must seek audio during dragging.');
+}
+if (!html.includes("!['bookmarks','loop','tempo'].includes(currentScreen)") ||
+    !html.includes("window.scrollTo({top:0,behavior:'instant'});paintTime();")) {
+  errors.push('The floating player must not cover the Bookmarks, Loop or Tempo controls and must update visibility on navigation.');
+}
+if (!html.includes("function jumpToLoopStart(restart=false){if(!loopActive())return;seekTo(aPoint);") ||
+    !html.includes("go.onclick=()=>{showScreen('practice');seekTo(b.time)}")) {
+  errors.push('Loop restart and bookmark navigation must use the shared audio seek function.');
+}
 if (!/const\s+SHELL_CACHE\s*=\s*['"]pro-musica-shell-v\d+['"]/.test(sw)) {
   errors.push('site/sw.js must declare a versioned app-shell cache.');
 }
 if (!/['"]\.\/index\.html['"]/.test(sw)) {
   errors.push('site/sw.js must precache index.html as part of the app shell.');
+}
+if (!/['"]\.\/pieces\.json['"]/.test(sw)) {
+  errors.push('site/sw.js must precache pieces.json so the song catalogue is available for an offline launch.');
+}
+const offlineCacheName = 'pro-musica-offline-songs-v1';
+if (!html.includes(`const OFFLINE_CACHE='${offlineCacheName}';`) || !sw.includes(`const OFFLINE_CACHE = '${offlineCacheName}';`)) {
+  errors.push('The app and service worker must use the same offline-song cache name.');
 }
 
 const collectStrings = value => {
