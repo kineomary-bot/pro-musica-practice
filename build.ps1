@@ -18,7 +18,7 @@ param(
     [string]$Site = (Join-Path $PSScriptRoot 'site'),
     [string]$MScore = '',
     [string]$Only = '',
-    [double]$BackgroundDb = -12,   # how much quieter the other voices are in "my part louder"
+    [double]$BackgroundDb = -30,   # how much quieter the other voices are in "my part louder"
     [switch]$NoOnly,               # skip the "my part only" tracks (smaller site)
     [string]$Bitrate = '64k',      # mp3 bitrate if ffmpeg is installed; 'off' keeps MuseScore's files
     [string]$ChoirName = ''
@@ -28,7 +28,7 @@ $ErrorActionPreference = 'Stop'
 [System.Threading.Thread]::CurrentThread.CurrentCulture = [System.Globalization.CultureInfo]::InvariantCulture
 Add-Type -AssemblyName System.IO.Compression
 Add-Type -AssemblyName System.IO.Compression.FileSystem
-$BuildVersion = 'ps1-3-stem-mix'
+$BuildVersion = 'ps1-10-prepared-loud-recordings-minus-30db'
 $Utf8 = New-Object System.Text.UTF8Encoding($false)
 
 # ------------------------------------------------------------ MuseScore
@@ -52,11 +52,38 @@ function Find-MuseScore {
 
 function Invoke-MuseScore([string[]]$ArgList) {
     # Start-Process needs one properly quoted argument string on Windows PowerShell 5.1.
-    # Return the exit code so callers can report failures; output-file checks remain authoritative
-    # because some MuseScore versions have returned success while producing unusable exports.
+    # Capture stdout/stderr separately for every CLI operation so a failed export can be
+    # diagnosed from the preserved temporary build folder instead of relying on a generic error.
     $q = ($ArgList | ForEach-Object { '"' + ($_ -replace '"', '\"') + '"' }) -join ' '
-    $proc = Start-Process -FilePath $script:Mscore -ArgumentList $q -Wait -NoNewWindow -PassThru -ErrorAction Stop
-    return $proc.ExitCode
+    $logDir = $script:DiagnosticDir
+    if (-not $logDir -or -not (Test-Path -LiteralPath $logDir)) {
+        $logDir = [IO.Path]::GetTempPath()
+    }
+
+    $name = 'command'
+    if ($ArgList.Count -ge 2 -and ($ArgList[0] -eq '-o' -or $ArgList[0] -eq '--export-to')) {
+        $name = [IO.Path]::GetFileName($ArgList[1])
+    } elseif ($ArgList.Count -ge 2 -and $ArgList[0] -eq '-j') {
+        $name = [IO.Path]::GetFileNameWithoutExtension($ArgList[1])
+    }
+    $name = $name -replace '[^a-zA-Z0-9._-]', '_'
+    $prefix = Join-Path $logDir ('musescore-' + $name)
+    $stdoutLog = $prefix + '.stdout.txt'
+    $stderrLog = $prefix + '.stderr.txt'
+    $commandLog = $prefix + '.command.txt'
+    foreach ($log in @($stdoutLog, $stderrLog, $commandLog)) {
+        Remove-Item -LiteralPath $log -Force -ErrorAction SilentlyContinue
+    }
+    [IO.File]::WriteAllText($commandLog, ("Executable: " + $script:Mscore + "`r`nArguments: " + $q + "`r`n"), $Utf8)
+
+    try {
+        $proc = Start-Process -FilePath $script:Mscore -ArgumentList $q -Wait -NoNewWindow -PassThru -RedirectStandardOutput $stdoutLog -RedirectStandardError $stderrLog -ErrorAction Stop
+        [IO.File]::AppendAllText($commandLog, ("Exit code: " + $proc.ExitCode + "`r`n"), $Utf8)
+        return $proc.ExitCode
+    } catch {
+        [IO.File]::AppendAllText($commandLog, ("Start/export exception: " + $_.Exception.Message + "`r`n"), $Utf8)
+        throw
+    }
 }
 
 function Test-Output([string]$path) {
@@ -94,7 +121,8 @@ function Export-Audio([string]$inputScore, [string]$outputAudio) {
     try { $exitCode = Invoke-MuseScore @('-o', $outputAudio, $inputScore) }
     catch { throw ("MuseScore could not start or complete audio export for ${outputAudio}: " + $_.Exception.Message) }
     if (-not (Test-Output $outputAudio)) {
-        throw ("MuseScore did not produce a non-empty audio file: " + $outputAudio + "`n(from " + $inputScore + "). Check that the score plays in MuseScore 4 and that its sound profile is available.")
+        $stderrLog = Join-Path $script:DiagnosticDir ('musescore-' + ([IO.Path]::GetFileName($outputAudio) -replace '[^a-zA-Z0-9._-]', '_') + '.stderr.txt')
+        throw ("MuseScore did not produce a non-empty audio file: " + $outputAudio + "`n(from " + $inputScore + "). See the MuseScore command/stderr logs in: " + $script:DiagnosticDir + "`nExpected stderr log: " + $stderrLog)
     }
     if ($exitCode -ne 0) {
         throw ("MuseScore returned exit code $exitCode while exporting ${outputAudio}. The file may be incomplete; fix the export error and run the build again.")
@@ -118,6 +146,30 @@ function Get-VoiceName([string]$raw) {
     return $s
 }
 
+function Get-MuseNoteName([int]$pitch, [int]$tpc) {
+    # MuseScore tonal-pitch-class values preserve the score's enharmonic spelling.
+    $spellings = @{
+        '-1'='Fbb'; '0'='Cbb'; '1'='Gbb'; '2'='Dbb'; '3'='Abb'; '4'='Ebb'; '5'='Bbb'
+        '6'='Fb'; '7'='Cb'; '8'='Gb'; '9'='Db'; '10'='Ab'; '11'='Eb'; '12'='Bb'
+        '13'='F'; '14'='C'; '15'='G'; '16'='D'; '17'='A'; '18'='E'; '19'='B'
+        '20'='F#'; '21'='C#'; '22'='G#'; '23'='D#'; '24'='A#'; '25'='E#'; '26'='B#'
+    }
+    if ($spellings.ContainsKey([string]$tpc)) {
+        $spelling = [string]$spellings[[string]$tpc]
+        if ($spelling -match '^([A-G])([#b]{0,2})$') {
+            $letter = $Matches[1]
+            $accidental = $Matches[2]
+            $naturalPitches = @{ C=0; D=2; E=4; F=5; G=7; A=9; B=11 }
+            $natural = $naturalPitches[$letter]
+            $offset = ([regex]::Matches($accidental, '#').Count) - ([regex]::Matches($accidental, 'b').Count)
+            $octave = [int][math]::Floor(($pitch - ($natural + $offset)) / 12) - 1
+            return ($spelling + $octave)
+        }
+    }
+    $chromatic = @('C','C#','D','D#','E','F','F#','G','G#','A','A#','B')
+    return ($chromatic[$pitch % 12] + ([int][math]::Floor($pitch / 12) - 1))
+}
+
 function Get-ScoreInfo([string]$mscz) {
     $z = [IO.Compression.ZipFile]::OpenRead($mscz)
     try {
@@ -132,6 +184,8 @@ function Get-ScoreInfo([string]$mscz) {
     $xml = New-Object System.Xml.XmlDocument
     $xml.LoadXml($text)
     $parts = @()
+    $staffNodes = @($xml.SelectNodes('/museScore/Score/Staff'))
+    $partIndex = 0
     foreach ($p in $xml.SelectNodes('/museScore/Score/Part')) {
         $name = ''
         foreach ($tag in 'longName', 'shortName', 'trackName') {
@@ -142,7 +196,33 @@ function Get-ScoreInfo([string]$mscz) {
             $n = $p.SelectSingleNode('trackName')
             if ($n) { $name = $n.InnerText } else { $name = 'Part ' + $p.GetAttribute('id') }
         }
-        $parts += [pscustomobject]@{ Id = $p.GetAttribute('id'); Name = (Get-VoiceName $name) }
+
+        # Use the first pitched note in the matching music staff, skipping opening rests.
+        $partId = $p.GetAttribute('id')
+        $staff = $xml.SelectSingleNode("/museScore/Score/Staff[@id='$partId']")
+        if (-not $staff -and $partIndex -lt $staffNodes.Count) { $staff = $staffNodes[$partIndex] }
+        $startingMidi = $null
+        $startingNote = $null
+        if ($staff) {
+            $firstNote = $staff.SelectSingleNode('.//Chord/Note')
+            if ($firstNote) {
+                $pitchNode = $firstNote.SelectSingleNode('pitch')
+                $tpcNode = $firstNote.SelectSingleNode('tpc')
+                if ($pitchNode -and $pitchNode.InnerText -match '^\d+$') {
+                    $startingMidi = [int]$pitchNode.InnerText
+                    $tpc = 14
+                    if ($tpcNode -and $tpcNode.InnerText -match '^-?\d+$') { $tpc = [int]$tpcNode.InnerText }
+                    $startingNote = Get-MuseNoteName $startingMidi $tpc
+                }
+            }
+        }
+        $parts += [pscustomobject]@{
+            Id = $partId
+            Name = (Get-VoiceName $name)
+            StartingMidi = $startingMidi
+            StartingNote = $startingNote
+        }
+        $partIndex++
     }
     $first = $null
     $m = $xml.SelectSingleNode('/museScore/Score/Part/Staff/Measure[1]')
@@ -179,30 +259,59 @@ function Set-Prop($obj, [string]$name, $value) {
     else { $obj | Add-Member -NotePropertyName $name -NotePropertyValue $value }
 }
 
-# Copy a .mscz with the mixer changed. Mode: all | loud | only
+# Copy a .mscz and prepare its audio variant. Mode: all | loud | only
+# MuseScore 4's CLI has a known bug: mixer mute states can be ignored during MP3 export.
+# For "only", remove the other score parts and their staves from the temporary score itself.
 function New-Variant([string]$src, [string]$dst, [string]$mode, [string]$targetId, [string[]]$partIds) {
     Copy-Item -LiteralPath $src -Destination $dst -Force
     $z = [IO.Compression.ZipFile]::Open($dst, [IO.Compression.ZipArchiveMode]::Update)
     try {
+        # Do not modify the score XML. MuseScore's own part/mixer data is retained;
+        # isolated stems are created by lowering unwanted tracks' output volume.
+
         $e = $z.GetEntry('audiosettings.json')
+        if (-not $e) { throw "Could not find audiosettings.json inside '$dst'." }
         $sr = New-Object IO.StreamReader($e.Open(), $Utf8)
         try { $json = $sr.ReadToEnd() } finally { $sr.Dispose() }
         $s = ConvertFrom-Json -InputObject $json
-        foreach ($tr in $s.tracks) {
-            if ([string]$tr.instrumentId -eq 'metronome' -or [string]$tr.partId -eq '999') {
+        $matchedParts = @{}
+        $matchedTarget = $false
+        foreach ($tr in @($s.tracks)) {
+            $trackPartId = [string]$tr.partId
+            if ($trackPartId -eq '999' -or [string]$tr.instrumentId -eq 'metronome') {
+                if ($mode -eq 'only') {
+                    if (-not $tr.out) { Set-Prop $tr 'out' ([pscustomobject]@{}) }
+                    Set-Prop $tr.out 'volumeDb' -60
+                    continue
+                }
                 if (-not $tr.soloMuteState) { Set-Prop $tr 'soloMuteState' ([pscustomobject]@{}) }
                 Set-Prop $tr.soloMuteState 'mute' $true
                 continue
             }
-            if ($partIds -notcontains [string]$tr.partId) { continue }
-            $mine = ([string]$tr.partId -eq $targetId)
+            if ($partIds -notcontains $trackPartId) { continue }
+            $matchedParts[$trackPartId] = $true
+            $mine = ($trackPartId -eq [string]$targetId)
+            if ($mine) { $matchedTarget = $true }
             if (-not $tr.out) { Set-Prop $tr 'out' ([pscustomobject]@{}) }
             if (-not $tr.soloMuteState) { Set-Prop $tr 'soloMuteState' ([pscustomobject]@{}) }
             Set-Prop $tr.out 'volumeDb' 0
             Set-Prop $tr.soloMuteState 'mute' $false
             Set-Prop $tr.soloMuteState 'solo' $false
             if ($mode -eq 'loud' -and -not $mine) { Set-Prop $tr.out 'volumeDb' $BackgroundDb }
-            elseif ($mode -eq 'only' -and -not $mine) { Set-Prop $tr.soloMuteState 'mute' $true }
+            elseif ($mode -eq 'only' -and -not $mine) {
+                # CLI export may ignore mute/solo states, but changing output gain is an
+                # established workaround. -60 dB makes the non-target voices effectively silent.
+                Set-Prop $tr.out 'volumeDb' -60
+                Set-Prop $tr.soloMuteState 'mute' $false
+                Set-Prop $tr.soloMuteState 'solo' $false
+            }
+        }
+        if ($mode -ne 'all' -and -not $matchedTarget) {
+            throw ("Could not match requested voice part '$targetId' to a MuseScore audio track. Available audio track part IDs: " + (($s.tracks | ForEach-Object { [string]$_.partId } | Sort-Object -Unique) -join ', ') + ". No practice audio was exported.")
+        }
+        $missingParts = @($partIds | Where-Object { -not $matchedParts.ContainsKey([string]$_) })
+        if ($mode -ne 'only' -and $missingParts.Count -gt 0) {
+            throw ("These score part IDs were not found in audiosettings.json: " + ($missingParts -join ', ') + ". No practice audio was exported.")
         }
         $e.Delete()
         $ne = $z.CreateEntry('audiosettings.json')
@@ -395,7 +504,10 @@ function Build-Piece([IO.FileInfo]$src, [string]$outdir) {
         $base = $id; $n = 2
         while ($seen.ContainsKey($id)) { $id = "$base-$n"; $n++ }
         $seen[$id] = $true
-        $voices += [pscustomobject]@{ Id = $id; Name = $p.Name; Part = $p.Id }
+        $voices += [pscustomobject]@{
+            Id = $id; Name = $p.Name; Part = $p.Id
+            StartingMidi = $p.StartingMidi; StartingNote = $p.StartingNote
+        }
     }
 
     $partIds = @($voices | ForEach-Object { [string]$_.Part })
@@ -405,8 +517,19 @@ function Build-Piece([IO.FileInfo]$src, [string]$outdir) {
     $infoFile = Join-Path $outdir 'info.json'
     if ((Test-Path -LiteralPath $stampFile) -and (Test-Path -LiteralPath $infoFile) -and
         ([IO.File]::ReadAllText($stampFile) -eq $stamp)) {
-        Write-Host '  unchanged, skipping'
-        return (ConvertFrom-Json -InputObject ([IO.File]::ReadAllText($infoFile)))
+        # Audio exports are already valid and unchanged. Refresh score-derived metadata in
+        # the cached info file without needlessly re-exporting every MP3.
+        $cached = ConvertFrom-Json -InputObject ([IO.File]::ReadAllText($infoFile))
+        foreach ($cachedVoice in @($cached.voices)) {
+            $voiceDetails = $voices | Where-Object { $_.Id -eq [string]$cachedVoice.id } | Select-Object -First 1
+            if ($voiceDetails) {
+                Set-Prop $cachedVoice 'startingMidi' $voiceDetails.StartingMidi
+                Set-Prop $cachedVoice 'startingNote' $voiceDetails.StartingNote
+            }
+        }
+        [IO.File]::WriteAllText($infoFile, (ConvertTo-Json -InputObject $cached -Depth 10 -Compress), $Utf8)
+        Write-Host '  audio unchanged; refreshed starting-note metadata'
+        return $cached
     }
 
     if (Test-Path -LiteralPath $outdir) { Remove-Item -LiteralPath $outdir -Recurse -Force }
@@ -414,6 +537,8 @@ function Build-Piece([IO.FileInfo]$src, [string]$outdir) {
 
     $td = Join-Path ([IO.Path]::GetTempPath()) ('choir-' + [guid]::NewGuid().ToString('N'))
     New-Item -ItemType Directory -Path $td | Out-Null
+    $script:DiagnosticDir = $td
+    $buildSucceeded = $false
     try {
         $jobs = @()
         $loud = [ordered]@{}; $only = [ordered]@{}
@@ -439,14 +564,38 @@ function Build-Piece([IO.FileInfo]$src, [string]$outdir) {
         $jobs += @{ In = $src.FullName; Out = $mid }
         Invoke-Exports $jobs
         $bm = Get-BeatMap $mid $info.FirstMeasure
-    } finally { Remove-Item -LiteralPath $td -Recurse -Force -ErrorAction SilentlyContinue }
+        $buildSucceeded = $true
+    } catch {
+        Write-Host "`nBuild failed while working with temporary score files. Diagnostics kept at: $td"
+        Write-Host "Please keep this folder until the failure has been diagnosed."
+        throw
+    } finally {
+        if ($buildSucceeded) {
+            Remove-Item -LiteralPath $td -Recurse -Force -ErrorAction SilentlyContinue
+        }
+    }
 
     if ($script:Ffmpeg -and $Bitrate -ne 'off') {
         foreach ($mp3 in (Get-ChildItem -LiteralPath $outdir -Filter '*.mp3')) { Compress-Mp3 $mp3.FullName }
     }
 
+    # Never publish a nominally isolated voice file if MuseScore exported the full mix again.
+    $allHash = (Get-FileHash -LiteralPath (Join-Path $outdir 'all.mp3') -Algorithm SHA256).Hash
+    foreach ($v in $voices) {
+        if ($NoOnly) { continue }
+        $onlyFile = Join-Path $outdir ('only-' + $v.Id + '.mp3')
+        if ((Get-FileHash -LiteralPath $onlyFile -Algorithm SHA256).Hash -eq $allHash) {
+            throw ("The isolated track for '$($v.Name)' is byte-for-byte identical to all.mp3. The build has stopped rather than publishing a misleading voice track. Check the score's MuseScore mixer/audio settings and rebuild.")
+        }
+    }
+
     $voiceList = @()
-    foreach ($v in $voices) { $voiceList += [ordered]@{ id = $v.Id; name = $v.Name } }
+    foreach ($v in $voices) {
+        $voiceList += [ordered]@{
+            id = $v.Id; name = $v.Name
+            startingMidi = $v.StartingMidi; startingNote = $v.StartingNote
+        }
+    }
     $result = [ordered]@{
         voices = $voiceList
         files = [ordered]@{ all = 'all.mp3'; loud = $loud; only = $only; stems = $only }
@@ -524,8 +673,39 @@ foreach ($f in $files) {
         Copy-Item -LiteralPath $origSrc -Destination $origDst -Force
         $entry['original'] = 'original.pdf'
     } elseif (Test-Path -LiteralPath $origDst) { Remove-Item -LiteralPath $origDst }
-    $txtSrc = Join-Path $Songs ($stem + '.txt')
-    if (Test-Path -LiteralPath $txtSrc) { $entry['lyrics'] = ([IO.File]::ReadAllText($txtSrc)).Trim() }
+    # Shared lyrics remain supported as <score filename>.txt or <clean song title>.txt.
+    $sharedLyricsCandidates = @(
+        (Join-Path $Songs ($stem + '.txt')),
+        (Join-Path $Songs ($title + '.txt'))
+    )
+    foreach ($txtSrc in $sharedLyricsCandidates) {
+        if (Test-Path -LiteralPath $txtSrc) {
+            $sharedText = ([IO.File]::ReadAllText($txtSrc)).Trim()
+            if ($sharedText) { $entry['lyrics'] = $sharedText }
+            break
+        }
+    }
+
+    # Optional part-specific lyrics override the shared lyrics for that singer.
+    # Preferred filenames: "<clean song title> - <part name>.txt", for example
+    # "Joy to the World - Alto.txt" or "Joy to the World - Soprano 1.txt".
+    # Also accept the exact score filename stem for songs that include an ordering prefix.
+    $lyricsByVoice = [ordered]@{}
+    foreach ($v in @($info.voices)) {
+        $partName = [string]$v.name
+        $partLyricsCandidates = @(
+            (Join-Path $Songs ($title + ' - ' + $partName + '.txt')),
+            (Join-Path $Songs ($stem + ' - ' + $partName + '.txt'))
+        )
+        foreach ($partLyricsSrc in $partLyricsCandidates) {
+            if (Test-Path -LiteralPath $partLyricsSrc) {
+                $partText = ([IO.File]::ReadAllText($partLyricsSrc)).Trim()
+                if ($partText) { $lyricsByVoice[[string]$v.id] = $partText }
+                break
+            }
+        }
+    }
+    if ($lyricsByVoice.Count -gt 0) { $entry['lyricsByVoice'] = $lyricsByVoice }
     $pieces.Add($entry)
 }
 

@@ -89,7 +89,7 @@ The batch launcher changes the working directory to the script directory, and th
 - Added collection filtering and a collection-download action. The builder reads optional `songs/collections.json` and adds a `collection` property to each catalogue entry; unmapped songs are `Uncategorised`.
 - Added recently opened songs, member-controlled practice status, per-song playback-position bookmarks, named bookmarks, and a central bookmark list. These are stored locally in the browser.
 - Added combined Lyrics/Sheet Music tabs to the Practice screen while retaining the existing separate navigation destinations as shortcuts into those tabs.
-- Replaced the placeholder Playback & Vocal Parts screen with a Voice Mixer, including per-part controls, presets and per-song saved balances. The mixer uses the builder's isolated `files.only` / `files.stems` MP3s and synchronises them against the main audio element.
+- The Practice screen uses three prepared playback choices: All parts together, My part loudest, and My part only. Each choice plays a single pre-rendered MP3; there is no live multi-track Voice Mixer or live per-part volume control.
 - Improved A/B marker validation, loop boundary handling, seek-by-ten-second behaviour and the no-song warning.
 - Updated service-worker shell cache version and app icons.
 
@@ -106,6 +106,6 @@ The batch launcher changes the working directory to the script directory, and th
 - The official logo URL could not be retrieved from this environment. The bundled `choir-logo.svg` and PNG app icons are temporary black-and-white musical-note placeholders, not a verified copy of the official Pro Musica logo. Replace these assets with the actual logo before publishing.
 - `songs/collections.json` is intentionally empty because the desired concert groupings have not been supplied.
 - Collection downloads and Cache API behaviour need real-browser testing, including quota failures, interrupted downloads, and offline access.
-- The mixer requires generated isolated-part audio for each song. Its synchronization, volume balance and loop behaviour require testing on target browsers with real recordings.
+- The prepared My part loudest and My part only options require generated recordings for every voice. Listening tests on target browsers/devices remain necessary; live mixer synchronisation and balance controls are not part of this approach.
 - The `pieces.json` catalogue and generated audio are not included in the source ZIP; run `Make practice tracks.bat` on Windows with MuseScore 4 to build them.
 - No app publishing/deployment was performed.
