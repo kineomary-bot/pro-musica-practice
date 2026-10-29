@@ -1,6 +1,6 @@
-const SHELL_CACHE = 'pro-musica-shell-v14';
+const SHELL_CACHE = 'pro-musica-shell-v15';
 const OFFLINE_CACHE = 'pro-musica-offline-songs-v1';
-const SHELL = ['./', './index.html', './manifest.webmanifest', './icon-192.png', './icon-512.png', './apple-touch-icon.png', './choir-logo.svg', './announcements.json', './events.json'];
+const SHELL = ['./', './index.html', './pieces.json', './manifest.webmanifest', './icon-192.png', './icon-512.png', './apple-touch-icon.png', './choir-logo.svg', './announcements.json', './events.json'];
 self.addEventListener('install', event => {
   event.waitUntil(caches.open(SHELL_CACHE).then(cache => cache.addAll(SHELL)).then(() => self.skipWaiting()));
 });
