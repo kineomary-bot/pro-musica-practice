@@ -355,7 +355,7 @@ async function playStartingNote(){
   gain.gain.exponentialRampToValueAtTime(0.0001,now+1.35);
   osc.connect(gain);gain.connect(startingNoteCtx.destination);
   osc.start(now);osc.stop(now+1.36);
-  $('#startingNoteHint').textContent='Playing '+(note.startingNote||'your starting note')+' for '+note.name+'. Sing the same pitch.';
+  $('#startingNoteHint').textContent='Playing '+(note.startingNote||'your starting note')+' for '+note.name+'.';
  }catch(e){console.warn('Starting note unavailable',e);$('#startingNoteHint').textContent='The starting note could not be played. Tap the button again to retry.'}
 }
 function metroClick(accent=false){try{const C=window.AudioContext||window.webkitAudioContext;if(!C)return;metroCtx=metroCtx||new C();if(metroCtx.state==='suspended')metroCtx.resume();const osc=metroCtx.createOscillator(),gain=metroCtx.createGain();const volume=(Number($('#metronomeVolume').value)||0)/100;osc.type='sine';osc.frequency.value=accent?1200:850;gain.gain.setValueAtTime(0.0001,metroCtx.currentTime);if(volume>0)gain.gain.exponentialRampToValueAtTime(Math.max(0.0001,0.22*volume),metroCtx.currentTime+0.004);gain.gain.exponentialRampToValueAtTime(0.0001,metroCtx.currentTime+0.055);osc.connect(gain);gain.connect(metroCtx.destination);osc.start();osc.stop(metroCtx.currentTime+0.06);}catch(e){console.warn('Metronome unavailable',e)}}
