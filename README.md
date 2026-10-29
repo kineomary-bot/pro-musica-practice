@@ -46,18 +46,31 @@ The Windows builder exports an isolated track for each part from the MuseScore s
 - Test the published HTTPS link on a phone before sharing it with the choir.
 
 
-## Collections / concerts
+## Concerts and performances
 
-The app now supports collection filters. To group songs, edit `songs/collections.json` before running `Make practice tracks.bat`. The file is a JSON object mapping the source `.mscz` filename (without its extension) or the cleaned song title to a collection name. For example:
+The song-library dropdown is organised by named concerts or performance programmes. Edit `songs/performances.json` before running `Make practice tracks.bat`. The file contains a top-level `performances` array. Each performance has a stable ID, display name, optional date, status and a list of songs.
+
+Example structure (the draft below is intentionally unassigned and is not a real programme):
 
 ```json
 {
-  "Joy to the World": "Christmas Concert 2026",
-  "O Holy Night": "Christmas Concert 2026"
+  "performances": [
+    {
+      "id": "winter-concert-2027",
+      "name": "Winter Concert 2027",
+      "date": null,
+      "status": "draft",
+      "songs": []
+    }
+  ]
 }
 ```
 
-Songs not listed appear under `Uncategorised`. The sample file is intentionally empty because the intended concert groupings have not been supplied.
+Use a unique lowercase ID with hyphens. Set `date` to `YYYY-MM-DD` or `null`. Status must be `draft`, `active` or `archived`; only active performances appear in the singers' dropdown. Draft and archived performances remain in the source configuration but are hidden from the main dropdown.
+
+The `songs` array accepts the exact source `.mscz` filename without its extension, the cleaned song title, or the stable song ID. One song can be assigned to more than one performance. The build checks references against the available `.mscz` files and reports unknown or ambiguous song references. A song not assigned to any performance remains available under **All songs** and is not placed in an `Uncategorised` group.
+
+After editing the file, run `Make practice tracks.bat` to regenerate `site/pieces.json`. The generated catalogue stores the performance list and a `performanceIds` array on each song. The offline download button downloads all songs when **All songs** is selected, or only songs assigned to the selected active performance.
 
 ## Branding asset note
 
