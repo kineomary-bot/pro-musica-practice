@@ -78,4 +78,4 @@ After editing the file, run `Make practice tracks.bat` to regenerate `site/piece
 
 ## Upgrade validation status
 
-The upgraded source includes code-level changes for the Voice Mixer, per-song preferences, collection filtering/downloads, bookmarks, practice status, combined lyrics/score tabs and playback controls. JavaScript syntax and HTML ID consistency have been checked. Runtime browser, phone, offline-cache and Windows/MuseScore audio tests remain outstanding. Run the full test checklist in `AUDIT-REPORT.md` before publishing.
+The upgraded source includes code-level changes for the Voice Mixer, per-song preferences, concert/performance filtering and downloads, bookmarks, practice status, combined lyrics/score tabs and playback controls. JavaScript syntax has been checked. Runtime browser, phone, offline-cache and Windows/MuseScore audio tests remain outstanding. Run the full test checklist in `AUDIT-REPORT.md` before publishing.
