@@ -68,7 +68,7 @@ Example structure (the draft below is intentionally unassigned and is not a real
 
 Use a unique lowercase ID with hyphens. Set `date` to `YYYY-MM-DD` or `null`. Status must be `draft`, `active` or `archived`; only active performances appear in the singers' dropdown. Draft and archived performances remain in the source configuration but are hidden from the main dropdown.
 
-The `songs` array accepts the exact source `.mscz` filename without its extension, the cleaned song title, or the stable song ID. One song can be assigned to more than one performance. The build checks references against the available `.mscz` files and reports unknown or ambiguous song references. A song not assigned to any performance remains available under **All songs** and is not placed in an `Uncategorised` group.
+The `songs` array accepts the exact source `.mscz` filename without its extension, the cleaned song title, or the stable song ID. One song can be assigned to more than one performance. The build checks references against the available `.mscz` files and reports unknown or ambiguous song references. A song not assigned to any performance remains available under **All songs** and appears in the **Unassigned songs** filter. In **All songs**, each song also shows its performance name or an unassigned label. Every build prints a colour-coded assignment report listing assigned and unassigned songs.
 
 After editing the file, run `Make practice tracks.bat` to regenerate `site/pieces.json`. The generated catalogue stores the performance list and a `performanceIds` array on each song. The offline download button downloads all songs when **All songs** is selected, or only songs assigned to the selected active performance.
 
