@@ -664,7 +664,7 @@ try {
 } catch {
     throw "Could not read $performanceFile. Use JSON with a top-level 'performances' array. Details: $($_.Exception.Message)"
 }
-if ($null -eq $parsedPerformanceConfig -or $null -eq $parsedPerformanceConfig.performances) {
+if ($null -eq $parsedPerformanceConfig -or $parsedPerformanceConfig.PSObject.Properties.Name -notcontains 'performances') {
     throw "Could not read $performanceFile. It must contain a top-level 'performances' array."
 }
 foreach ($rawPerformance in @($parsedPerformanceConfig.performances)) {
