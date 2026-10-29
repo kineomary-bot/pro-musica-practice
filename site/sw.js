@@ -1,4 +1,4 @@
-const SHELL_CACHE = 'pro-musica-shell-v12';
+const SHELL_CACHE = 'pro-musica-shell-v13';
 const OFFLINE_CACHE = 'pro-musica-offline-songs-v2';
 const SHELL = ['./', './index.html', './manifest.webmanifest', './icon-192.png', './icon-512.png', './apple-touch-icon.png', './choir-logo.svg'];
 self.addEventListener('install', event => {
@@ -18,21 +18,24 @@ self.addEventListener('fetch', event => {
   // Song files explicitly downloaded by the singer are kept in a separate cache.
   // Serve these first so audio and PDFs remain available without a connection.
   event.respondWith((async () => {
-    const saved = await caches.open(OFFLINE_CACHE);
-    const savedResponse = await saved.match(req, {ignoreSearch: true});
-    if (savedResponse) return savedResponse;
+    // Refresh the catalogue from the deployment first. Never let an old
+    // offline-song cache override the current list of songs.
     if (url.pathname.endsWith('/pieces.json')) {
       try {
-        const response = await fetch(req);
-        if (response.ok) { const shell = await caches.open(SHELL_CACHE); await shell.put(req, response.clone()); }
-        return response;
+        return await fetch(req, {cache: 'no-store'});
       } catch (error) {
         const shell = await caches.open(SHELL_CACHE);
-        const cached = await shell.match(req);
+        const canonicalUrl = new URL('pieces.json', self.registration.scope).href;
+        const cached = await shell.match(canonicalUrl);
         if (cached) return cached;
         throw error;
       }
     }
+    // Song files explicitly downloaded by the singer are kept in a separate cache.
+    // Serve these first so audio and PDFs remain available without a connection.
+    const saved = await caches.open(OFFLINE_CACHE);
+    const savedResponse = await saved.match(req, {ignoreSearch: true});
+    if (savedResponse) return savedResponse;
     if (req.mode === 'navigate' || /\.(?:html|webmanifest|png)$/.test(url.pathname)) {
       const shell = await caches.open(SHELL_CACHE);
       // Prefer the latest site version; use the cached shell only when offline.
