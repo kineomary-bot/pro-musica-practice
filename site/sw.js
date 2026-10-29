@@ -13,7 +13,7 @@ async function respondWithByteRange(request, response) {
   const contentType = (response.headers.get('content-type') || '').toLowerCase();
   if (!contentType.startsWith('audio/') && !contentType.includes('application/pdf')) return response;
 
-  const match = /^bytes=(\\d*)-(\\d*)$/.exec(range.trim());
+  const match = /^bytes=(\d*)-(\d*)$/.exec(range.trim());
   if (!match) return response;
 
   const body = await response.arrayBuffer();
