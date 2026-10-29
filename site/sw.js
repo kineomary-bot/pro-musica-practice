@@ -1,4 +1,4 @@
-const SHELL_CACHE = 'pro-musica-shell-v17';
+const SHELL_CACHE = 'pro-musica-shell-v18';
 const OFFLINE_CACHE = 'pro-musica-offline-songs-v1';
 const SHELL = ['./', './index.html', './pieces.json', './manifest.webmanifest', './icon-192.png', './icon-512.png', './apple-touch-icon.png', './choir-logo.svg', './announcements.json', './events.json'];
 self.addEventListener('install', event => {
@@ -11,7 +11,9 @@ async function respondWithByteRange(request, response) {
   const range = request.headers.get('range');
   if (!range || response.status !== 200) return response;
   const contentType = (response.headers.get('content-type') || '').toLowerCase();
-  if (!contentType.startsWith('audio/') && !contentType.includes('application/pdf')) return response;
+  const pathname = new URL(request.url).pathname.toLowerCase();
+  const isKnownMediaFile = /\.(?:mp3|m4a|wav|ogg|aac|flac|pdf)$/.test(pathname);
+  if (!isKnownMediaFile && !contentType.startsWith('audio/') && !contentType.includes('application/pdf')) return response;
 
   const match = /^bytes=(\d*)-(\d*)$/.exec(range.trim());
   if (!match) return response;
@@ -72,6 +74,12 @@ self.addEventListener('fetch', event => {
       const response = await fetch(req);
       if (response.ok) await shell.put(req, response.clone());
       return response;
+    }
+    // Some hosting layers ignore Range and return a full 200 response. Convert
+    // those media responses into 206 partial responses so audio seeking works.
+    if (req.headers.has('range') && /\.(?:mp3|m4a|wav|ogg|aac|flac|pdf)$/i.test(url.pathname)) {
+      const response = await fetch(req);
+      return respondWithByteRange(req, response);
     }
     return fetch(req);
   })());
