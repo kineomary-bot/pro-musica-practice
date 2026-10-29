@@ -128,3 +128,12 @@ The batch launcher changes the working directory to the script directory, and th
 - New JSON configuration files parse, and the event data contains the Christmas concert entry.
 - No duplicate HTML IDs were found.
 - The existing Windows/MuseScore build was not run, and live browser, mobile and offline interactions have not yet been tested. These require acceptance testing after deployment.
+
+
+# Choir dates and noticeboard update — 2026-10-29
+
+- Added Year-End Function (14 November 2026, 11:30), Kerssangdiens (29 November 2026, 18:00, NG Kerk Hermanus), Hospital Performances (5 December 2026, 15:00), retaining Christmas in Music and Song (6 December 2026, 16:00, NG Kerk Hermanus).
+- Added an Extra practice announcement for Wednesday 4 November, posted 29 October and set to expire after 4 November.
+- Styled the Home announcement block with a pale coral background and the upcoming dates block with a pale teal background. Home event cards use compact spacing to keep the summary prominent without taking over the song library layout.
+- Bumped the service-worker shell cache to v15.
+- Static syntax/data checks remain the available validation; browser/mobile visual acceptance testing is still required.
