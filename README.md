@@ -12,10 +12,15 @@ This is the upgraded, mobile-first version of the existing choir practice app. T
 
 ## Publish and install on phones
 
-1. Upload the **contents of the `site` folder** to your hosting provider (for example, Netlify Drop). Do not upload only `index.html`; the JSON file, audio folder, PDFs, icons, manifest and service worker are needed.
-2. Open the published HTTPS link on the phone.
-3. iPhone: Safari → Share → Add to Home Screen. Android: Chrome menu → Install app / Add to Home screen.
-4. The app shell can be available offline after it has been loaded once. Song audio and PDFs must be explicitly downloaded from the library; tag-filtered downloads are also available.
+**Use the validated deployment bundle wherever possible.** Every push to `development` now runs the site integrity check. A successful run creates a downloadable artifact named `pro-musica-site-<commit SHA>` in GitHub Actions. Download that artifact and publish its contents. This avoids manually assembling a release from a mixture of old and new files.
+
+1. In GitHub, open **Actions** → **Validate and package choir app** → select the successful run for the commit you want to publish.
+2. Download the `pro-musica-site-<commit SHA>` artifact and extract it. It contains the *contents* of `site`, with `index.html` at the root.
+3. Upload the extracted contents to your hosting provider (for example, Netlify Drop). Do not upload only `index.html` or only the changed JSON file. The catalogue, announcement/calendar JSON, complete audio folder, PDFs, icons, manifest and service worker must all be published together.
+4. Open the published HTTPS link on the phone and confirm the welcome form, song list, announcement and upcoming dates appear.
+5. iPhone: Safari → Share → Add to Home Screen. Android: Chrome menu → Install app / Add to Home screen.
+
+A service-worker update will only activate when the required app-shell files—including `pieces.json`—are present. If a release is incomplete, the previous working service worker should remain active instead of being replaced by a partial one. The site check validates the source bundle before producing the artifact, but it cannot verify a third-party host after the artifact is manually uploaded. Song audio and PDFs are still downloaded on demand for offline use.
 
 ## Singer profile
 
