@@ -148,37 +148,25 @@ input,select,textarea,.section-card,.bookmark-card,.modal,.sheet,.screen-card{
 .song-tags{display:block;margin-top:4px;font-size:11px;line-height:1.3;color:var(--muted);font-weight:650;overflow-wrap:anywhere}.song-tags.untagged{color:#8b5a00}
 
 /* Choir noticeboard and calendar */
-.board-section{margin:16px 0 20px;padding:12px 13px 13px}
-.board-section[aria-labelledby="announcementsHeading"],.board-section[aria-labelledby="allAnnouncementsHeading"]{background:#fcf0eb;border:1px solid #efcec3;border-left:4px solid #e3856b}
-.board-section[aria-labelledby="upcomingHeading"],.board-section[aria-labelledby="allEventsHeading"]{background:#eaf4f1;border:1px solid #cfe3db;border-left:4px solid #367f79}
+.board-section{margin:18px 0 22px}
 .board-list{display:grid;gap:9px}
 .notice-card,.event-card{display:flex;align-items:flex-start;gap:12px;padding:13px;border:1px solid var(--line);background:var(--paper);min-width:0}
-.notice-card{border-left:3px solid var(--coral);background:#fffaf7}
+.notice-card{border-left:3px solid var(--coral)}
 .notice-main,.event-main{flex:1;min-width:0}
 .notice-title,.event-title{font:600 17px/1.25 Georgia,"Times New Roman",serif;margin:0 0 6px;overflow-wrap:anywhere}
 .notice-message,.event-details{font-size:13px;line-height:1.5;color:#425c5d;margin:0;white-space:pre-wrap;overflow-wrap:anywhere}
 .board-meta{display:block;margin-top:8px;color:var(--muted);font-size:11px}
-.board-link{display:inline-block;margin-top:8px;color:#245d5c;font-size:12px;font-weight:800;text-decoration:underline;text-underline-offset:3px}
+.board-link{display:inline-block;margin-top:8px;color:var(--teal);font-size:12px;font-weight:800;text-decoration:underline;text-underline-offset:3px}
 .board-label{display:inline-block;margin-bottom:5px;color:#83576a;font-size:10px;letter-spacing:.1em;font-weight:800;text-transform:uppercase}
-.event-date{display:flex;flex:none;flex-direction:column;align-items:center;justify-content:center;width:54px;min-height:64px;padding:6px 3px;background:#d8eae3;color:#245d5c;text-align:center;border:1px solid #c4ddd2}
+.event-date{display:flex;flex:none;flex-direction:column;align-items:center;justify-content:center;width:54px;min-height:64px;padding:6px 3px;background:#e4f1ee;color:#245d5c;text-align:center}
 .event-date-month{font-size:10px;font-weight:800;letter-spacing:.08em;text-transform:uppercase}
 .event-date-day{font:600 25px/.98 Georgia,"Times New Roman",serif;margin:3px 0}
 .event-date-year{font-size:10px;color:#425c5d}
 .event-meta{display:block;color:var(--muted);font-size:12px;margin:0 0 7px;overflow-wrap:anywhere}
-.board-empty{padding:12px;border:1px dashed #dec9c1;color:#59676b;font-size:13px;background:#fffaf7}
-.board-section[aria-labelledby="allEventsHeading"] .board-empty{border-color:#c8ddd5;background:#f7fbf9}
-.board-section .sectionrow{align-items:center;gap:8px;margin-bottom:9px}
+.board-empty{padding:14px;border:1px dashed var(--line);color:var(--muted);font-size:13px;background:var(--paper)}
+.board-section .sectionrow{align-items:center}
 .board-section .sectionrow h2{min-width:0}
-.board-section .quietbtn{white-space:nowrap;flex:none;font-size:12px;padding:6px 0 6px 4px}
-.board-section[aria-labelledby="announcementsHeading"] .notice-card{padding:10px 11px}
-.board-section[aria-labelledby="upcomingHeading"] .board-list{gap:6px}
-.board-section[aria-labelledby="upcomingHeading"] .event-card{align-items:center;gap:9px;padding:8px;background:#f8fcfa;border-color:#d4e5de}
-.board-section[aria-labelledby="upcomingHeading"] .event-date{width:45px;min-height:52px;padding:4px 2px}
-.board-section[aria-labelledby="upcomingHeading"] .event-date-day{font-size:22px;margin:2px 0}
-.board-section[aria-labelledby="upcomingHeading"] .event-title{font-size:15px;margin-bottom:3px}
-.board-section[aria-labelledby="upcomingHeading"] .board-label{margin-bottom:2px;font-size:9px}
-.board-section[aria-labelledby="upcomingHeading"] .event-meta{font-size:11px;margin-bottom:0}
-@media(max-width:360px){.board-section{padding:10px}.notice-card,.event-card{padding:10px;gap:9px}.event-date{width:47px}.board-section .sectionrow{gap:5px}.board-section .quietbtn{font-size:11px}}
+@media(max-width:360px){.notice-card,.event-card{padding:10px;gap:9px}.event-date{width:47px}}
 
 </style>
 </head>
@@ -246,13 +234,13 @@ let data=null,piece=null,voice=store.get('voice',null),profile=store.get('profil
 let announcementItems=[],eventItems=[],announcementsLoadFailed=false,eventsLoadFailed=false;
 let practiceStatuses=store.get('practiceStatuses',{}),bookmarks=store.get('bookmarks',{}),recentSongs=store.get('recentSongs',[]),tagFilter='all';
 const fmt=s=>{s=Math.max(0,Math.floor(Number(s)||0));return Math.floor(s/60)+':'+String(s%60).padStart(2,'0')};
-function allVoices(){const seen=new Map();(data?.pieces||[]).forEach(p=>(p.voices||[]).forEach(v=>{if(!seen.has(v.id))seen.set(v.id,v.name)}));return seen.size?[...seen].map(([id,name])=>({id,name})): [{id:'soprano-1',name:'Soprano 1'},{id:'soprano-2',name:'Soprano 2'},{id:'alto',name:'Alto'},{id:'tenor',name:'Tenor'},{id:'bass',name:'Bass'}];}
+function allVoices(){const seen=new Map();(data?.pieces||[]).forEach(p=>(p.voices||[]).forEach(v=>{if(!seen.has(v.id))seen.set(v.id,v.name)}));return [...seen].map(([id,name])=>({id,name}));}
 function fillVoiceSelect(select,selected){if(!select)return;select.innerHTML='';const voices=allVoices();voices.forEach(v=>{const o=document.createElement('option');o.value=v.id;o.textContent=v.name;select.append(o)});if(selected&&voices.some(v=>v.id===selected))select.value=selected;else if(voices.length)select.value=voices[0].id;}
 function syncProfileFields(){const n=profile?.name||'';$('#settingsName').value=n;fillVoiceSelect($('#settingsVoice'),voice);}
-function showWelcome(){$('#welcomeName').value=profile?.name||'';fillVoiceSelect($('#welcomeVoice'),profile?.voice||voice);const selected=profile?.voice||voice;if(selected&&[...$('#welcomeVoice').options].some(o=>o.value===selected))$('#welcomeVoice').value=selected;$('#welcomeBackdrop').classList.remove('hidden');document.body.style.overflow='hidden';setTimeout(()=>$('#welcomeName').focus(),60);}
+function showWelcome(){fillVoiceSelect($('#welcomeVoice'),voice);if(voice&&[...$('#welcomeVoice').options].some(o=>o.value===voice))$('#welcomeVoice').value=voice;$('#welcomeBackdrop').classList.remove('hidden');document.body.style.overflow='hidden';setTimeout(()=>$('#welcomeName').focus(),60);}
 function updateProfileHeader(){const name=profile?.name?.trim();const selected=allVoices().find(v=>v.id===voice);$('#brandName').textContent='Pro Musica Choir';$('#profileSummary').textContent=name&&selected?name+' · '+selected.name:'Set up your singer profile in Settings';}
 function saveProfile(name,part){const chosen=allVoices().find(v=>v.id===part);profile={name:name.trim(),voice:chosen?.id||part};voice=profile.voice;store.set('profile',profile);store.set('voice',voice);$('#welcomeBackdrop').classList.add('hidden');document.body.style.overflow='';$('#welcomeName').value='';syncProfileFields();renderSongs();updateProfileHeader();$('#homeGreeting').textContent='Welcome back, '+profile.name+'.';if(piece){setPlaybackMode(playMode,true);renderStartingNote();renderLyrics();}}
-function init(){document.title='Pro Musica Choir';$('#brandName').textContent='Pro Musica Choir';const v=allVoices();if(!v.some(x=>x.id===voice))voice=v[0]?.id||null;if(profile?.voice&&v.some(x=>x.id===profile.voice))voice=profile.voice;renderSongs();syncProfileFields();updateProfileHeader();renderLibraryExtras();$('#empty').classList.toggle('hidden',data.pieces.length>0);if(!data.pieces.length)$('#empty').textContent='No songs yet. Add .mscz files to the songs folder and run Make practice tracks.';paintNav('home');if(profile?.name&&v.some(x=>x.id===profile.voice))$('#homeGreeting').textContent='Welcome back, '+profile.name+'.';showWelcome();loadBoardData();}
+function init(){document.title='Pro Musica Choir';$('#brandName').textContent='Pro Musica Choir';const v=allVoices();if(!v.some(x=>x.id===voice))voice=v[0]?.id||null;if(profile?.voice&&v.some(x=>x.id===profile.voice))voice=profile.voice;renderSongs();syncProfileFields();updateProfileHeader();renderLibraryExtras();$('#empty').classList.toggle('hidden',data.pieces.length>0);if(!data.pieces.length)$('#empty').textContent='No songs yet. Add .mscz files to the songs folder and run Make practice tracks.';paintNav('home');if(profile?.name&&v.some(x=>x.id===profile.voice))$('#homeGreeting').textContent='Welcome back, '+profile.name+'.';else showWelcome();loadBoardData();}
 function localDateKey(date=new Date()){return date.getFullYear()+'-'+String(date.getMonth()+1).padStart(2,'0')+'-'+String(date.getDate()).padStart(2,'0')}
 function parseBoardDate(value){const m=/^(\d{4})-(\d{2})-(\d{2})$/.exec(String(value||''));if(!m)return null;const d=new Date(Number(m[1]),Number(m[2])-1,Number(m[3]));return d.getFullYear()===Number(m[1])&&d.getMonth()===Number(m[2])-1&&d.getDate()===Number(m[3])?d:null}
 function formatBoardDate(value,weekday=true){const d=parseBoardDate(value);if(!d)return '';return d.toLocaleDateString('en-ZA',weekday?{weekday:'short',day:'numeric',month:'short',year:'numeric'}:{day:'numeric',month:'short',year:'numeric'})}
@@ -289,7 +277,7 @@ function playAll(){return audio.play()}
 function pauseAll(){audio.pause()}
 function paintPiece(){if(!piece)return;renderStartingNote();$('#practiceTitle').textContent=piece.title;$('#practiceMeta').textContent=(profile?.name?profile.name+' · ':'')+(allVoices().find(v=>v.id===voice)?.name||'Your part')+' · Pro Musica Choir';$('#durationPill').textContent=piece.duration?fmt(piece.duration)+' recording':'Ready to practise';$('#miniTitle').textContent=piece.title;$('#scoreTitle').textContent=piece.title;$('#lyricsTitle').textContent=piece.title;renderLyrics();$('#practiceStatus').value=practiceStatuses[piece.id]||'New';renderSongBookmarks();const scoreFile=piece.original||piece.score;const scoreUrl=scoreFile?piece.dir+scoreFile:null;const area=$('#scoreArea');area.innerHTML='';if(scoreUrl){const note=document.createElement('p');note.className='muted';note.textContent='Preview the score below, or open it full size to zoom and turn pages in your phone’s PDF viewer.';area.append(note);const open=document.createElement('a');open.className='link';open.href=scoreUrl;open.target='_blank';open.rel='noopener';open.textContent=piece.original?'Open original score full size ↗':'Open score full size ↗';open.style.cssText='display:block;padding:14px;text-align:center;border:1px solid var(--line);border-radius:14px;color:var(--teal);font-weight:750;text-decoration:none;background:var(--paper);margin:12px 0';area.append(open);const frame=document.createElement('iframe');frame.className='viewer';frame.title='Sheet music PDF for '+piece.title;frame.loading='lazy';frame.src=scoreUrl+'#toolbar=1&navpanes=0&view=FitH';area.append(frame);const combined=$('#practiceScoreArea');if(combined){combined.innerHTML='';combined.append(note.cloneNode(true),open.cloneNode(true),frame.cloneNode(true));}if(piece.original&&piece.score){const generated=document.createElement('a');generated.className='quietbtn';generated.href=piece.dir+piece.score;generated.target='_blank';generated.rel='noopener';generated.textContent='Open generated score instead';area.append(generated)}}else{const el=document.createElement('div');el.className='viewerfallback';el.textContent='No PDF score has been added for this song yet. Add a PDF with the same name as the MuseScore file in the songs folder, then rebuild.';area.append(el);const combined=$('#practiceScoreArea');if(combined)combined.innerHTML='<p class="muted">No score is available for this song yet.</p>'}paintTime();}
 function showScreen(name){if(name==='practice'&&!piece){alert('Choose a song before starting practice.');name='home'}currentScreen=name;$$('.screen').forEach(s=>s.classList.toggle('active',s.id==='screen-'+name));paintNav(name);if(name==='home')renderSongs();if(name==='practice'&&piece)paintPiece();if((name==='score'||name==='lyrics')&&!piece){alert('Choose a song first, then open its lyrics or sheet music.');name='home';currentScreen=name;$$('.screen').forEach(s=>s.classList.toggle('active',s.id==='screen-'+name));paintNav(name)}window.scrollTo({top:0,behavior:'instant'});}
-function paintNav(name){const active=name==='calendar'?'home':name;$('.tab').forEach(b=>{if(b.dataset.tab===active)b.setAttribute('aria-current','page');else b.removeAttribute('aria-current')});}
+function paintNav(name){$$('.tab').forEach(b=>{if(b.dataset.tab===name)b.setAttribute('aria-current','page');else b.removeAttribute('aria-current')});}
 function paintTime(){const d=audio.duration||piece?.duration||0,n=audio.currentTime||0;$('#timeNow').textContent=fmt(n);$('#timeEnd').textContent=fmt(d);if(!miniSeeking)$('#miniTime').textContent=fmt(n)+' · '+fmt(d);if(!seeking)$('#seek').value=d?Math.round(n/d*1000):0;if(!miniSeeking)$('#miniSeek').value=d?Math.round(n/d*1000):0;$('#mini').classList.toggle('visible',!!piece);}
 function paintPlay(){const paused=audio.paused;const playMarkup='<span aria-hidden="true">▶</span>';const pauseMarkup='<span class="pause-icon" aria-hidden="true"><i></i><i></i></span>';$('#mainPlay').innerHTML=paused?playMarkup:pauseMarkup;$('#mainPlay').setAttribute('aria-label',paused?'Play':'Pause');$('#miniPlay').innerHTML=paused?playMarkup:pauseMarkup;$('#miniPlay').setAttribute('aria-label',paused?'Play':'Pause');$('#heroPlay').innerHTML=paused?playMarkup+' Start practising':pauseMarkup+' Pause song';}
 function playPause(){if(!piece)return; if(audio.paused){playAll().then(()=>paintPlay()).catch(()=>{alert('This recording could not be played. Please check that the practice tracks have been built and uploaded with the app.')})}else pauseAll();}
@@ -368,6 +356,6 @@ $('#profileSettingsForm').addEventListener('submit',e=>{e.preventDefault();const
 $('#keepAwake').checked=store.get('keepAwake',false);$('#keepAwake').addEventListener('change',async e=>{store.set('keepAwake',e.target.checked);if(e.target.checked&&'wakeLock'in navigator){try{wakeLock=await navigator.wakeLock.request('screen')}catch{}}else if(wakeLock){try{await wakeLock.release()}catch{}wakeLock=null}});
 if('mediaSession'in navigator){navigator.mediaSession.setActionHandler('play',()=>playAll());navigator.mediaSession.setActionHandler('pause',()=>pauseAll());}
 if('serviceWorker' in navigator){addEventListener('load',()=>navigator.serviceWorker.register('./sw.js').catch(()=>{}));}
-fetch('pieces.json').then(r=>{if(!r.ok)throw Error('pieces.json unavailable (HTTP '+r.status+')');return r.json()}).then(d=>{if(!d||!Array.isArray(d.pieces))throw Error('pieces.json does not contain a pieces array');data=d;init()}).catch(err=>{console.error('The song catalogue could not be loaded:',err);data={title:'Choir Practice',pieces:[],tags:[]};$('#songList').innerHTML='';$('#empty').classList.remove('hidden');$('#empty').textContent='The song catalogue could not be loaded. Republish the complete site folder, including pieces.json and the audio folder.';$('#songCount').textContent='Library unavailable';$('#brandName').textContent='Pro Musica Choir';updateProfileHeader();paintNav('home');showWelcome();loadBoardData();});
+fetch('pieces.json').then(r=>{if(!r.ok)throw Error('pieces.json not found');return r.json()}).then(d=>{data=d;init()}).catch(()=>{$('#songList').innerHTML='';$('#empty').classList.remove('hidden');$('#empty').textContent='The song library is not built yet. On your computer, run “Make practice tracks.bat” first, then upload the updated site folder.';$('#songCount').textContent='Not ready';});
 </script>
 </body></html>
