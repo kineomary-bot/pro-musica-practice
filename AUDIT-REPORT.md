@@ -86,7 +86,7 @@ The batch launcher changes the working directory to the script directory, and th
 ## Code changes made
 
 - Reworked the main screen styling to reduce rounded surfaces and simplify controls while retaining the teal/white palette.
-- Added simple tag filtering and tag-filtered offline downloads. The builder reads `songs/tags.json`, validates tag IDs and song references, writes the tag list to the catalogue, and adds a `tagIds` array to each song. Songs can have multiple tags; untagged songs remain visible under All songs and in the Untagged filter.
+- Added simple tag filtering and tag-filtered offline downloads. The builder reads `songs/tags.json`, validates tag IDs and song references, writes the tag list to the catalogue, and adds a `tagIds` array to each song. Songs can have multiple tags; untagged songs remain visible under All songs and in the Everything else filter.
 - Added recently opened songs, member-controlled practice status, per-song playback-position bookmarks, named bookmarks, and a central bookmark list. These are stored locally in the browser.
 - Added combined Lyrics/Sheet Music tabs to the Practice screen while retaining the existing separate navigation destinations as shortcuts into those tabs.
 - Replaced the placeholder Playback & Vocal Parts screen with a Voice Mixer, including per-part controls, presets and per-song saved balances. The mixer uses the builder's isolated `files.only` / `files.stems` MP3s and synchronises them against the main audio element.
