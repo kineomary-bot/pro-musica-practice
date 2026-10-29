@@ -99,6 +99,20 @@ for (const [index, match] of scripts.entries()) {
 if (inlineScriptCount === 0) errors.push('No inline app script was found in site/index.html.');
 
 const sw = await readFile(path.join(root, 'sw.js'), 'utf8').catch(() => '');
+try {
+  new vm.Script(sw, { filename: 'site/sw.js' });
+} catch (error) {
+  errors.push(`JavaScript syntax error in site/sw.js: ${error.message}`);
+}
+if (!/function\s+respondWithByteRange/.test(sw) ||
+    !/request\.headers\.get\(['"]range['"]\)/.test(sw) ||
+    !/status:\s*206/.test(sw)) {
+  errors.push('site/sw.js must honour byte-range requests for cached audio and PDF files so seeking works.');
+}
+if (!html.includes("$('#seek').addEventListener('input',e=>{seeking=true;const d=seekDuration(),target=Number(e.target.value)/1000*d;$('#timeNow').textContent=fmt(target);if(d>0)seekTo(target)});") ||
+    !html.includes("$('#miniSeek').addEventListener('input',e=>{miniSeeking=true;const d=seekDuration();const target=Number(e.target.value)/1000*d;$('#miniTime').textContent=fmt(target)+' · '+fmt(d);if(d>0)seekTo(target)});")) {
+  errors.push('Both player sliders must seek audio during dragging.');
+}
 if (!/const\s+SHELL_CACHE\s*=\s*['"]pro-musica-shell-v\d+['"]/.test(sw)) {
   errors.push('site/sw.js must declare a versioned app-shell cache.');
 }
