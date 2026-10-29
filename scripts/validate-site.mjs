@@ -83,6 +83,14 @@ for (const marker of requiredHtmlMarkers) {
   if (!html.includes(marker)) errors.push(`site/index.html is missing required startup/app markup: ${marker}`);
 }
 
+const showScreenStart = html.indexOf('function showScreen(');
+const paintNavStart = html.indexOf('function paintNav(', showScreenStart);
+const showScreenSource = showScreenStart >= 0 && paintNavStart > showScreenStart
+  ? html.slice(showScreenStart, paintNavStart)
+  : '';
+if (!showScreenSource.includes("$('.screen').forEach(")) {
+  errors.push('Screen navigation must use querySelectorAll ( $ ) to activate the Practice, Bookmarks and Loop screens.');
+}
 const scripts = [...html.matchAll(/<script\b([^>]*)>([\s\S]*?)<\/script\s*>/gi)];
 let inlineScriptCount = 0;
 for (const [index, match] of scripts.entries()) {
