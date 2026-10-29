@@ -1,3 +1,14 @@
 {
-  "performances": []
+  "performances": [
+    {
+      "id": "christmas-concert-2026",
+      "name": "Christmas Concert 2026",
+      "date": null,
+      "status": "active",
+      "songs": [
+        "carol-of-the-bells",
+        "joy-to-the-world"
+      ]
+    }
+  ]
 }
