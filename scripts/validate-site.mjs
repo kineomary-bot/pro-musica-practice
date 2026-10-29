@@ -102,8 +102,8 @@ const sw = await readFile(path.join(root, 'sw.js'), 'utf8').catch(() => '');
 if (!/const\s+SHELL_CACHE\s*=\s*['"]pro-musica-shell-v\d+['"]/.test(sw)) {
   errors.push('site/sw.js must declare a versioned app-shell cache.');
 }
-if (!/['"]\.\/pieces\.json['"]/.test(sw)) {
-  errors.push('site/sw.js must precache pieces.json so a partial release cannot replace the last working service worker.');
+if (!/['"]\.\/index\.html['"]/.test(sw)) {
+  errors.push('site/sw.js must precache index.html as part of the app shell.');
 }
 
 const collectStrings = value => {
