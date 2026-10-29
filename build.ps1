@@ -628,9 +628,9 @@ if (-not $ChoirName) {
 if (-not $ChoirName) { $ChoirName = 'Choir Practice' }
 
 $pieces = New-Object System.Collections.Generic.List[object]
-$performances = New-Object System.Collections.Generic.List[object]
-$performanceAssignments = @{}
-$performanceIdsSeen = @{}
+$tags = New-Object System.Collections.Generic.List[object]
+$tagAssignments = @{}
+$tagIdsSeen = @{}
 
 # Build aliases from source score filenames, cleaned titles and stable song IDs.
 # This allows a performance to refer to a song by any of those readable identifiers.
@@ -651,81 +651,62 @@ foreach ($sourceFile in $files) {
     }
 }
 
-# songs/performances.json defines the actual programmes. Each programme lists one or
-# more source song filenames, cleaned titles or stable song IDs. A song may belong to
-# more than one performance; the generated catalogue stores those performance IDs on
-# each song. No performance assignments are guessed by the build.
-$performanceFile = Join-Path $Songs 'performances.json'
-if (-not (Test-Path -LiteralPath $performanceFile)) {
-    throw "Missing $performanceFile. Create it with a JSON object containing a 'performances' array (an empty array is valid)."
+# songs/tags.json defines optional tags for grouping songs. Songs may have multiple tags.
+# Songs with no configured tag stay visible under All songs and appear in the Untagged filter.
+$tagFile = Join-Path $Songs 'tags.json'
+if (-not (Test-Path -LiteralPath $tagFile)) {
+    throw "Missing $tagFile. Create it with a JSON object containing a 'tags' array (an empty array is valid)."
 }
 try {
-    $parsedPerformanceConfig = ConvertFrom-Json -InputObject ([IO.File]::ReadAllText($performanceFile))
+    $parsedTagConfig = ConvertFrom-Json -InputObject ([IO.File]::ReadAllText($tagFile))
 } catch {
-    throw "Could not read $performanceFile. Use JSON with a top-level 'performances' array. Details: $($_.Exception.Message)"
+    throw "Could not read $tagFile. Use JSON with a top-level 'tags' array. Details: $($_.Exception.Message)"
 }
-if ($null -eq $parsedPerformanceConfig -or $parsedPerformanceConfig.PSObject.Properties.Name -notcontains 'performances') {
-    throw "Could not read $performanceFile. It must contain a top-level 'performances' array."
+if ($null -eq $parsedTagConfig -or $parsedTagConfig.PSObject.Properties.Name -notcontains 'tags') {
+    throw "Could not read $tagFile. It must contain a top-level 'tags' array."
 }
-foreach ($rawPerformance in @($parsedPerformanceConfig.performances)) {
-    $performanceId = ([string]$rawPerformance.id).Trim().ToLowerInvariant()
-    $performanceName = ([string]$rawPerformance.name).Trim()
-    $performanceStatus = ([string]$rawPerformance.status).Trim().ToLowerInvariant()
-    if ($performanceId -notmatch '^[a-z0-9]+(?:-[a-z0-9]+)*$') {
-        throw "Invalid performance ID '$performanceId' in $performanceFile. Use lowercase letters, numbers and hyphens, for example 'winter-concert-2027'."
+foreach ($rawTag in @($parsedTagConfig.tags)) {
+    $tagId = ([string]$rawTag.id).Trim().ToLowerInvariant()
+    $tagName = ([string]$rawTag.name).Trim()
+    if ($tagId -notmatch '^[a-z0-9]+(?:-[a-z0-9]+)*$') {
+        throw "Invalid tag ID '$tagId' in $tagFile. Use lowercase letters, numbers and hyphens, for example 'christmas-2026'."
     }
-    if ([string]::IsNullOrWhiteSpace($performanceName)) {
-        throw "Performance '$performanceId' needs a non-empty name in $performanceFile."
+    if ([string]::IsNullOrWhiteSpace($tagName)) {
+        throw "Tag '$tagId' needs a non-empty name in $tagFile."
     }
-    if ($performanceIdsSeen.ContainsKey($performanceId)) {
-        throw "Duplicate performance ID '$performanceId' in $performanceFile."
+    if ($tagIdsSeen.ContainsKey($tagId)) {
+        throw "Duplicate tag ID '$tagId' in $tagFile."
     }
-    if ($performanceStatus -notin @('draft', 'active', 'archived')) {
-        throw "Performance '$performanceId' has invalid status '$performanceStatus'. Use draft, active or archived."
-    }
-
-    $performanceDate = $null
-    if ($null -ne $rawPerformance.date -and -not [string]::IsNullOrWhiteSpace([string]$rawPerformance.date)) {
-        $dateText = ([string]$rawPerformance.date).Trim()
-        try {
-            $parsedDate = [DateTime]::ParseExact($dateText, 'yyyy-MM-dd', [Globalization.CultureInfo]::InvariantCulture)
-            $performanceDate = $parsedDate.ToString('yyyy-MM-dd')
-        } catch {
-            throw "Performance '$performanceId' has invalid date '$dateText'. Use YYYY-MM-DD or null."
-        }
-    }
-    if ($null -eq $rawPerformance.songs -or $rawPerformance.songs -isnot [Array]) {
-        throw "Performance '$performanceId' must have a 'songs' array. Use an empty array if the programme is not assigned yet."
+    if ($null -eq $rawTag.songs -or $rawTag.songs -isnot [Array]) {
+        throw "Tag '$tagId' must have a 'songs' array. Use an empty array if no songs have been tagged yet."
     }
 
     $assignedSongIds = New-Object System.Collections.Generic.List[string]
-    foreach ($songReferenceValue in @($rawPerformance.songs)) {
+    foreach ($songReferenceValue in @($rawTag.songs)) {
         $songReference = ([string]$songReferenceValue).Trim()
         if ([string]::IsNullOrWhiteSpace($songReference)) {
-            throw "Performance '$performanceId' contains a blank song reference in $performanceFile."
+            throw "Tag '$tagId' contains a blank song reference in $tagFile."
         }
         if ($ambiguousSongAliases.ContainsKey($songReference)) {
-            throw "Song reference '$songReference' is ambiguous. Use the exact source filename or stable song ID in $performanceFile."
+            throw "Song reference '$songReference' is ambiguous. Use the exact source filename or stable song ID in $tagFile."
         }
         if (-not $songAliasToId.ContainsKey($songReference)) {
-            throw "Performance '$performanceId' references '$songReference', but no matching .mscz file exists in $Songs."
+            throw "Tag '$tagId' references '$songReference', but no matching .mscz file exists in $Songs."
         }
         $songId = [string]$songAliasToId[$songReference]
         if (-not $assignedSongIds.Contains($songId)) { $assignedSongIds.Add($songId) }
-        if (-not $performanceAssignments.ContainsKey($songId)) {
-            $performanceAssignments[$songId] = New-Object System.Collections.Generic.List[string]
+        if (-not $tagAssignments.ContainsKey($songId)) {
+            $tagAssignments[$songId] = New-Object System.Collections.Generic.List[string]
         }
-        if (-not $performanceAssignments[$songId].Contains($performanceId)) {
-            $performanceAssignments[$songId].Add($performanceId)
+        if (-not $tagAssignments[$songId].Contains($tagId)) {
+            $tagAssignments[$songId].Add($tagId)
         }
     }
 
-    $performanceIdsSeen[$performanceId] = $true
-    $performances.Add([ordered]@{
-        id = $performanceId
-        name = $performanceName
-        date = $performanceDate
-        status = $performanceStatus
+    $tagIdsSeen[$tagId] = $true
+    $tags.Add([ordered]@{
+        id = $tagId
+        name = $tagName
         songs = @($assignedSongIds.ToArray())
     })
 }
@@ -750,11 +731,11 @@ foreach ($f in $files) {
     } else {
         $info = Build-Piece $f $dir
     }
-    $songPerformanceIds = @()
-    if ($performanceAssignments.ContainsKey($pid2)) {
-        $songPerformanceIds = @($performanceAssignments[$pid2].ToArray())
+    $songTagIds = @()
+    if ($tagAssignments.ContainsKey($pid2)) {
+        $songTagIds = @($tagAssignments[$pid2].ToArray())
     }
-    $entry = [ordered]@{ id = $pid2; title = $title; dir = "audio/$pid2/"; performanceIds = $songPerformanceIds }
+    $entry = [ordered]@{ id = $pid2; title = $title; dir = "audio/$pid2/"; tagIds = $songTagIds }
     foreach ($p in $info.PSObject.Properties) { $entry[$p.Name] = $p.Value }
     # optional extras next to the .mscz: <name>.pdf = the original score, <name>.txt = the words
     $origSrc = Join-Path $Songs ($stem + '.pdf')
@@ -806,39 +787,39 @@ foreach ($d in (Get-ChildItem -LiteralPath $audio -Directory)) {
     }
 }
 
-$out = [ordered]@{ title = $ChoirName; built = [int][double]::Parse((Get-Date -UFormat %s)); performances = @($performances.ToArray()); pieces = $pieces }
+$out = [ordered]@{ title = $ChoirName; built = [int][double]::Parse((Get-Date -UFormat %s)); tags = @($tags.ToArray()); pieces = $pieces }
 [IO.File]::WriteAllText((Join-Path $Site 'pieces.json'), (ConvertTo-Json -InputObject $out -Depth 12 -Compress), $Utf8)
 
-# Print assignment status on every build so new songs cannot silently remain unassigned.
-$performanceNamesById = @{}
-foreach ($performance in $performances) {
-    $performanceNamesById[[string]$performance['id']] = [string]$performance['name']
+# Report tag assignments on every build so new songs are easy to identify.
+$tagNamesById = @{}
+foreach ($tag in $tags) {
+    $tagNamesById[[string]$tag['id']] = [string]$tag['name']
 }
-Write-Host "`nPerformance assignment check:"
-$assignedCount = 0
-$unassignedCount = 0
+Write-Host "`nSong tag check:"
+$taggedCount = 0
+$untaggedCount = 0
 foreach ($cataloguePiece in $pieces) {
-    $assignedIds = @($cataloguePiece['performanceIds'])
+    $assignedIds = @($cataloguePiece['tagIds'])
     if ($assignedIds.Count -eq 0) {
-        $unassignedCount++
-        Write-Host ("  UNASSIGNED: " + $cataloguePiece['title']) -ForegroundColor Yellow
+        $untaggedCount++
+        Write-Host ("  UNTAGGED: " + $cataloguePiece['title']) -ForegroundColor Yellow
         continue
     }
     $assignedNames = @()
-    foreach ($performanceId in $assignedIds) {
-        if ($performanceNamesById.ContainsKey([string]$performanceId)) {
-            $assignedNames += $performanceNamesById[[string]$performanceId]
+    foreach ($tagId in $assignedIds) {
+        if ($tagNamesById.ContainsKey([string]$tagId)) {
+            $assignedNames += $tagNamesById[[string]$tagId]
         }
     }
     if ($assignedNames.Count -gt 0) {
-        $assignedCount++
-        Write-Host ("  ASSIGNED:   " + $cataloguePiece['title'] + " -> " + ($assignedNames -join ", ")) -ForegroundColor Green
+        $taggedCount++
+        Write-Host ("  TAGGED:   " + $cataloguePiece['title'] + " -> " + ($assignedNames -join ", ")) -ForegroundColor Green
     } else {
-        $unassignedCount++
-        Write-Host ("  UNASSIGNED: " + $cataloguePiece['title'] + " (performance reference missing)") -ForegroundColor Yellow
+        $untaggedCount++
+        Write-Host ("  UNTAGGED: " + $cataloguePiece['title'] + " (tag reference missing)") -ForegroundColor Yellow
     }
 }
-Write-Host ("  Summary: {0} assigned, {1} unassigned." -f $assignedCount, $unassignedCount)
+Write-Host ("  Summary: {0} tagged, {1} untagged." -f $taggedCount, $untaggedCount)
 
 $total = (Get-ChildItem -LiteralPath $audio -Recurse -File | Measure-Object Length -Sum).Sum / 1MB
 Write-Host ("`nDone: {0} pieces, {1:N0} MB. Upload the 'site' folder." -f $pieces.Count, $total)
