@@ -139,7 +139,7 @@ for (const marker of requiredHtmlMarkers) {
   if (!html.includes(marker)) errors.push(`site/index.html is missing required startup/app markup: ${marker}`);
 }
 
-if (!html.includes("const excluded=new Set(['soprano','solo','descant']);")) {
+if (!html.includes("const seen=new Map(),excluded=new Set(['soprano','solo','descant']);")) {
   errors.push('Singer profile choices must not include generic Soprano, Solo or Descant.');
 }
 if (!html.includes('function pieceVoiceId(p){') ||
