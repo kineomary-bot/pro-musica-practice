@@ -1,3 +1,11 @@
 {
-  "announcements": []
+  "announcements": [
+    {
+      "id": "extra-practice-2026-11-04",
+      "title": "Extra practice — Wednesday 4 November",
+      "message": "There will be an extra practice on Wednesday 4 November.",
+      "postedOn": "2026-10-29",
+      "expiresOn": "2026-11-04"
+    }
+  ]
 }
