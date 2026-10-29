@@ -139,6 +139,16 @@ for (const marker of requiredHtmlMarkers) {
   if (!html.includes(marker)) errors.push(`site/index.html is missing required startup/app markup: ${marker}`);
 }
 
+if (!html.includes("const excluded=new Set(['soprano','solo','descant']);")) {
+  errors.push('Singer profile choices must not include generic Soprano, Solo or Descant.');
+}
+if (!html.includes('function pieceVoiceId(p){') ||
+    !html.includes("(voice==='soprano-1'||voice==='soprano-2')&&ids.has('soprano')") ||
+    !html.includes('const partLyrics=piece.lyricsByVoice?.[pieceVoiceId(piece)];') ||
+    !html.includes('const voiceId=pieceVoiceId(piece);')) {
+  errors.push('Soprano 1 and Soprano 2 must fall back to a song’s single Soprano lyrics/audio/starting note.');
+}
+
 const showScreenStart = html.indexOf('function showScreen(');
 const paintNavStart = html.indexOf('function paintNav(', showScreenStart);
 const showScreenSource = showScreenStart >= 0 && paintNavStart > showScreenStart
@@ -267,6 +277,14 @@ const collectStrings = value => {
 
 if (piecesData && Array.isArray(piecesData.pieces)) {
   for (const piece of piecesData.pieces) {
+    if (Array.isArray(piece?.voices) && piece.voices.some(v => v?.id === 'soprano')) {
+      if (typeof piece.lyricsByVoice?.soprano !== 'string' || !piece.lyricsByVoice.soprano.trim()) {
+        errors.push(`Song "${piece.title}" has a single Soprano audio part but no shared Soprano lyrics.`);
+      }
+      if (typeof piece.files?.only?.soprano !== 'string' || typeof piece.files?.loud?.soprano !== 'string') {
+        errors.push(`Song "${piece.title}" has a single Soprano part but is missing the shared Soprano audio tracks.`);
+      }
+    }
     if (!piece || typeof piece.title !== 'string' || !piece.title.trim()) {
       errors.push('Each song entry in pieces.json must have a title.');
       continue;
