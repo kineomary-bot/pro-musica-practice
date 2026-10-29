@@ -48,7 +48,7 @@ The Windows builder exports an isolated track for each part from the MuseScore s
 
 ## Song tags
 
-The song-library dropdown groups songs using simple tags. Edit `songs/tags.json` before running `Make practice tracks.bat`. Songs do not have draft/active/archived statuses and are never hidden because they lack a tag.
+The song-library dropdown groups songs using simple tags. Edit `songs/tags.json` before running `Make practice tracks.bat`. Tags simply group songs; they do not control whether a song appears in the library.
 
 Example:
 
@@ -69,11 +69,11 @@ Example:
 
 Use a unique lowercase tag ID with hyphens. The `songs` array accepts the exact source `.mscz` filename without its extension, the cleaned song title, or the stable song ID. A song can have more than one tag. The builder checks references against available score files and reports unknown or ambiguous song references.
 
-All songs remain available under **All songs**. Songs with no tags are also available in the **Untagged songs** filter, and each song's tag or untagged status is shown in the All songs list. Every build prints a colour-coded report showing which songs are tagged and which still need categorising.
+All songs remain available under **All songs**. Songs with no tags are also available in the **Everything else (not yet tagged)** filter, and each song's tag or untagged status is shown in the All songs list. Every build prints a colour-coded report showing which songs are tagged and which still need categorising.
 
 For now, **Christmas 2026** is assigned to *Carol of the Bells* and *Joy to the World*. Add further tags only when the choir decides how to group other songs.
 
-After editing the file, run `Make practice tracks.bat` to regenerate `site/pieces.json`. The generated catalogue stores the tag list and a `tagIds` array on each song. The offline download button downloads all songs when **All songs** is selected, only songs with the selected tag when a tag is selected, or only untagged songs in the Untagged view.
+After editing the file, run `Make practice tracks.bat` to regenerate `site/pieces.json`. The generated catalogue stores the tag list and a `tagIds` array on each song. The offline download button downloads all songs when **All songs** is selected, only songs with the selected tag when a tag is selected, or only untagged songs in the Everything else view.
 
 ## Branding asset note
 
