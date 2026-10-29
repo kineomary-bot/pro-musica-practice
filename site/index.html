@@ -148,25 +148,37 @@ input,select,textarea,.section-card,.bookmark-card,.modal,.sheet,.screen-card{
 .song-tags{display:block;margin-top:4px;font-size:11px;line-height:1.3;color:var(--muted);font-weight:650;overflow-wrap:anywhere}.song-tags.untagged{color:#8b5a00}
 
 /* Choir noticeboard and calendar */
-.board-section{margin:18px 0 22px}
+.board-section{margin:16px 0 20px;padding:12px 13px 13px}
+.board-section[aria-labelledby="announcementsHeading"],.board-section[aria-labelledby="allAnnouncementsHeading"]{background:#fcf0eb;border:1px solid #efcec3;border-left:4px solid #e3856b}
+.board-section[aria-labelledby="upcomingHeading"],.board-section[aria-labelledby="allEventsHeading"]{background:#eaf4f1;border:1px solid #cfe3db;border-left:4px solid #367f79}
 .board-list{display:grid;gap:9px}
 .notice-card,.event-card{display:flex;align-items:flex-start;gap:12px;padding:13px;border:1px solid var(--line);background:var(--paper);min-width:0}
-.notice-card{border-left:3px solid var(--coral)}
+.notice-card{border-left:3px solid var(--coral);background:#fffaf7}
 .notice-main,.event-main{flex:1;min-width:0}
 .notice-title,.event-title{font:600 17px/1.25 Georgia,"Times New Roman",serif;margin:0 0 6px;overflow-wrap:anywhere}
 .notice-message,.event-details{font-size:13px;line-height:1.5;color:#425c5d;margin:0;white-space:pre-wrap;overflow-wrap:anywhere}
 .board-meta{display:block;margin-top:8px;color:var(--muted);font-size:11px}
-.board-link{display:inline-block;margin-top:8px;color:var(--teal);font-size:12px;font-weight:800;text-decoration:underline;text-underline-offset:3px}
+.board-link{display:inline-block;margin-top:8px;color:#245d5c;font-size:12px;font-weight:800;text-decoration:underline;text-underline-offset:3px}
 .board-label{display:inline-block;margin-bottom:5px;color:#83576a;font-size:10px;letter-spacing:.1em;font-weight:800;text-transform:uppercase}
-.event-date{display:flex;flex:none;flex-direction:column;align-items:center;justify-content:center;width:54px;min-height:64px;padding:6px 3px;background:#e4f1ee;color:#245d5c;text-align:center}
+.event-date{display:flex;flex:none;flex-direction:column;align-items:center;justify-content:center;width:54px;min-height:64px;padding:6px 3px;background:#d8eae3;color:#245d5c;text-align:center;border:1px solid #c4ddd2}
 .event-date-month{font-size:10px;font-weight:800;letter-spacing:.08em;text-transform:uppercase}
 .event-date-day{font:600 25px/.98 Georgia,"Times New Roman",serif;margin:3px 0}
 .event-date-year{font-size:10px;color:#425c5d}
 .event-meta{display:block;color:var(--muted);font-size:12px;margin:0 0 7px;overflow-wrap:anywhere}
-.board-empty{padding:14px;border:1px dashed var(--line);color:var(--muted);font-size:13px;background:var(--paper)}
-.board-section .sectionrow{align-items:center}
+.board-empty{padding:12px;border:1px dashed #dec9c1;color:#59676b;font-size:13px;background:#fffaf7}
+.board-section[aria-labelledby="allEventsHeading"] .board-empty{border-color:#c8ddd5;background:#f7fbf9}
+.board-section .sectionrow{align-items:center;gap:8px;margin-bottom:9px}
 .board-section .sectionrow h2{min-width:0}
-@media(max-width:360px){.notice-card,.event-card{padding:10px;gap:9px}.event-date{width:47px}}
+.board-section .quietbtn{white-space:nowrap;flex:none;font-size:12px;padding:6px 0 6px 4px}
+.board-section[aria-labelledby="announcementsHeading"] .notice-card{padding:10px 11px}
+.board-section[aria-labelledby="upcomingHeading"] .board-list{gap:6px}
+.board-section[aria-labelledby="upcomingHeading"] .event-card{align-items:center;gap:9px;padding:8px;background:#f8fcfa;border-color:#d4e5de}
+.board-section[aria-labelledby="upcomingHeading"] .event-date{width:45px;min-height:52px;padding:4px 2px}
+.board-section[aria-labelledby="upcomingHeading"] .event-date-day{font-size:22px;margin:2px 0}
+.board-section[aria-labelledby="upcomingHeading"] .event-title{font-size:15px;margin-bottom:3px}
+.board-section[aria-labelledby="upcomingHeading"] .board-label{margin-bottom:2px;font-size:9px}
+.board-section[aria-labelledby="upcomingHeading"] .event-meta{font-size:11px;margin-bottom:0}
+@media(max-width:360px){.board-section{padding:10px}.notice-card,.event-card{padding:10px;gap:9px}.event-date{width:47px}.board-section .sectionrow{gap:5px}.board-section .quietbtn{font-size:11px}}
 
 </style>
 </head>
