@@ -633,7 +633,7 @@ $tagAssignments = @{}
 $tagIdsSeen = @{}
 
 # Build aliases from source score filenames, cleaned titles and stable song IDs.
-# This allows a performance to refer to a song by any of those readable identifiers.
+# This allows a tag to refer to a song by any of those readable identifiers.
 $songAliasToId = @{}
 $ambiguousSongAliases = @{}
 foreach ($sourceFile in $files) {
