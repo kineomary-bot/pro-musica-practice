@@ -148,7 +148,7 @@ if (!/(^|[^$])\$\$\('\.screen'\)\.forEach\(/.test(showScreenSource)) {
   errors.push('Screen navigation must use the querySelectorAll helper ($$) to activate Practice, Bookmarks and Loop screens.');
 }
 
-const scripts =const scripts = [...html.matchAll(/<script\b([^>]*)>([\s\S]*?)<\/script\s*>/gi)];
+const scripts = [...html.matchAll(/<script\b([^>]*)>([\s\S]*?)<\/script\s*>/gi)];
 let inlineScriptCount = 0;
 for (const [index, match] of scripts.entries()) {
   const attributes = match[1] || '';
