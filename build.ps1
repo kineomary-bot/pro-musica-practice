@@ -628,17 +628,186 @@ if (-not $ChoirName) {
 if (-not $ChoirName) { $ChoirName = 'Choir Practice' }
 
 $pieces = New-Object System.Collections.Generic.List[object]
-# Optional collection mapping: songs/collections.json maps source score filenames (without
-# extension) to concert/collection names. Unmapped songs appear under "Uncategorised".
-$collectionMap = @{}
-$collectionFile = Join-Path $Songs 'collections.json'
-if (Test-Path -LiteralPath $collectionFile) {
-    try {
-        $parsedCollections = ConvertFrom-Json -InputObject ([IO.File]::ReadAllText($collectionFile))
-        foreach ($prop in $parsedCollections.PSObject.Properties) {
-            if ($prop.Name -and $prop.Value) { $collectionMap[$prop.Name] = [string]$prop.Value }
+$performances = New-Object System.Collections.Generic.List[object]
+$performanceAssignments = @{}
+$performanceIdsSeen = @{}
+
+# Build aliases from source score filenames, cleaned titles and stable song IDs.
+# This allows a performance to refer to a song by any of those readable identifiers.
+$songAliasToId = @{}
+$ambiguousSongAliases = @{}
+foreach ($sourceFile in $files) {
+    $sourceStem = [IO.Path]::GetFileNameWithoutExtension($sourceFile.Name)
+    $sourceTitle = ($sourceStem -replace '^\s*\d+\s*[-_.)]*\s*', '').Trim()
+    if (-not $sourceTitle) { $sourceTitle = $sourceStem }
+    $sourceId = Get-Slug $sourceStem
+    foreach ($alias in @($sourceStem, $sourceTitle, $sourceId)) {
+        if ([string]::IsNullOrWhiteSpace([string]$alias)) { continue }
+        if ($songAliasToId.ContainsKey([string]$alias) -and $songAliasToId[[string]$alias] -ne $sourceId) {
+            $ambiguousSongAliases[[string]$alias] = $true
+        } else {
+            $songAliasToId[[string]$alias] = $sourceId
         }
-    } catch { throw "Could not read $collectionFile. Use a JSON object mapping score filenames (without extension) to collection names. Details: $($_.Exception.Message)" }
+    }
+}
+
+# songs/performances.json defines the actual programmes. Each programme lists one or
+# more source song filenames, cleaned titles or stable song IDs. A song may belong to
+# more than one performance; the generated catalogue stores those performance IDs on
+# each song. No performance assignments are guessed by the build.
+$performanceFile = Join-Path $Songs 'performances.json'
+if (-not (Test-Path -LiteralPath $performanceFile)) {
+    throw "Missing $performanceFile. Create it with a JSON object containing a 'performances' array (an empty array is valid)."
+}
+try {
+    $parsedPerformanceConfig = ConvertFrom-Json -InputObject ([IO.File]::ReadAllText($performanceFile))
+} catch {
+    throw "Could not read $performanceFile. Use JSON with a top-level 'performances' array. Details: $($_.Exception.Message)"
+}
+if ($null -eq $parsedPerformanceConfig -or $null -eq $parsedPerformanceConfig.performances) {
+    throw "Could not read $performanceFile. It must contain a top-level 'performances' array."
+}
+foreach ($rawPerformance in @($parsedPerformanceConfig.performances)) {
+    $performanceId = ([string]$rawPerformance.id).Trim().ToLowerInvariant()
+    $performanceName = ([string]$rawPerformance.name).Trim()
+    $performanceStatus = ([string]$rawPerformance.status).Trim().ToLowerInvariant()
+    if ($performanceId -notmatch '^[a-z0-9]+(?:-[a-z0-9]+)*
+foreach ($f in $files) {
+    $stem = [IO.Path]::GetFileNameWithoutExtension($f.Name)
+    $title = ($stem -replace '^\s*\d+\s*[-_.)]*\s*', '').Trim()
+    if (-not $title) { $title = $stem }
+    $pid2 = Get-Slug $stem
+    if ($keep.ContainsKey($pid2)) {
+        throw ("Song filename collision: '$stem' and '$($slugOwners[$pid2])' both map to '$pid2'. Rename one file so each song has a unique slug.")
+    }
+    $keep[$pid2] = $true
+    $slugOwners[$pid2] = $stem
+    Write-Host $f.Name
+    $dir = Join-Path $audio $pid2
+    if ($Only -and ($f.Name.IndexOf($Only, [StringComparison]::OrdinalIgnoreCase) -lt 0)) {
+        $inf = Join-Path $dir 'info.json'
+        if (-not (Test-Path -LiteralPath $inf)) { Write-Host '  (skipped, not built yet)'; continue }
+        $info = ConvertFrom-Json -InputObject ([IO.File]::ReadAllText($inf))
+    } else {
+        $info = Build-Piece $f $dir
+    }
+    $songPerformanceIds = @()
+    if ($performanceAssignments.ContainsKey($pid2)) {
+        $songPerformanceIds = @($performanceAssignments[$pid2].ToArray())
+    }
+    $entry = [ordered]@{ id = $pid2; title = $title; dir = "audio/$pid2/"; performanceIds = $songPerformanceIds }
+    foreach ($p in $info.PSObject.Properties) { $entry[$p.Name] = $p.Value }
+    # optional extras next to the .mscz: <name>.pdf = the original score, <name>.txt = the words
+    $origSrc = Join-Path $Songs ($stem + '.pdf')
+    $origDst = Join-Path $dir 'original.pdf'
+    if (Test-Path -LiteralPath $origSrc) {
+        Copy-Item -LiteralPath $origSrc -Destination $origDst -Force
+        $entry['original'] = 'original.pdf'
+    } elseif (Test-Path -LiteralPath $origDst) { Remove-Item -LiteralPath $origDst }
+    # Shared lyrics remain supported as <score filename>.txt or <clean song title>.txt.
+    $sharedLyricsCandidates = @(
+        (Join-Path $Songs ($stem + '.txt')),
+        (Join-Path $Songs ($title + '.txt'))
+    )
+    foreach ($txtSrc in $sharedLyricsCandidates) {
+        if (Test-Path -LiteralPath $txtSrc) {
+            $sharedText = ([IO.File]::ReadAllText($txtSrc)).Trim()
+            if ($sharedText) { $entry['lyrics'] = $sharedText }
+            break
+        }
+    }
+
+    # Optional part-specific lyrics override the shared lyrics for that singer.
+    # Preferred filenames: "<clean song title> - <part name>.txt", for example
+    # "Joy to the World - Alto.txt" or "Joy to the World - Soprano 1.txt".
+    # Also accept the exact score filename stem for songs that include an ordering prefix.
+    $lyricsByVoice = [ordered]@{}
+    foreach ($v in @($info.voices)) {
+        $partName = [string]$v.name
+        $partLyricsCandidates = @(
+            (Join-Path $Songs ($title + ' - ' + $partName + '.txt')),
+            (Join-Path $Songs ($stem + ' - ' + $partName + '.txt'))
+        )
+        foreach ($partLyricsSrc in $partLyricsCandidates) {
+            if (Test-Path -LiteralPath $partLyricsSrc) {
+                $partText = ([IO.File]::ReadAllText($partLyricsSrc)).Trim()
+                if ($partText) { $lyricsByVoice[[string]$v.id] = $partText }
+                break
+            }
+        }
+    }
+    if ($lyricsByVoice.Count -gt 0) { $entry['lyricsByVoice'] = $lyricsByVoice }
+    $pieces.Add($entry)
+}
+
+foreach ($d in (Get-ChildItem -LiteralPath $audio -Directory)) {
+    if (-not $keep.ContainsKey($d.Name)) {
+        Write-Host ('Removing ' + $d.Name)
+        Remove-Item -LiteralPath $d.FullName -Recurse -Force
+    }
+}
+
+$out = [ordered]@{ title = $ChoirName; built = [int][double]::Parse((Get-Date -UFormat %s)); performances = @($performances.ToArray()); pieces = $pieces }
+[IO.File]::WriteAllText((Join-Path $Site 'pieces.json'), (ConvertTo-Json -InputObject $out -Depth 12 -Compress), $Utf8)
+$total = (Get-ChildItem -LiteralPath $audio -Recurse -File | Measure-Object Length -Sum).Sum / 1MB
+Write-Host ("`nDone: {0} pieces, {1:N0} MB. Upload the 'site' folder." -f $pieces.Count, $total)
+) {
+        throw "Invalid performance ID '$performanceId' in $performanceFile. Use lowercase letters, numbers and hyphens, for example 'winter-concert-2027'."
+    }
+    if ([string]::IsNullOrWhiteSpace($performanceName)) {
+        throw "Performance '$performanceId' needs a non-empty name in $performanceFile."
+    }
+    if ($performanceIdsSeen.ContainsKey($performanceId)) {
+        throw "Duplicate performance ID '$performanceId' in $performanceFile."
+    }
+    if ($performanceStatus -notin @('draft', 'active', 'archived')) {
+        throw "Performance '$performanceId' has invalid status '$performanceStatus'. Use draft, active or archived."
+    }
+
+    $performanceDate = $null
+    if ($null -ne $rawPerformance.date -and -not [string]::IsNullOrWhiteSpace([string]$rawPerformance.date)) {
+        $dateText = ([string]$rawPerformance.date).Trim()
+        try {
+            $parsedDate = [DateTime]::ParseExact($dateText, 'yyyy-MM-dd', [Globalization.CultureInfo]::InvariantCulture)
+            $performanceDate = $parsedDate.ToString('yyyy-MM-dd')
+        } catch {
+            throw "Performance '$performanceId' has invalid date '$dateText'. Use YYYY-MM-DD or null."
+        }
+    }
+    if ($null -eq $rawPerformance.songs -or $rawPerformance.songs -isnot [Array]) {
+        throw "Performance '$performanceId' must have a 'songs' array. Use an empty array if the programme is not assigned yet."
+    }
+
+    $assignedSongIds = New-Object System.Collections.Generic.List[string]
+    foreach ($songReferenceValue in @($rawPerformance.songs)) {
+        $songReference = ([string]$songReferenceValue).Trim()
+        if ([string]::IsNullOrWhiteSpace($songReference)) {
+            throw "Performance '$performanceId' contains a blank song reference in $performanceFile."
+        }
+        if ($ambiguousSongAliases.ContainsKey($songReference)) {
+            throw "Song reference '$songReference' is ambiguous. Use the exact source filename or stable song ID in $performanceFile."
+        }
+        if (-not $songAliasToId.ContainsKey($songReference)) {
+            throw "Performance '$performanceId' references '$songReference', but no matching .mscz file exists in $Songs."
+        }
+        $songId = [string]$songAliasToId[$songReference]
+        if (-not $assignedSongIds.Contains($songId)) { $assignedSongIds.Add($songId) }
+        if (-not $performanceAssignments.ContainsKey($songId)) {
+            $performanceAssignments[$songId] = New-Object System.Collections.Generic.List[string]
+        }
+        if (-not $performanceAssignments[$songId].Contains($performanceId)) {
+            $performanceAssignments[$songId].Add($performanceId)
+        }
+    }
+
+    $performanceIdsSeen[$performanceId] = $true
+    $performances.Add([ordered]@{
+        id = $performanceId
+        name = $performanceName
+        date = $performanceDate
+        status = $performanceStatus
+        songs = @($assignedSongIds.ToArray())
+    })
 }
 $keep = @{}
 $slugOwners = @{}
