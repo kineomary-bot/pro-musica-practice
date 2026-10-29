@@ -175,10 +175,10 @@ if (!/function\s+respondWithByteRange/.test(sw) ||
   errors.push('site/sw.js must honour byte-range requests for cached audio and PDF files so seeking works.');
 }
 if (!sw.includes("if (req.headers.has('range')") ||
-    !/\\.(?:mp3|m4a|wav|ogg|aac|flac|pdf)\$/.test(sw)) {
+    !sw.includes("mp3|m4a|wav|ogg|aac|flac|pdf") ||
+    !sw.includes("return respondWithByteRange(req, response)")) {
   errors.push('site/sw.js must convert ignored network Range requests into partial media responses, including when the server returns application/octet-stream.');
 }
-
 if (!errors.some(error => error.startsWith('JavaScript syntax error in site/sw.js'))) {
   try {
     const workerListeners = {};
@@ -237,8 +237,8 @@ if (!html.includes("$('#mini').classList.toggle('visible',!!piece);") ||
   errors.push('The floating player must remain available while a song is selected and update on navigation.');
 }
 if (!html.includes("function paintNav(name){const activeTab=['bookmarks','loop','tempo','score','lyrics'].includes(name)?'practice':name;") ||
-    !html.includes("if(b.dataset.tab===activeTab)b.setAttribute('aria-current','page')")) {
-  errors.push('Practice navigation must remain visibly selected on Bookmarks, Loop, Tempo, Lyrics and Score sub-screens.');
+    !html.includes("$('.tab').forEach(b=>{if(b.dataset.tab===activeTab)b.setAttribute('aria-current','page')")) {
+  errors.push('Practice navigation must use querySelectorAll and remain selected on Bookmarks, Loop, Tempo, Lyrics and Score sub-screens.');
 }
 if (!html.includes("function jumpToLoopStart(restart=false){if(!loopActive())return;seekTo(aPoint);") ||
     !html.includes("go.onclick=()=>{showScreen('practice');seekTo(b.time)}")) {
