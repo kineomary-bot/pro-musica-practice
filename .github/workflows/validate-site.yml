@@ -1,0 +1,38 @@
+name: Validate and package choir app
+
+on:
+  push:
+    branches:
+      - development
+  pull_request:
+    branches:
+      - development
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    name: Validate complete site bundle
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Validate site, catalogue, calendar and audio assets
+        run: node scripts/validate-site.mjs
+
+      - name: Package ready-to-publish site contents
+        if: success() && github.event_name != 'pull_request'
+        uses: actions/upload-artifact@v4
+        with:
+          name: pro-musica-site-${{ github.sha }}
+          path: site/
+          if-no-files-found: error
+          retention-days: 14
