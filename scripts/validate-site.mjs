@@ -237,7 +237,7 @@ if (!html.includes("$('#mini').classList.toggle('visible',!!piece);") ||
   errors.push('The floating player must remain available while a song is selected and update on navigation.');
 }
 if (!html.includes("function paintNav(name){const activeTab=['bookmarks','loop','tempo','score','lyrics'].includes(name)?'practice':name;") ||
-    !html.includes("$('.tab').forEach(b=>{if(b.dataset.tab===activeTab)b.setAttribute('aria-current','page')")) {
+    !html.includes("$$('.tab').forEach(b=>{if(b.dataset.tab===activeTab)b.setAttribute('aria-current','page')")) {
   errors.push('Practice navigation must use querySelectorAll and remain selected on Bookmarks, Loop, Tempo, Lyrics and Score sub-screens.');
 }
 if (!html.includes("function jumpToLoopStart(restart=false){if(!loopActive())return;seekTo(aPoint);") ||
