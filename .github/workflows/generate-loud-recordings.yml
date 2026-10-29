@@ -1,0 +1,107 @@
+name: Generate prepared loud-part recordings
+
+on:
+  push:
+    branches:
+      - fix/voice-mixer-seek-ui
+    paths:
+      - .github/workflows/generate-loud-recordings.yml
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  generate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out the test branch
+        uses: actions/checkout@v4
+        with:
+          ref: fix/voice-mixer-seek-ui
+
+      - name: Install audio tools
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y ffmpeg jq
+
+      - name: Regenerate prepared loud-part MP3s
+        shell: bash
+        run: |
+          set -euo pipefail
+          generated=0
+
+          for songdir in site/audio/*; do
+            [[ -d "$songdir" ]] || continue
+            info="$songdir/info.json"
+            [[ -s "$info" ]] || continue
+            mapfile -t voices < <(jq -r '.voices[].id' "$info")
+            if [[ ${#voices[@]} -lt 2 ]]; then
+              echo "Not enough voice parts in $info"
+              exit 1
+            fi
+
+            for target in "${voices[@]}"; do
+              target_file="$songdir/only-$target.mp3"
+              [[ -s "$target_file" ]] || { echo "Missing isolated target stem: $target_file"; exit 1; }
+
+              inputs=("$target_file")
+              filter_parts=("[0:a]volume=1.0[v0]")
+              idx=1
+
+              for background in "${voices[@]}"; do
+                [[ "$background" == "$target" ]] && continue
+                background_file="$songdir/only-$background.mp3"
+                [[ -s "$background_file" ]] || { echo "Missing background stem: $background_file"; exit 1; }
+                inputs+=("$background_file")
+                filter_parts+=("[$idx:a]volume=-30dB[v$idx]")
+                idx=$((idx + 1))
+              done
+
+              mix_inputs=""
+              for ((i=0; i<idx; i++)); do mix_inputs+="[v$i]"; done
+              filter_complex="$(IFS=';'; printf '%s' "${filter_parts[*]}")"
+              filter_complex+=";${mix_inputs}amix=inputs=${idx}:duration=longest:normalize=0,alimiter=limit=0.95[out]"
+
+              args=()
+              for input in "${inputs[@]}"; do args+=(-i "$input"); done
+              output="$songdir/loud-$target.mp3"
+              temporary="$songdir/.loud-$target.generated.mp3"
+              rm -f "$temporary"
+
+              ffmpeg -hide_banner -nostdin -loglevel error -y \
+                "${args[@]}" \
+                -filter_complex "$filter_complex" -map '[out]' \
+                -c:a libmp3lame -b:a 64k -ac 1 "$temporary"
+
+              [[ -s "$temporary" ]] || { echo "Generated file is empty: $temporary"; exit 1; }
+              ffmpeg -hide_banner -nostdin -v error -i "$temporary" -f null -
+
+              source_duration=$(ffprobe -v error -show_entries format=duration -of default=noprint_wrappers=1:nokey=1 "$target_file")
+              output_duration=$(ffprobe -v error -show_entries format=duration -of default=noprint_wrappers=1:nokey=1 "$temporary")
+              awk -v a="$source_duration" -v b="$output_duration" 'BEGIN { d=a-b; if (d<0) d=-d; exit(d>0.25) }' || {
+                echo "Duration mismatch for $output: stem=$source_duration output=$output_duration"
+                exit 1
+              }
+
+              mv "$temporary" "$output"
+              generated=$((generated + 1))
+              echo "Generated $output (background voices: -30 dB)"
+            done
+          done
+
+          if [[ $generated -lt 1 ]]; then
+            echo "No prepared loud-part recordings were generated."
+            exit 1
+          fi
+          echo "Validated $generated prepared loud-part recordings."
+
+      - name: Commit prepared recordings
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add 'site/audio/'*/loud-*.mp3
+          git diff --cached --check
+          git diff --cached --stat
+          git commit -m "Regenerate prepared loud-part recordings at -30 dB background"
+          git push origin HEAD:fix/voice-mixer-seek-ui
