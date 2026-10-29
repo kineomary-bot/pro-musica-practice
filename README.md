@@ -15,7 +15,7 @@ This is the upgraded, mobile-first version of the existing choir practice app. T
 1. Upload the **contents of the `site` folder** to your hosting provider (for example, Netlify Drop). Do not upload only `index.html`; the JSON file, audio folder, PDFs, icons, manifest and service worker are needed.
 2. Open the published HTTPS link on the phone.
 3. iPhone: Safari → Share → Add to Home Screen. Android: Chrome menu → Install app / Add to Home screen.
-4. The app shell can be available offline after it has been loaded once. Song audio and PDFs must be explicitly downloaded from the library; collection downloads are also available.
+4. The app shell can be available offline after it has been loaded once. Song audio and PDFs must be explicitly downloaded from the library; tag-filtered downloads are also available.
 
 ## Singer profile
 
@@ -28,9 +28,9 @@ This is the upgraded, mobile-first version of the existing choir practice app. T
 - Mobile-first song library with search.
 - Persistent mini-player while switching between Practice, Sheet Music, Lyrics and Settings.
 - Voice Mixer screen with per-part volume/mute controls, three quick mix presets, and per-song saved balances (requires generated isolated-part recordings).
-- Concert/performance filtering alongside global song search; member-controlled practice statuses; recently opened songs; per-song and central bookmarks.
+- Tag filtering alongside global song search; member-controlled practice statuses; recently opened songs; per-song and central bookmarks.
 - Combined Lyrics and Sheet Music tabs on the Practice screen.
-- Individual-song and performance-level offline downloads.
+- Individual-song and tag-filtered offline downloads.
 - Skip backward/forward, seek, adjustable playback speed, and A/B loop markers.
 - Original score PDF and lyrics view when those files are provided.
 - Installable web-app manifest and service worker shell caching.
@@ -46,31 +46,34 @@ The Windows builder exports an isolated track for each part from the MuseScore s
 - Test the published HTTPS link on a phone before sharing it with the choir.
 
 
-## Concerts and performances
+## Song tags
 
-The song-library dropdown is organised by named concerts or performance programmes. Edit `songs/performances.json` before running `Make practice tracks.bat`. The file contains a top-level `performances` array. Each performance has a stable ID, display name, optional date, status and a list of songs.
+The song-library dropdown groups songs using simple tags. Edit `songs/tags.json` before running `Make practice tracks.bat`. Songs do not have draft/active/archived statuses and are never hidden because they lack a tag.
 
-Example structure (the draft below is intentionally unassigned and is not a real programme):
+Example:
 
 ```json
 {
-  "performances": [
+  "tags": [
     {
-      "id": "winter-concert-2027",
-      "name": "Winter Concert 2027",
-      "date": null,
-      "status": "draft",
-      "songs": []
+      "id": "christmas-2026",
+      "name": "Christmas 2026",
+      "songs": [
+        "carol-of-the-bells",
+        "joy-to-the-world"
+      ]
     }
   ]
 }
 ```
 
-Use a unique lowercase ID with hyphens. Set `date` to `YYYY-MM-DD` or `null`. Status must be `draft`, `active` or `archived`; only active performances appear in the singers' dropdown. Draft and archived performances remain in the source configuration but are hidden from the main dropdown.
+Use a unique lowercase tag ID with hyphens. The `songs` array accepts the exact source `.mscz` filename without its extension, the cleaned song title, or the stable song ID. A song can have more than one tag. The builder checks references against available score files and reports unknown or ambiguous song references.
 
-The `songs` array accepts the exact source `.mscz` filename without its extension, the cleaned song title, or the stable song ID. One song can be assigned to more than one performance. The build checks references against the available `.mscz` files and reports unknown or ambiguous song references. A song not assigned to any performance remains available under **All songs** and appears in the **Unassigned songs** filter. In **All songs**, each song also shows its performance name or an unassigned label. Every build prints a colour-coded assignment report listing assigned and unassigned songs.
+All songs remain available under **All songs**. Songs with no tags are also available in the **Untagged songs** filter, and each song's tag or untagged status is shown in the All songs list. Every build prints a colour-coded report showing which songs are tagged and which still need categorising.
 
-After editing the file, run `Make practice tracks.bat` to regenerate `site/pieces.json`. The generated catalogue stores the performance list and a `performanceIds` array on each song. The offline download button downloads all songs when **All songs** is selected, or only songs assigned to the selected active performance.
+For now, **Christmas 2026** is assigned to *Carol of the Bells* and *Joy to the World*. Add further tags only when the choir decides how to group other songs.
+
+After editing the file, run `Make practice tracks.bat` to regenerate `site/pieces.json`. The generated catalogue stores the tag list and a `tagIds` array on each song. The offline download button downloads all songs when **All songs** is selected, only songs with the selected tag when a tag is selected, or only untagged songs in the Untagged view.
 
 ## Branding asset note
 
@@ -78,4 +81,4 @@ After editing the file, run `Make practice tracks.bat` to regenerate `site/piece
 
 ## Upgrade validation status
 
-The upgraded source includes code-level changes for the Voice Mixer, per-song preferences, concert/performance filtering and downloads, bookmarks, practice status, combined lyrics/score tabs and playback controls. JavaScript syntax has been checked. Runtime browser, phone, offline-cache and Windows/MuseScore audio tests remain outstanding. Run the full test checklist in `AUDIT-REPORT.md` before publishing.
+The upgraded source includes code-level changes for the Voice Mixer, per-song preferences, tag filtering and downloads, bookmarks, practice status, combined lyrics/score tabs and playback controls. JavaScript syntax has been checked. Runtime browser, phone, offline-cache and Windows/MuseScore audio tests remain outstanding. Run the full test checklist in `AUDIT-REPORT.md` before publishing.
