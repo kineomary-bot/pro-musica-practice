@@ -27,7 +27,7 @@ This is the upgraded, mobile-first version of the existing choir practice app. T
 
 - Mobile-first song library with search.
 - Persistent mini-player while switching between Practice, Sheet Music, Lyrics and Settings.
-- Voice Mixer screen with per-part volume/mute controls, three quick mix presets, and per-song saved balances (requires generated isolated-part recordings).
+- Prepared-recording playback modes: all parts together, My part loudest (other voices 30 dB quieter), and My part only. Playback switches between pre-rendered MP3 files; there is no live browser mixer.
 - Concert/collection filtering alongside global song search; member-controlled practice statuses; recently opened songs; per-song and central bookmarks.
 - Combined Lyrics and Sheet Music tabs on the Practice screen.
 - Individual-song and collection-level offline downloads.
@@ -35,10 +35,11 @@ This is the upgraded, mobile-first version of the existing choir practice app. T
 - Original score PDF and lyrics view when those files are provided.
 - Installable web-app manifest and service worker shell caching.
 
-## How independent vocal mixing works
+## How prepared vocal playback works
 
-The Windows builder exports an isolated track for each part from the MuseScore score. The app uses those files for independent part volume and mute controls. The code attempts to synchronise the part players to the main audio timeline during playback, seeking, tempo changes and looping. This path requires an actual Windows/MuseScore build and listening test before it can be considered verified. The build version has changed so existing song exports are regenerated on the next full build.
+The Windows builder exports recordings ahead of time. The app selects one prepared MP3 for the full choir, one for the selected part with the other voices quieter, or one for the selected part alone. The browser does not mix stems live.
 
+The prepared `loud-<part>.mp3` recordings keep the selected part at normal level and place each background part 30 dB lower. The current recordings are regenerated from the prepared `only-<part>.mp3` stems; the standard Windows build now also defaults to `-BackgroundDb -30`. Run `Make practice tracks.bat` to rebuild from the MuseScore source scores.
 ## Troubleshooting
 
 - If the app says the library is not built, run `Make practice tracks.bat` and check for `site/pieces.json`.
