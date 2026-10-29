@@ -1111,12 +1111,11 @@ foreach ($f in $files) {
     $lyricsByVoice = [ordered]@{}
     foreach ($v in @($info.voices)) {
         $partName = [string]$v.name
-        $partLyricsCandidates = @(
+                $partLyricsCandidates = @(
             (Join-Path $Songs ($title + ' - ' + $partName + '.txt')),
             (Join-Path $Songs ($stem + ' - ' + $partName + '.txt'))
         )
-        # Some cached score metadata has one shared Soprano voice, while the lyrics source files
-        # are named separately for Soprano 1 and Soprano 2. In that case use Soprano 1's shared words.
+        # Cached metadata can have one shared Soprano voice while lyrics files are named for Soprano 1 and 2.
         if ([string]$v.id -eq 'soprano') {
             $partLyricsCandidates += @(
                 (Join-Path $Songs ($title + ' - Soprano 1.txt')),
@@ -1130,8 +1129,19 @@ foreach ($f in $files) {
                 $partText = ([IO.File]::ReadAllText($partLyricsSrc)).Trim()
                 if ($partText) {
                     if ([string]$v.id -eq 'soprano') {
-                        $partText = [regex]::Replace($partText, '(?m)^(.+?)[ \t]+[-–—][ \t]*Soprano 1[ \t]*
-    }
+                        $firstLineEnd = $partText.IndexOf([char]10)
+                        if ($firstLineEnd -ge 0) {
+                            $header = $partText.Substring(0, $firstLineEnd).TrimEnd([char]13)
+                            $body = $partText.Substring($firstLineEnd)
+                            $header = $header.Replace(' — Soprano 1', ' — Soprano').Replace(' - Soprano 1', ' — Soprano').Replace(' – Soprano 1', ' — Soprano')
+                            $partText = $header + $body
+                        }
+                    }
+                    $lyricsByVoice[[string]$v.id] = $partText
+                }
+                break
+            }
+        }
     if ($lyricsByVoice.Count -gt 0) { $entry['lyricsByVoice'] = $lyricsByVoice }
     $pieces.Add($entry)
 }
