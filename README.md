@@ -28,12 +28,13 @@ This is the upgraded, mobile-first version of the existing choir practice app. T
 - Mobile-first song library with search.
 - Persistent mini-player while switching between Practice, Sheet Music, Lyrics and Settings.
 - Voice Mixer screen with per-part volume/mute controls, three quick mix presets, and per-song saved balances (requires generated isolated-part recordings).
+- Home announcement and upcoming-date summaries, plus a full Announcements & dates screen.
 - Tag filtering alongside global song search; member-controlled practice statuses; recently opened songs; per-song and central bookmarks.
 - Combined Lyrics and Sheet Music tabs on the Practice screen.
 - Individual-song and tag-filtered offline downloads.
 - Skip backward/forward, seek, adjustable playback speed, and A/B loop markers.
 - Original score PDF and lyrics view when those files are provided.
-- Installable web-app manifest and service worker shell caching.
+- Installable web-app manifest and service worker shell caching, including announcements and calendar data for offline access.
 
 ## How independent vocal mixing works
 
@@ -45,6 +46,38 @@ The Windows builder exports an isolated track for each part from the MuseScore s
 - If a song appears but does not play, confirm its matching MP3 files exist in `site/audio/<song-folder>/` and that the uploaded `site` folder includes the complete `audio` directory.
 - Test the published HTTPS link on a phone before sharing it with the choir.
 
+
+## Announcements and dates
+
+The Home screen displays the latest announcements and the next three dates. The **Announcements & dates** screen lists all current announcements and upcoming events. The data is kept in two editable files inside `site`; you do not need to edit the HTML or rerun the MuseScore song builder just to update notices or dates.
+
+### Announcements — `site/announcements.json`
+
+Add entries to the `announcements` array. Each notice needs an `id`, `title` and `message`. Dates use `YYYY-MM-DD`. `postedOn`, `expiresOn`, `url` and `linkLabel` are optional. Notices are sorted by `postedOn` (newest first) and automatically stop appearing after their expiry date.
+
+```json
+{
+  "announcements": [
+    {
+      "id": "rehearsal-reminder-2026-11",
+      "title": "Rehearsal reminder",
+      "message": "Please bring your sheet music to rehearsal.",
+      "postedOn": "2026-11-01",
+      "expiresOn": "2026-11-03"
+    }
+  ]
+}
+```
+
+The file currently has an empty announcements list, so the app shows a friendly empty state until the choir adds a real notice.
+
+### Events — `site/events.json`
+
+Add entries to the `events` array. Each event needs a unique `id`, `title` and `date`. Use `YYYY-MM-DD` for dates and 24-hour `HH:MM` for times. The `time`, `venue`, `category`, `details`, `url` and `linkLabel` fields are optional. Events are sorted by date and time; past dates stop appearing in the upcoming lists but remain in the JSON file until you remove them.
+
+The current calendar includes **Christmas in Music and Song** on **6 December 2026 at 16:00**, at **NG Kerk Hermanus**, with the ticket prices recorded as R150 / R50.
+
+To publish a change, edit the relevant JSON file, commit it to the branch used for the site, and deploy or upload the updated `site` contents. These notices and dates display in the app; they do not send automatic phone notifications.
 
 ## Song tags
 
