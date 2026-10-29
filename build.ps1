@@ -671,87 +671,7 @@ foreach ($rawPerformance in @($parsedPerformanceConfig.performances)) {
     $performanceId = ([string]$rawPerformance.id).Trim().ToLowerInvariant()
     $performanceName = ([string]$rawPerformance.name).Trim()
     $performanceStatus = ([string]$rawPerformance.status).Trim().ToLowerInvariant()
-    if ($performanceId -notmatch '^[a-z0-9]+(?:-[a-z0-9]+)*
-foreach ($f in $files) {
-    $stem = [IO.Path]::GetFileNameWithoutExtension($f.Name)
-    $title = ($stem -replace '^\s*\d+\s*[-_.)]*\s*', '').Trim()
-    if (-not $title) { $title = $stem }
-    $pid2 = Get-Slug $stem
-    if ($keep.ContainsKey($pid2)) {
-        throw ("Song filename collision: '$stem' and '$($slugOwners[$pid2])' both map to '$pid2'. Rename one file so each song has a unique slug.")
-    }
-    $keep[$pid2] = $true
-    $slugOwners[$pid2] = $stem
-    Write-Host $f.Name
-    $dir = Join-Path $audio $pid2
-    if ($Only -and ($f.Name.IndexOf($Only, [StringComparison]::OrdinalIgnoreCase) -lt 0)) {
-        $inf = Join-Path $dir 'info.json'
-        if (-not (Test-Path -LiteralPath $inf)) { Write-Host '  (skipped, not built yet)'; continue }
-        $info = ConvertFrom-Json -InputObject ([IO.File]::ReadAllText($inf))
-    } else {
-        $info = Build-Piece $f $dir
-    }
-    $songPerformanceIds = @()
-    if ($performanceAssignments.ContainsKey($pid2)) {
-        $songPerformanceIds = @($performanceAssignments[$pid2].ToArray())
-    }
-    $entry = [ordered]@{ id = $pid2; title = $title; dir = "audio/$pid2/"; performanceIds = $songPerformanceIds }
-    foreach ($p in $info.PSObject.Properties) { $entry[$p.Name] = $p.Value }
-    # optional extras next to the .mscz: <name>.pdf = the original score, <name>.txt = the words
-    $origSrc = Join-Path $Songs ($stem + '.pdf')
-    $origDst = Join-Path $dir 'original.pdf'
-    if (Test-Path -LiteralPath $origSrc) {
-        Copy-Item -LiteralPath $origSrc -Destination $origDst -Force
-        $entry['original'] = 'original.pdf'
-    } elseif (Test-Path -LiteralPath $origDst) { Remove-Item -LiteralPath $origDst }
-    # Shared lyrics remain supported as <score filename>.txt or <clean song title>.txt.
-    $sharedLyricsCandidates = @(
-        (Join-Path $Songs ($stem + '.txt')),
-        (Join-Path $Songs ($title + '.txt'))
-    )
-    foreach ($txtSrc in $sharedLyricsCandidates) {
-        if (Test-Path -LiteralPath $txtSrc) {
-            $sharedText = ([IO.File]::ReadAllText($txtSrc)).Trim()
-            if ($sharedText) { $entry['lyrics'] = $sharedText }
-            break
-        }
-    }
-
-    # Optional part-specific lyrics override the shared lyrics for that singer.
-    # Preferred filenames: "<clean song title> - <part name>.txt", for example
-    # "Joy to the World - Alto.txt" or "Joy to the World - Soprano 1.txt".
-    # Also accept the exact score filename stem for songs that include an ordering prefix.
-    $lyricsByVoice = [ordered]@{}
-    foreach ($v in @($info.voices)) {
-        $partName = [string]$v.name
-        $partLyricsCandidates = @(
-            (Join-Path $Songs ($title + ' - ' + $partName + '.txt')),
-            (Join-Path $Songs ($stem + ' - ' + $partName + '.txt'))
-        )
-        foreach ($partLyricsSrc in $partLyricsCandidates) {
-            if (Test-Path -LiteralPath $partLyricsSrc) {
-                $partText = ([IO.File]::ReadAllText($partLyricsSrc)).Trim()
-                if ($partText) { $lyricsByVoice[[string]$v.id] = $partText }
-                break
-            }
-        }
-    }
-    if ($lyricsByVoice.Count -gt 0) { $entry['lyricsByVoice'] = $lyricsByVoice }
-    $pieces.Add($entry)
-}
-
-foreach ($d in (Get-ChildItem -LiteralPath $audio -Directory)) {
-    if (-not $keep.ContainsKey($d.Name)) {
-        Write-Host ('Removing ' + $d.Name)
-        Remove-Item -LiteralPath $d.FullName -Recurse -Force
-    }
-}
-
-$out = [ordered]@{ title = $ChoirName; built = [int][double]::Parse((Get-Date -UFormat %s)); performances = @($performances.ToArray()); pieces = $pieces }
-[IO.File]::WriteAllText((Join-Path $Site 'pieces.json'), (ConvertTo-Json -InputObject $out -Depth 12 -Compress), $Utf8)
-$total = (Get-ChildItem -LiteralPath $audio -Recurse -File | Measure-Object Length -Sum).Sum / 1MB
-Write-Host ("`nDone: {0} pieces, {1:N0} MB. Upload the 'site' folder." -f $pieces.Count, $total)
-) {
+    if ($performanceId -notmatch '^[a-z0-9]+(?:-[a-z0-9]+)*$') {
         throw "Invalid performance ID '$performanceId' in $performanceFile. Use lowercase letters, numbers and hyphens, for example 'winter-concert-2027'."
     }
     if ([string]::IsNullOrWhiteSpace($performanceName)) {
@@ -830,10 +750,11 @@ foreach ($f in $files) {
     } else {
         $info = Build-Piece $f $dir
     }
-    $collection = 'Uncategorised'
-    if ($collectionMap.ContainsKey($stem)) { $collection = $collectionMap[$stem] }
-    elseif ($collectionMap.ContainsKey($title)) { $collection = $collectionMap[$title] }
-    $entry = [ordered]@{ id = $pid2; title = $title; dir = "audio/$pid2/"; collection = $collection }
+    $songPerformanceIds = @()
+    if ($performanceAssignments.ContainsKey($pid2)) {
+        $songPerformanceIds = @($performanceAssignments[$pid2].ToArray())
+    }
+    $entry = [ordered]@{ id = $pid2; title = $title; dir = "audio/$pid2/"; performanceIds = $songPerformanceIds }
     foreach ($p in $info.PSObject.Properties) { $entry[$p.Name] = $p.Value }
     # optional extras next to the .mscz: <name>.pdf = the original score, <name>.txt = the words
     $origSrc = Join-Path $Songs ($stem + '.pdf')
@@ -885,7 +806,7 @@ foreach ($d in (Get-ChildItem -LiteralPath $audio -Directory)) {
     }
 }
 
-$out = [ordered]@{ title = $ChoirName; built = [int][double]::Parse((Get-Date -UFormat %s)); pieces = $pieces }
+$out = [ordered]@{ title = $ChoirName; built = [int][double]::Parse((Get-Date -UFormat %s)); performances = @($performances.ToArray()); pieces = $pieces }
 [IO.File]::WriteAllText((Join-Path $Site 'pieces.json'), (ConvertTo-Json -InputObject $out -Depth 12 -Compress), $Utf8)
 $total = (Get-ChildItem -LiteralPath $audio -Recurse -File | Measure-Object Length -Sum).Sum / 1MB
 Write-Host ("`nDone: {0} pieces, {1:N0} MB. Upload the 'site' folder." -f $pieces.Count, $total)
