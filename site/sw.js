@@ -1,6 +1,6 @@
-const SHELL_CACHE = 'pro-musica-shell-v13';
+const SHELL_CACHE = 'pro-musica-shell-v14';
 const OFFLINE_CACHE = 'pro-musica-offline-songs-v1';
-const SHELL = ['./', './index.html', './manifest.webmanifest', './icon-192.png', './icon-512.png', './apple-touch-icon.png', './choir-logo.svg'];
+const SHELL = ['./', './index.html', './manifest.webmanifest', './icon-192.png', './icon-512.png', './apple-touch-icon.png', './choir-logo.svg', './announcements.json', './events.json'];
 self.addEventListener('install', event => {
   event.waitUntil(caches.open(SHELL_CACHE).then(cache => cache.addAll(SHELL)).then(() => self.skipWaiting()));
 });
@@ -18,7 +18,7 @@ self.addEventListener('fetch', event => {
     const saved = await caches.open(OFFLINE_CACHE);
     const savedResponse = await saved.match(req, {ignoreSearch: true});
     if (savedResponse) return savedResponse;
-    if (url.pathname.endsWith('/pieces.json')) {
+    if (['/pieces.json', '/announcements.json', '/events.json'].some(path => url.pathname.endsWith(path))) {
       try {
         const response = await fetch(req);
         if (response.ok) { const shell = await caches.open(SHELL_CACHE); await shell.put(req, response.clone()); }
