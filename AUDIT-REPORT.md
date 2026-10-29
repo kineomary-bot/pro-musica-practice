@@ -86,7 +86,7 @@ The batch launcher changes the working directory to the script directory, and th
 ## Code changes made
 
 - Reworked the main screen styling to reduce rounded surfaces and simplify controls while retaining the teal/white palette.
-- Added concert/performance filtering and performance-specific offline downloads. The builder reads `songs/performances.json`, validates programme IDs/statuses/dates/song references, writes performance metadata to the catalogue, and adds a `performanceIds` array to each song. A song may belong to more than one performance; unassigned songs remain under All songs.
+- Added simple tag filtering and tag-filtered offline downloads. The builder reads `songs/tags.json`, validates tag IDs and song references, writes the tag list to the catalogue, and adds a `tagIds` array to each song. Songs can have multiple tags; untagged songs remain visible under All songs and in the Untagged filter.
 - Added recently opened songs, member-controlled practice status, per-song playback-position bookmarks, named bookmarks, and a central bookmark list. These are stored locally in the browser.
 - Added combined Lyrics/Sheet Music tabs to the Practice screen while retaining the existing separate navigation destinations as shortcuts into those tabs.
 - Replaced the placeholder Playback & Vocal Parts screen with a Voice Mixer, including per-part controls, presets and per-song saved balances. The mixer uses the builder's isolated `files.only` / `files.stems` MP3s and synchronises them against the main audio element.
@@ -104,8 +104,8 @@ The batch launcher changes the working directory to the script directory, and th
 ## Known limitations / follow-up required
 
 - The official logo URL could not be retrieved from this environment. The bundled `choir-logo.svg` and PNG app icons are temporary black-and-white musical-note placeholders, not a verified copy of the official Pro Musica logo. Replace these assets with the actual logo before publishing.
-- `songs/performances.json` currently contains no performance entries because the actual concert programmes have not been supplied. The two existing songs remain available under All songs until explicitly assigned.
-- Performance downloads and Cache API behaviour need real-browser testing, including quota failures, interrupted downloads, and offline access.
+- `songs/tags.json` assigns both existing songs to the `Christmas 2026` tag. Any other songs remain visible and untagged until the choir decides how to group them.
+- Tag-filtered downloads and Cache API behaviour need real-browser testing, including quota failures, interrupted downloads, and offline access.
 - The mixer requires generated isolated-part audio for each song. Its synchronization, volume balance and loop behaviour require testing on target browsers with real recordings.
 - The `pieces.json` catalogue and generated audio are not included in the source ZIP; run `Make practice tracks.bat` on Windows with MuseScore 4 to build them.
 - No app publishing/deployment was performed.
