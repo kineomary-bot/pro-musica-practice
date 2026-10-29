@@ -187,7 +187,7 @@ const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)], a
 const store={get(k,d){try{const v=localStorage.getItem('pmc-'+k);return v===null?d:JSON.parse(v)}catch{return d}},set(k,v){try{localStorage.setItem('pmc-'+k,JSON.stringify(v));return true}catch{return false}}};
 const profileParams=new URLSearchParams(location.search);
 const urlProfileName=(profileParams.get('name')||'').trim(),urlProfileVoice=(profileParams.get('voice')||'').trim();
-let data=null,piece=null,voice=store.get('voice',urlProfileVoice||null),profile=store.get('profile',urlProfileName?{name:urlProfileName,voice:urlProfileVoice||null}:null),currentScreen='home',aPoint=0,bPoint=null,loopOn=false,seeking=false,miniSeeking=false,wakeLock=null;
+let data=null,piece=null,voice=urlProfileVoice||store.get('voice',null),profile=urlProfileName?{name:urlProfileName,voice:urlProfileVoice||null}:store.get('profile',null),currentScreen='home',aPoint=0,bPoint=null,loopOn=false,seeking=false,miniSeeking=false,wakeLock=null;
 let practiceStatuses=store.get('practiceStatuses',{}),bookmarks=store.get('bookmarks',{}),recentSongs=store.get('recentSongs',[]),lastPositions=store.get('lastPositions',{}),lastContentTab=store.get('contentTab','lyrics'),lastSavedSecond=-1,collectionFilter='all';
 const fmt=s=>{s=Math.max(0,Math.floor(Number(s)||0));return Math.floor(s/60)+':'+String(s%60).padStart(2,'0')};
 function allVoices(){const seen=new Map();(data?.pieces||[]).forEach(p=>(p.voices||[]).forEach(v=>{if(!seen.has(v.id))seen.set(v.id,v.name)}));const voices=[...seen].map(([id,name])=>({id,name}));return voices.length?voices:[{id:'soprano-1',name:'Soprano 1'},{id:'soprano-2',name:'Soprano 2'},{id:'alto',name:'Alto'},{id:'tenor',name:'Tenor'},{id:'bass',name:'Bass'}];}
@@ -313,10 +313,11 @@ function showStartupError(message){
 window.addEventListener('error',event=>showStartupError(event.message||'JavaScript error'));
 window.addEventListener('unhandledrejection',event=>showStartupError(event.reason?.message||event.reason||'Unhandled promise rejection'));
 fillVoiceSelect($('#welcomeVoice'),voice);
-fetch(new URL('pieces.json',document.baseURI),{cache:'no-store'})
-  .then(r=>{if(!r.ok)throw Error('pieces.json returned HTTP '+r.status);return r.json()})
+fetch(new URL('pieces.json',document.baseURI),{cache:'reload'})
+  .then(r=>{if(!r.ok)throw Error('pieces.json returned HTTP '+r.status+' at '+r.url);return r.json()})
   .then(d=>{
     if(!d||!Array.isArray(d.pieces))throw Error('pieces.json loaded, but its pieces list is missing');
+    if(d.pieces.length===0)throw Error('pieces.json loaded but contains zero songs');
     data=d;
     init();
   })
