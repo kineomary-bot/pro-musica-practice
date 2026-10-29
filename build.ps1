@@ -18,7 +18,7 @@ param(
     [string]$Site = (Join-Path $PSScriptRoot 'site'),
     [string]$MScore = '',
     [string]$Only = '',
-    [double]$BackgroundDb = -20,   # how much quieter the other voices are in "my part louder"
+    [double]$BackgroundDb = -30,   # how much quieter the other voices are in "my part louder"
     [switch]$NoOnly,               # skip the "my part only" tracks (smaller site)
     [string]$Bitrate = '64k',      # mp3 bitrate if ffmpeg is installed; 'off' keeps MuseScore's files
     [string]$ChoirName = ''
@@ -28,7 +28,7 @@ $ErrorActionPreference = 'Stop'
 [System.Threading.Thread]::CurrentThread.CurrentCulture = [System.Globalization.CultureInfo]::InvariantCulture
 Add-Type -AssemblyName System.IO.Compression
 Add-Type -AssemblyName System.IO.Compression.FileSystem
-$BuildVersion = 'ps1-9-quieter-background-voice-isolation'
+$BuildVersion = 'ps1-10-prepared-loud-recordings-minus-30db'
 $Utf8 = New-Object System.Text.UTF8Encoding($false)
 
 # ------------------------------------------------------------ MuseScore
