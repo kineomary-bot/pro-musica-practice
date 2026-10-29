@@ -503,7 +503,26 @@ function Build-Piece([IO.FileInfo]$src, [string]$outdir) {
         # If the score has one part simply named "Soprano", both soprano sections
         # sing that line. Expose it under both app voice IDs while retaining the
         # same underlying MuseScore part ID for audio export.
-        $displayNames = if ($p.Name -match '^\s*Soprano\s*
+        $displayNames = if ($p.Name.Trim() -ieq 'Soprano') {
+            @('Soprano 1', 'Soprano 2')
+        } else {
+            @($p.Name)
+        }
+        foreach ($displayName in $displayNames) {
+            $id = Get-Slug $displayName
+            $base = $id; $n = 2
+            while ($seen.ContainsKey($id)) { $id = "$base-$n"; $n++ }
+            $seen[$id] = $true
+            $voices += [pscustomobject]@{
+                Id = $id; Name = $displayName; SourceName = $p.Name; Part = $p.Id
+                StartingMidi = $p.StartingMidi; StartingNote = $p.StartingNote
+            }
+        }
+    }
+
+    # A shared source part can be exposed as more than one app voice; export
+    # validation still needs the actual distinct MuseScore part IDs only.
+    $partIds = @($voices | ForEach-Object { [string]$_.Part } | Select-Object -Unique)
     $opts = "$BuildVersion|$BackgroundDb|$($NoOnly.IsPresent)|$Bitrate|$([bool]$script:Ffmpeg)"
     $stamp = (Get-FileHash -LiteralPath $src.FullName -Algorithm SHA1).Hash + '|' + $opts
     $stampFile = Join-Path $outdir '.stamp'
