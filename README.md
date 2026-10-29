@@ -28,9 +28,9 @@ This is the upgraded, mobile-first version of the existing choir practice app. T
 - Mobile-first song library with search.
 - Persistent mini-player while switching between Practice, Sheet Music, Lyrics and Settings.
 - Voice Mixer screen with per-part volume/mute controls, three quick mix presets, and per-song saved balances (requires generated isolated-part recordings).
-- Concert/collection filtering alongside global song search; member-controlled practice statuses; recently opened songs; per-song and central bookmarks.
+- Concert/performance filtering alongside global song search; member-controlled practice statuses; recently opened songs; per-song and central bookmarks.
 - Combined Lyrics and Sheet Music tabs on the Practice screen.
-- Individual-song and collection-level offline downloads.
+- Individual-song and performance-level offline downloads.
 - Skip backward/forward, seek, adjustable playback speed, and A/B loop markers.
 - Original score PDF and lyrics view when those files are provided.
 - Installable web-app manifest and service worker shell caching.
