@@ -109,3 +109,22 @@ The batch launcher changes the working directory to the script directory, and th
 - The mixer requires generated isolated-part audio for each song. Its synchronization, volume balance and loop behaviour require testing on target browsers with real recordings.
 - The `pieces.json` catalogue and generated audio are not included in the source ZIP; run `Make practice tracks.bat` on Windows with MuseScore 4 to build them.
 - No app publishing/deployment was performed.
+
+
+# Announcements and calendar update — 2026-10-29
+
+## Code changes
+
+- Added an Announcements section and the next three events to the Home screen.
+- Added an Announcements & dates screen, opened through the Home links, that displays all current notices and upcoming events.
+- Added editable `site/announcements.json` and `site/events.json` files. Announcements support a posted date, optional expiry date, and optional link. Events support a date, time, venue, category, details, and optional link.
+- Seeded the calendar with the established Christmas concert date: 6 December 2026 at 16:00, NG Kerk Hermanus. Announcements intentionally start empty so no sample notice is mistaken for a real choir message.
+- Past events are omitted from upcoming lists but remain in the source JSON. Announcements with an expiry date stop appearing after that date.
+- Bumped the service-worker shell cache to v14 and included announcement/event JSON in network-first cache handling, with cached fallback when offline.
+
+## Validation status
+
+- Inline app JavaScript syntax passed a parser check.
+- New JSON configuration files parse, and the event data contains the Christmas concert entry.
+- No duplicate HTML IDs were found.
+- The existing Windows/MuseScore build was not run, and live browser, mobile and offline interactions have not yet been tested. These require acceptance testing after deployment.
