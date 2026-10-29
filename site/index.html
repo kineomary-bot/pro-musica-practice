@@ -310,7 +310,7 @@ function renderLyrics(){
 function renderStartingNote(){
  const note=selectedStartingNote();
  $('#startingNoteName').textContent=note?(note.startingNote||'Starting pitch'):'Not available yet';
- $('#startingNoteHint').textContent=note?('Opening sung note for '+note.name+'. Play it, then sing that pitch.'):('A starting note has not been read from this song’s score for your selected voice part yet.');
+ $('#startingNoteHint').textContent=note?('Opening sung note for '+note.name+'.'):('A starting note has not been read from this song’s score for your selected voice part yet.');
  $('#playStartingNote').disabled=!note;
  $('#playStartingNote').setAttribute('aria-label',note?('Play '+(note.startingNote||'starting note')+' for '+note.name):'Starting note unavailable');
 }
