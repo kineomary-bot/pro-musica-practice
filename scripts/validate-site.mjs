@@ -174,6 +174,55 @@ if (!/function\s+respondWithByteRange/.test(sw) ||
     !/status:\s*206/.test(sw)) {
   errors.push('site/sw.js must honour byte-range requests for cached audio and PDF files so seeking works.');
 }
+if (!sw.includes("if (req.headers.has('range')") ||
+    !/\\.(?:mp3|m4a|wav|ogg|aac|flac|pdf)\$/.test(sw)) {
+  errors.push('site/sw.js must convert ignored network Range requests into partial media responses, including when the server returns application/octet-stream.');
+}
+
+if (!errors.some(error => error.startsWith('JavaScript syntax error in site/sw.js'))) {
+  try {
+    const workerListeners = {};
+    const mockBytes = new Uint8Array([10, 20, 30, 40, 50, 60, 70, 80]);
+    const workerContext = {
+      URL,
+      Request,
+      Response,
+      Headers,
+      self: {
+        location: { origin: 'https://choir.example' },
+        clients: { claim: async () => {} },
+        skipWaiting: async () => {},
+        addEventListener: (name, handler) => { workerListeners[name] = handler; },
+      },
+      caches: {
+        open: async () => ({ match: async () => null, put: async () => {}, addAll: async () => {} }),
+        keys: async () => [],
+      },
+      fetch: async () => new Response(mockBytes, {
+        status: 200,
+        headers: { 'Content-Type': 'application/octet-stream', 'Content-Length': String(mockBytes.length) },
+      }),
+    };
+    vm.runInNewContext(sw, workerContext, { filename: 'site/sw.js range integration test' });
+    const request = new Request('https://choir.example/audio/test.mp3', {
+      headers: { Range: 'bytes=2-5' },
+    });
+    let networkResult = null;
+    workerListeners.fetch({
+      request,
+      respondWith: responsePromise => { networkResult = responsePromise; },
+    });
+    const rangedResponse = await networkResult;
+    const rangedBytes = [...new Uint8Array(await rangedResponse.arrayBuffer())];
+    if (rangedResponse.status !== 206 ||
+        rangedResponse.headers.get('content-range') !== 'bytes 2-5/8' ||
+        JSON.stringify(rangedBytes) !== JSON.stringify([30, 40, 50, 60])) {
+      errors.push('Service-worker integration test failed: network media Range requests must return the requested bytes as HTTP 206.');
+    }
+  } catch (error) {
+    errors.push(`Service-worker Range integration test could not run: ${error.message}`);
+  }
+}
 if (!html.includes("$('#seek').addEventListener('input',e=>{seeking=true;const d=seekDuration(),target=Number(e.target.value)/1000*d;$('#timeNow').textContent=fmt(target);if(d>0)seekTo(target)});") ||
     !html.includes("$('#miniSeek').addEventListener('input',e=>{miniSeeking=true;const d=seekDuration();const target=Number(e.target.value)/1000*d;$('#miniTime').textContent=fmt(target)+' · '+fmt(d);if(d>0)seekTo(target)});") ||
     !html.includes("audio.addEventListener('seeked',paintTime);") ||
@@ -186,6 +235,10 @@ if (!html.includes("$('#seek').addEventListener('input',e=>{seeking=true;const d
 if (!html.includes("$('#mini').classList.toggle('visible',!!piece);") ||
     !html.includes("window.scrollTo({top:0,behavior:'instant'});paintTime();")) {
   errors.push('The floating player must remain available while a song is selected and update on navigation.');
+}
+if (!html.includes("function paintNav(name){const activeTab=['bookmarks','loop','tempo','score','lyrics'].includes(name)?'practice':name;") ||
+    !html.includes("if(b.dataset.tab===activeTab)b.setAttribute('aria-current','page')")) {
+  errors.push('Practice navigation must remain visibly selected on Bookmarks, Loop, Tempo, Lyrics and Score sub-screens.');
 }
 if (!html.includes("function jumpToLoopStart(restart=false){if(!loopActive())return;seekTo(aPoint);") ||
     !html.includes("go.onclick=()=>{showScreen('practice');seekTo(b.time)}")) {
