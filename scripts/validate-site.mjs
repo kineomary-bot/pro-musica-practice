@@ -58,8 +58,64 @@ const announcementsData = await readJson('announcements.json');
 const eventsData = await readJson('events.json');
 await readJson('manifest.webmanifest');
 
+let tagConfig = null;
+try {
+  tagConfig = JSON.parse(await readFile(path.resolve('songs/tags.json'), 'utf8'));
+} catch (error) {
+  errors.push(`Could not read songs/tags.json: ${error.message}`);
+}
+if (!tagConfig || !Array.isArray(tagConfig.tags)) {
+  errors.push('songs/tags.json must contain a tags array.');
+}
+
 if (!piecesData || !Array.isArray(piecesData.pieces) || piecesData.pieces.length === 0) {
   errors.push('site/pieces.json must contain a non-empty pieces array; the app must not be published without its song catalogue.');
+}
+
+if (piecesData && Array.isArray(piecesData.pieces) && tagConfig && Array.isArray(tagConfig.tags)) {
+  const piecesById = new Map(piecesData.pieces.map(piece => [piece.id, piece]));
+  const expectedTagsBySong = new Map();
+  const siteTagsById = new Map((piecesData.tags || []).map(tag => [tag.id, tag]));
+
+  for (const tag of tagConfig.tags) {
+    if (!tag || typeof tag.id !== 'string' || typeof tag.name !== 'string' || !Array.isArray(tag.songs)) {
+      errors.push('Every entry in songs/tags.json must have an id, name and songs array.');
+      continue;
+    }
+    const siteTag = siteTagsById.get(tag.id);
+    if (!siteTag || siteTag.name !== tag.name) {
+      errors.push(`site/pieces.json is missing the configured tag "${tag.name}" (${tag.id}).`);
+    }
+    for (const songId of tag.songs) {
+      const piece = piecesById.get(songId);
+      if (!piece) {
+        errors.push(`Tag "${tag.name}" refers to unknown song id "${songId}".`);
+        continue;
+      }
+      const expected = expectedTagsBySong.get(songId) || [];
+      if (!expected.includes(tag.id)) expected.push(tag.id);
+      expectedTagsBySong.set(songId, expected);
+      if (!Array.isArray(piece.tagIds) || !piece.tagIds.includes(tag.id)) {
+        errors.push(`Song "${piece.title}" is missing configured tag "${tag.name}" in site/pieces.json.`);
+      }
+    }
+    if (siteTag && Array.isArray(siteTag.songs)) {
+      const configuredSongs = [...new Set(tag.songs)].sort();
+      const builtSongs = [...new Set(siteTag.songs)].sort();
+      if (JSON.stringify(configuredSongs) !== JSON.stringify(builtSongs)) {
+        errors.push(`Tag "${tag.name}" has different song assignments in songs/tags.json and site/pieces.json.`);
+      }
+    }
+  }
+
+  for (const piece of piecesData.pieces) {
+    const expected = expectedTagsBySong.get(piece.id) || [];
+    for (const tagId of Array.isArray(piece.tagIds) ? piece.tagIds : []) {
+      if (!expected.includes(tagId)) {
+        errors.push(`Song "${piece.title}" has tag "${tagId}" in site/pieces.json but not in songs/tags.json.`);
+      }
+    }
+  }
 }
 
 if (!announcementsData || !Array.isArray(announcementsData.announcements)) {
@@ -88,10 +144,11 @@ const paintNavStart = html.indexOf('function paintNav(', showScreenStart);
 const showScreenSource = showScreenStart >= 0 && paintNavStart > showScreenStart
   ? html.slice(showScreenStart, paintNavStart)
   : '';
-if (!showScreenSource.includes("$('.screen').forEach(")) {
-  errors.push('Screen navigation must use querySelectorAll ( $ ) to activate the Practice, Bookmarks and Loop screens.');
+if (!/(^|[^$])\$\$\('\.screen'\)\.forEach\(/.test(showScreenSource)) {
+  errors.push('Screen navigation must use the querySelectorAll helper ($$) to activate Practice, Bookmarks and Loop screens.');
 }
-const scripts = [...html.matchAll(/<script\b([^>]*)>([\s\S]*?)<\/script\s*>/gi)];
+
+const scripts =const scripts = [...html.matchAll(/<script\b([^>]*)>([\s\S]*?)<\/script\s*>/gi)];
 let inlineScriptCount = 0;
 for (const [index, match] of scripts.entries()) {
   const attributes = match[1] || '';
@@ -118,12 +175,17 @@ if (!/function\s+respondWithByteRange/.test(sw) ||
   errors.push('site/sw.js must honour byte-range requests for cached audio and PDF files so seeking works.');
 }
 if (!html.includes("$('#seek').addEventListener('input',e=>{seeking=true;const d=seekDuration(),target=Number(e.target.value)/1000*d;$('#timeNow').textContent=fmt(target);if(d>0)seekTo(target)});") ||
-    !html.includes("$('#miniSeek').addEventListener('input',e=>{miniSeeking=true;const d=seekDuration();const target=Number(e.target.value)/1000*d;$('#miniTime').textContent=fmt(target)+' · '+fmt(d);if(d>0)seekTo(target)});")) {
-  errors.push('Both player sliders must seek audio during dragging.');
+    !html.includes("$('#miniSeek').addEventListener('input',e=>{miniSeeking=true;const d=seekDuration();const target=Number(e.target.value)/1000*d;$('#miniTime').textContent=fmt(target)+' · '+fmt(d);if(d>0)seekTo(target)});") ||
+    !html.includes("audio.addEventListener('seeked',paintTime);") ||
+    !html.includes("$('#rewind').addEventListener('click',()=>seekBy(-10));") ||
+    !html.includes("$('#forward').addEventListener('click',()=>seekBy(10));") ||
+    !html.includes("$('#miniRewind').addEventListener('click',()=>seekBy(-10));") ||
+    !html.includes("$('#miniForward').addEventListener('click',()=>seekBy(10));")) {
+  errors.push('Both sliders and all skip buttons must route through the audio seek functions and update after seeking finishes.');
 }
-if (!html.includes("!['bookmarks','loop','tempo'].includes(currentScreen)") ||
+if (!html.includes("$('#mini').classList.toggle('visible',!!piece);") ||
     !html.includes("window.scrollTo({top:0,behavior:'instant'});paintTime();")) {
-  errors.push('The floating player must not cover the Bookmarks, Loop or Tempo controls and must update visibility on navigation.');
+  errors.push('The floating player must remain available while a song is selected and update on navigation.');
 }
 if (!html.includes("function jumpToLoopStart(restart=false){if(!loopActive())return;seekTo(aPoint);") ||
     !html.includes("go.onclick=()=>{showScreen('practice');seekTo(b.time)}")) {
