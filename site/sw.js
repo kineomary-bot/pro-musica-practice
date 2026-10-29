@@ -1,4 +1,4 @@
-const SHELL_CACHE = 'pro-musica-shell-v11';
+const SHELL_CACHE = 'pro-musica-shell-v12';
 const OFFLINE_CACHE = 'pro-musica-offline-songs-v1';
 const SHELL = ['./', './index.html', './manifest.webmanifest', './icon-192.png', './icon-512.png', './apple-touch-icon.png', './choir-logo.svg'];
 self.addEventListener('install', event => {
