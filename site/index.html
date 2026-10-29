@@ -146,6 +146,28 @@ input,select,textarea,.section-card,.bookmark-card,.modal,.sheet,.screen-card{
 .starting-note-panel{border-left:4px solid #e3856b}
 .starting-note-panel .panelhead{margin-bottom:8px}
 .song-tags{display:block;margin-top:4px;font-size:11px;line-height:1.3;color:var(--muted);font-weight:650;overflow-wrap:anywhere}.song-tags.untagged{color:#8b5a00}
+
+/* Choir noticeboard and calendar */
+.board-section{margin:18px 0 22px}
+.board-list{display:grid;gap:9px}
+.notice-card,.event-card{display:flex;align-items:flex-start;gap:12px;padding:13px;border:1px solid var(--line);background:var(--paper);min-width:0}
+.notice-card{border-left:3px solid var(--coral)}
+.notice-main,.event-main{flex:1;min-width:0}
+.notice-title,.event-title{font:600 17px/1.25 Georgia,"Times New Roman",serif;margin:0 0 6px;overflow-wrap:anywhere}
+.notice-message,.event-details{font-size:13px;line-height:1.5;color:#425c5d;margin:0;white-space:pre-wrap;overflow-wrap:anywhere}
+.board-meta{display:block;margin-top:8px;color:var(--muted);font-size:11px}
+.board-link{display:inline-block;margin-top:8px;color:var(--teal);font-size:12px;font-weight:800;text-decoration:underline;text-underline-offset:3px}
+.board-label{display:inline-block;margin-bottom:5px;color:#83576a;font-size:10px;letter-spacing:.1em;font-weight:800;text-transform:uppercase}
+.event-date{display:flex;flex:none;flex-direction:column;align-items:center;justify-content:center;width:54px;min-height:64px;padding:6px 3px;background:#e4f1ee;color:#245d5c;text-align:center}
+.event-date-month{font-size:10px;font-weight:800;letter-spacing:.08em;text-transform:uppercase}
+.event-date-day{font:600 25px/.98 Georgia,"Times New Roman",serif;margin:3px 0}
+.event-date-year{font-size:10px;color:#425c5d}
+.event-meta{display:block;color:var(--muted);font-size:12px;margin:0 0 7px;overflow-wrap:anywhere}
+.board-empty{padding:14px;border:1px dashed var(--line);color:var(--muted);font-size:13px;background:var(--paper)}
+.board-section .sectionrow{align-items:center}
+.board-section .sectionrow h2{min-width:0}
+@media(max-width:360px){.notice-card,.event-card{padding:10px;gap:9px}.event-date{width:47px}}
+
 </style>
 </head>
 <body>
@@ -154,11 +176,33 @@ input,select,textarea,.section-card,.bookmark-card,.modal,.sheet,.screen-card{
 <main class="content">
 <section class="screen active" id="screen-home">
  <section class="home-intro" aria-labelledby="homeHeadline"><p class="eyebrow" id="homeGreeting">PRO MUSICA · PRACTICE ROOM</p><h1 class="heading" id="homeHeadline">Know your notes.<br><span>Own your part.</span></h1><p class="subtext">Practise with purpose.<br>Sing with confidence.</p><span class="home-intro-mark" aria-hidden="true">♪</span></section>
+ <section class="board-section" aria-labelledby="announcementsHeading">
+  <div class="sectionrow"><h2 id="announcementsHeading">Announcements</h2><button class="quietbtn" type="button" data-goto="calendar">All announcements</button></div>
+  <div class="board-list" id="announcementList" aria-live="polite"><p class="board-empty">Loading announcements…</p></div>
+ </section>
+ <section class="board-section" aria-labelledby="upcomingHeading">
+  <div class="sectionrow"><h2 id="upcomingHeading">Upcoming dates</h2><button class="quietbtn" type="button" data-goto="calendar">View all dates</button></div>
+  <div class="board-list" id="homeEvents" aria-live="polite"><p class="board-empty">Loading dates…</p></div>
+ </section>
  <label class="search"><span aria-hidden="true">⌕</span><input id="search" type="search" placeholder="Search all songs…" autocomplete="off" aria-label="Search songs"></label>
  <div class="library-tools"><label for="tagFilter">Tags</label><select id="tagFilter" aria-label="Filter songs by tag"><option value="all">All songs</option></select><button class="smallbtn" id="downloadTag">Download selected songs</button></div>
  <div class="sectionrow"><h2 id="libraryHeading">All songs</h2><span class="muted" id="songCount"></span></div><div class="songlist" id="songList"></div><p class="empty hidden" id="empty">Your song library will appear here after practice tracks are created.</p>
  <div class="panel"><div class="panelhead"><h2>Recently practised</h2></div><div id="recentSongs" class="compact-list"><p class="muted">Songs you open will appear here.</p></div></div>
  <p class="footer-note">A little practice. A fuller sound.</p>
+</section>
+<section class="screen" id="screen-calendar">
+ <button class="quietbtn" type="button" data-back="home">‹ Home</button>
+ <p class="eyebrow">Stay in the loop</p>
+ <h1 class="heading">Announcements &amp; dates</h1>
+ <p class="subtext">The latest choir notices and upcoming events.</p>
+ <section class="board-section" aria-labelledby="allAnnouncementsHeading">
+  <div class="sectionrow"><h2 id="allAnnouncementsHeading">Announcements</h2></div>
+  <div class="board-list" id="allAnnouncements" aria-live="polite"><p class="board-empty">Loading announcements…</p></div>
+ </section>
+ <section class="board-section" aria-labelledby="allEventsHeading">
+  <div class="sectionrow"><h2 id="allEventsHeading">Upcoming dates</h2></div>
+  <div class="board-list" id="allEvents" aria-live="polite"><p class="board-empty">Loading dates…</p></div>
+ </section>
 </section>
 <section class="screen" id="screen-practice">
  <button class="quietbtn" id="backSongs">‹ All songs</button>
@@ -187,6 +231,7 @@ input,select,textarea,.section-card,.bookmark-card,.modal,.sheet,.screen-card{
 const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)], audio=$('#audio');
 const store={get(k,d){try{const v=localStorage.getItem('pmc-'+k);return v===null?d:JSON.parse(v)}catch{return d}},set(k,v){try{localStorage.setItem('pmc-'+k,JSON.stringify(v))}catch{}}};
 let data=null,piece=null,voice=store.get('voice',null),profile=store.get('profile',null),currentScreen='home',aPoint=0,bPoint=null,loopOn=false,seeking=false,miniSeeking=false,wakeLock=null;
+let announcementItems=[],eventItems=[],announcementsLoadFailed=false,eventsLoadFailed=false;
 let practiceStatuses=store.get('practiceStatuses',{}),bookmarks=store.get('bookmarks',{}),recentSongs=store.get('recentSongs',[]),tagFilter='all';
 const fmt=s=>{s=Math.max(0,Math.floor(Number(s)||0));return Math.floor(s/60)+':'+String(s%60).padStart(2,'0')};
 function allVoices(){const seen=new Map();(data?.pieces||[]).forEach(p=>(p.voices||[]).forEach(v=>{if(!seen.has(v.id))seen.set(v.id,v.name)}));return [...seen].map(([id,name])=>({id,name}));}
@@ -195,7 +240,18 @@ function syncProfileFields(){const n=profile?.name||'';$('#settingsName').value=
 function showWelcome(){fillVoiceSelect($('#welcomeVoice'),voice);if(voice&&[...$('#welcomeVoice').options].some(o=>o.value===voice))$('#welcomeVoice').value=voice;$('#welcomeBackdrop').classList.remove('hidden');document.body.style.overflow='hidden';setTimeout(()=>$('#welcomeName').focus(),60);}
 function updateProfileHeader(){const name=profile?.name?.trim();const selected=allVoices().find(v=>v.id===voice);$('#brandName').textContent='Pro Musica Choir';$('#profileSummary').textContent=name&&selected?name+' · '+selected.name:'Set up your singer profile in Settings';}
 function saveProfile(name,part){const chosen=allVoices().find(v=>v.id===part);profile={name:name.trim(),voice:chosen?.id||part};voice=profile.voice;store.set('profile',profile);store.set('voice',voice);$('#welcomeBackdrop').classList.add('hidden');document.body.style.overflow='';$('#welcomeName').value='';syncProfileFields();renderSongs();updateProfileHeader();$('#homeGreeting').textContent='Welcome back, '+profile.name+'.';if(piece){setPlaybackMode(playMode,true);renderStartingNote();renderLyrics();}}
-function init(){document.title='Pro Musica Choir';$('#brandName').textContent='Pro Musica Choir';const v=allVoices();if(!v.some(x=>x.id===voice))voice=v[0]?.id||null;if(profile?.voice&&v.some(x=>x.id===profile.voice))voice=profile.voice;renderSongs();syncProfileFields();updateProfileHeader();renderLibraryExtras();$('#empty').classList.toggle('hidden',data.pieces.length>0);if(!data.pieces.length)$('#empty').textContent='No songs yet. Add .mscz files to the songs folder and run Make practice tracks.';paintNav('home');if(profile?.name&&v.some(x=>x.id===profile.voice))$('#homeGreeting').textContent='Welcome back, '+profile.name+'.';else showWelcome();}
+function init(){document.title='Pro Musica Choir';$('#brandName').textContent='Pro Musica Choir';const v=allVoices();if(!v.some(x=>x.id===voice))voice=v[0]?.id||null;if(profile?.voice&&v.some(x=>x.id===profile.voice))voice=profile.voice;renderSongs();syncProfileFields();updateProfileHeader();renderLibraryExtras();$('#empty').classList.toggle('hidden',data.pieces.length>0);if(!data.pieces.length)$('#empty').textContent='No songs yet. Add .mscz files to the songs folder and run Make practice tracks.';paintNav('home');if(profile?.name&&v.some(x=>x.id===profile.voice))$('#homeGreeting').textContent='Welcome back, '+profile.name+'.';else showWelcome();loadBoardData();}
+function localDateKey(date=new Date()){return date.getFullYear()+'-'+String(date.getMonth()+1).padStart(2,'0')+'-'+String(date.getDate()).padStart(2,'0')}
+function parseBoardDate(value){const m=/^(\d{4})-(\d{2})-(\d{2})$/.exec(String(value||''));if(!m)return null;const d=new Date(Number(m[1]),Number(m[2])-1,Number(m[3]));return d.getFullYear()===Number(m[1])&&d.getMonth()===Number(m[2])-1&&d.getDate()===Number(m[3])?d:null}
+function formatBoardDate(value,weekday=true){const d=parseBoardDate(value);if(!d)return '';return d.toLocaleDateString('en-ZA',weekday?{weekday:'short',day:'numeric',month:'short',year:'numeric'}:{day:'numeric',month:'short',year:'numeric'})}
+function formatBoardTime(value){const m=/^(\d{2}):(\d{2})$/.exec(String(value||''));if(!m)return String(value||'');const hour=Number(m[1]),minute=Number(m[2]);if(hour>23||minute>59)return String(value);const h=hour%12||12;return h+':'+m[2]+' '+(hour>=12?'pm':'am')}
+function boardUrl(value){try{const url=new URL(String(value||''),location.href);return url.protocol==='http:'||url.protocol==='https:'?url.href:null}catch{return null}}
+function addBoardLink(parent,url,label){const href=boardUrl(url);if(!href)return;const a=document.createElement('a');a.className='board-link';a.href=href;a.textContent=label||'More information';if(new URL(href).origin!==location.origin){a.target='_blank';a.rel='noopener noreferrer'}parent.append(a)}
+function visibleAnnouncements(){const today=localDateKey();return announcementItems.filter(a=>a&&typeof a.title==='string'&&a.title.trim()&&typeof a.message==='string'&&a.message.trim()&&!(parseBoardDate(a.expiresOn)&&a.expiresOn<today)).sort((a,b)=>String(b.postedOn||'').localeCompare(String(a.postedOn||'')))}
+function upcomingEvents(){const today=localDateKey();return eventItems.filter(e=>e&&typeof e.title==='string'&&e.title.trim()&&parseBoardDate(e.date)&&e.date>=today).sort((a,b)=>(a.date+(a.time||'')).localeCompare(b.date+(b.time||'')))}
+async function loadBoardData(){const results=await Promise.allSettled([fetch('announcements.json').then(r=>{if(!r.ok)throw Error('announcements.json unavailable');return r.json()}),fetch('events.json').then(r=>{if(!r.ok)throw Error('events.json unavailable');return r.json()})]);if(results[0].status==='fulfilled'&&Array.isArray(results[0].value.announcements)){announcementItems=results[0].value.announcements;announcementsLoadFailed=false}else{announcementItems=[];announcementsLoadFailed=true}if(results[1].status==='fulfilled'&&Array.isArray(results[1].value.events)){eventItems=results[1].value.events;eventsLoadFailed=false}else{eventItems=[];eventsLoadFailed=true}renderAnnouncementList('announcementList',2);renderAnnouncementList('allAnnouncements',null);renderEventList('homeEvents',3);renderEventList('allEvents',null)}
+function renderAnnouncementList(targetId,limit){const target=$('#'+targetId);if(!target)return;target.innerHTML='';if(announcementsLoadFailed){const p=document.createElement('p');p.className='board-empty';p.textContent='Announcements could not be loaded. Please check your connection and try again.';target.append(p);return}let items=visibleAnnouncements();if(Number.isFinite(limit))items=items.slice(0,limit);if(!items.length){const p=document.createElement('p');p.className='board-empty';p.textContent='No announcements at the moment.';target.append(p);return}items.forEach(item=>{const card=document.createElement('article');card.className='notice-card';const main=document.createElement('div');main.className='notice-main';const title=document.createElement('h3');title.className='notice-title';title.textContent=item.title;const message=document.createElement('p');message.className='notice-message';message.textContent=item.message;main.append(title,message);if(parseBoardDate(item.postedOn)){const meta=document.createElement('span');meta.className='board-meta';meta.textContent='Posted '+formatBoardDate(item.postedOn,false);main.append(meta)}if(item.url)addBoardLink(main,item.url,item.linkLabel||'More information');card.append(main);target.append(card)})}
+function renderEventList(targetId,limit){const target=$('#'+targetId);if(!target)return;target.innerHTML='';if(eventsLoadFailed){const p=document.createElement('p');p.className='board-empty';p.textContent='Upcoming dates could not be loaded. Please check your connection and try again.';target.append(p);return}let items=upcomingEvents();if(Number.isFinite(limit))items=items.slice(0,limit);if(!items.length){const p=document.createElement('p');p.className='board-empty';p.textContent='No upcoming dates have been added yet.';target.append(p);return}items.forEach(item=>{const card=document.createElement('article');card.className='event-card';const date=document.createElement('time');date.className='event-date';date.dateTime=item.date;const d=parseBoardDate(item.date);const month=document.createElement('span');month.className='event-date-month';month.textContent=d.toLocaleDateString('en-ZA',{month:'short'});const day=document.createElement('span');day.className='event-date-day';day.textContent=String(d.getDate());const year=document.createElement('span');year.className='event-date-year';year.textContent=String(d.getFullYear());date.append(month,day,year);const main=document.createElement('div');main.className='event-main';if(item.category){const category=document.createElement('span');category.className='board-label';category.textContent=item.category;main.append(category)}const title=document.createElement('h3');title.className='event-title';title.textContent=item.title;main.append(title);const meta=[];if(item.time)meta.push(formatBoardTime(item.time));if(item.venue)meta.push(item.venue);if(meta.length){const metaEl=document.createElement('p');metaEl.className='event-meta';metaEl.textContent=meta.join(' · ');main.append(metaEl)}if(item.details){const details=document.createElement('p');details.className='event-details';details.textContent=item.details;main.append(details)}if(item.url)addBoardLink(main,item.url,item.linkLabel||'More information');card.append(date,main);target.append(card)})}
 function offlineFiles(p){const files=[];const add=v=>{if(typeof v==='string'&&v.trim())files.push(v);else if(Array.isArray(v))v.forEach(add);else if(v&&typeof v==='object')Object.values(v).forEach(add)};add(p.files?.all);add(p.files?.loud);add(p.files?.only);add(p.files?.stems);add(p.score);add(p.original);return [...new Set(files)].map(f=>new URL(p.dir+f,location.href).href)}
 const OFFLINE_CACHE='pro-musica-offline-songs-v1';
 async function offlineStatus(p){if(!('caches'in window))return false;const cache=await caches.open(OFFLINE_CACHE);const urls=offlineFiles(p);if(!urls.length)return false;for(const url of urls)if(!await cache.match(url))return false;return true}
