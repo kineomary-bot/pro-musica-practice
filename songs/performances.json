@@ -9,6 +9,13 @@
         "carol-of-the-bells",
         "joy-to-the-world"
       ]
+    },
+    {
+      "id": "winter-2026",
+      "name": "Winter 2026",
+      "date": null,
+      "status": "draft",
+      "songs": []
     }
   ]
 }
