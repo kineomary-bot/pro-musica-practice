@@ -808,5 +808,37 @@ foreach ($d in (Get-ChildItem -LiteralPath $audio -Directory)) {
 
 $out = [ordered]@{ title = $ChoirName; built = [int][double]::Parse((Get-Date -UFormat %s)); performances = @($performances.ToArray()); pieces = $pieces }
 [IO.File]::WriteAllText((Join-Path $Site 'pieces.json'), (ConvertTo-Json -InputObject $out -Depth 12 -Compress), $Utf8)
+
+# Print assignment status on every build so new songs cannot silently remain unassigned.
+$performanceNamesById = @{}
+foreach ($performance in $performances) {
+    $performanceNamesById[[string]$performance['id']] = [string]$performance['name']
+}
+Write-Host "`nPerformance assignment check:"
+$assignedCount = 0
+$unassignedCount = 0
+foreach ($cataloguePiece in $pieces) {
+    $assignedIds = @($cataloguePiece['performanceIds'])
+    if ($assignedIds.Count -eq 0) {
+        $unassignedCount++
+        Write-Host ("  UNASSIGNED: " + $cataloguePiece['title']) -ForegroundColor Yellow
+        continue
+    }
+    $assignedNames = @()
+    foreach ($performanceId in $assignedIds) {
+        if ($performanceNamesById.ContainsKey([string]$performanceId)) {
+            $assignedNames += $performanceNamesById[[string]$performanceId]
+        }
+    }
+    if ($assignedNames.Count -gt 0) {
+        $assignedCount++
+        Write-Host ("  ASSIGNED:   " + $cataloguePiece['title'] + " -> " + ($assignedNames -join ", ")) -ForegroundColor Green
+    } else {
+        $unassignedCount++
+        Write-Host ("  UNASSIGNED: " + $cataloguePiece['title'] + " (performance reference missing)") -ForegroundColor Yellow
+    }
+}
+Write-Host ("  Summary: {0} assigned, {1} unassigned." -f $assignedCount, $unassignedCount)
+
 $total = (Get-ChildItem -LiteralPath $audio -Recurse -File | Measure-Object Length -Sum).Sum / 1MB
 Write-Host ("`nDone: {0} pieces, {1:N0} MB. Upload the 'site' folder." -f $pieces.Count, $total)
