@@ -113,6 +113,14 @@ if (!html.includes("$('#seek').addEventListener('input',e=>{seeking=true;const d
     !html.includes("$('#miniSeek').addEventListener('input',e=>{miniSeeking=true;const d=seekDuration();const target=Number(e.target.value)/1000*d;$('#miniTime').textContent=fmt(target)+' · '+fmt(d);if(d>0)seekTo(target)});")) {
   errors.push('Both player sliders must seek audio during dragging.');
 }
+if (!html.includes("!['bookmarks','loop','tempo'].includes(currentScreen)") ||
+    !html.includes("window.scrollTo({top:0,behavior:'instant'});paintTime();")) {
+  errors.push('The floating player must not cover the Bookmarks, Loop or Tempo controls and must update visibility on navigation.');
+}
+if (!html.includes("function jumpToLoopStart(restart=false){if(!loopActive())return;seekTo(aPoint);") ||
+    !html.includes("go.onclick=()=>{showScreen('practice');seekTo(b.time)}")) {
+  errors.push('Loop restart and bookmark navigation must use the shared audio seek function.');
+}
 if (!/const\s+SHELL_CACHE\s*=\s*['"]pro-musica-shell-v\d+['"]/.test(sw)) {
   errors.push('site/sw.js must declare a versioned app-shell cache.');
 }
