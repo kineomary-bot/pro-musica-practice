@@ -105,6 +105,13 @@ if (!/const\s+SHELL_CACHE\s*=\s*['"]pro-musica-shell-v\d+['"]/.test(sw)) {
 if (!/['"]\.\/index\.html['"]/.test(sw)) {
   errors.push('site/sw.js must precache index.html as part of the app shell.');
 }
+if (!/['"]\.\/pieces\.json['"]/.test(sw)) {
+  errors.push('site/sw.js must precache pieces.json so the song catalogue is available for an offline launch.');
+}
+const offlineCacheName = 'pro-musica-offline-songs-v1';
+if (!html.includes(`const OFFLINE_CACHE='${offlineCacheName}';`) || !sw.includes(`const OFFLINE_CACHE = '${offlineCacheName}';`)) {
+  errors.push('The app and service worker must use the same offline-song cache name.');
+}
 
 const collectStrings = value => {
   if (typeof value === 'string') return [value];
