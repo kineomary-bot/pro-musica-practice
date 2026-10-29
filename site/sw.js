@@ -1,8 +1,12 @@
 const SHELL_CACHE = 'pro-musica-shell-v16';
 const OFFLINE_CACHE = 'pro-musica-offline-songs-v1';
-const SHELL = ['./', './index.html', './manifest.webmanifest', './icon-192.png', './icon-512.png', './apple-touch-icon.png', './choir-logo.svg', './announcements.json', './events.json'];
+const SHELL = ['./', './index.html', './manifest.webmanifest', './icon-192.png', './icon-512.png', './apple-touch-icon.png', './choir-logo.svg'];
+const OPTIONAL_BOARD_DATA = ['./announcements.json', './events.json'];
 self.addEventListener('install', event => {
-  event.waitUntil(caches.open(SHELL_CACHE).then(cache => cache.addAll(SHELL)).then(() => self.skipWaiting()));
+  event.waitUntil(caches.open(SHELL_CACHE).then(async cache => {
+    await cache.addAll(SHELL);
+    await Promise.all(OPTIONAL_BOARD_DATA.map(asset => cache.add(asset).catch(() => null)));
+  }).then(() => self.skipWaiting()));
 });
 self.addEventListener('activate', event => {
   event.waitUntil(caches.keys().then(keys => Promise.all(keys.filter(k => k.startsWith('pro-musica-shell-') && k !== SHELL_CACHE).map(k => caches.delete(k)))).then(() => self.clients.claim()));
