@@ -69,13 +69,20 @@ Add entries to the `announcements` array. Each notice needs an `id`, `title` and
 }
 ```
 
-The file currently has an empty announcements list, so the app shows a friendly empty state until the choir adds a real notice.
+The current notice is **Extra practice — Wednesday 4 November**. It is dated 29 October and expires after 4 November, so it will stop appearing from 5 November.
 
 ### Events — `site/events.json`
 
 Add entries to the `events` array. Each event needs a unique `id`, `title` and `date`. Use `YYYY-MM-DD` for dates and 24-hour `HH:MM` for times. The `time`, `venue`, `category`, `details`, `url` and `linkLabel` fields are optional. Events are sorted by date and time; past dates stop appearing in the upcoming lists but remain in the JSON file until you remove them.
 
-The current calendar includes **Christmas in Music and Song** on **6 December 2026 at 16:00**, at **NG Kerk Hermanus**, with the ticket prices recorded as R150 / R50.
+The current calendar includes:
+
+- **Year-End Function** — 14 November 2026 at 11:30.
+- **Kerssangdiens** — 29 November 2026 at 18:00, NG Kerk Hermanus.
+- **Hospital Performances** — 5 December 2026 at 15:00.
+- **Christmas in Music and Song** — 6 December 2026 at 16:00, NG Kerk Hermanus. Tickets: R150 / R50.
+
+The Home screen keeps the announcement and next three dates compact. The notice section uses a soft coral tint, while upcoming dates use a soft teal tint and date tiles; the full calendar shows the details.
 
 To publish a change, edit the relevant JSON file, commit it to the branch used for the site, and deploy or upload the updated `site` contents. These notices and dates display in the app; they do not send automatic phone notifications.
 
