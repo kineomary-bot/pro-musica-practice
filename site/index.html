@@ -243,7 +243,9 @@ function selectedStartingNote(){
 }
 function renderLyrics(){
  if(!piece)return;
- const display=piece.lyrics||'Words for this song have not been added yet.';
+ const partLyrics=piece.lyricsByVoice?.[voice];
+ const chosen=typeof partLyrics==='string'&&partLyrics.trim()?partLyrics:piece.lyrics;
+ const display=chosen||'Words for this song have not been added yet.';
  $('#lyricsText').textContent=display;
  $('#practiceLyrics').textContent=display;
 }
