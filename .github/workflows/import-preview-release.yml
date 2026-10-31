@@ -28,7 +28,6 @@ jobs:
           rsync -a --delete /tmp/pro-musica-test/scripts/ scripts/
           cp /tmp/pro-musica-test/build.ps1 build.ps1
           cp /tmp/pro-musica-test/README.md README.md
-          cp /tmp/pro-musica-test/.github/workflows/validate-site.yml .github/workflows/validate-site.yml
 
       - name: Validate imported app
         run: node scripts/validate-site.mjs
