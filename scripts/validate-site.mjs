@@ -53,6 +53,21 @@ async function readJson(relativePath) {
 
 for (const file of requiredFiles) await fileExists(file);
 
+const intervalRecordingFiles = [
+  'do-re.mp3', 're-do.mp3',
+  'do-mi.mp3', 'mi-do.mp3',
+  'do-fa.mp3', 'fa-do.mp3',
+  'do-sol.mp3', 'sol-do.mp3',
+  'do-la.mp3', 'la-do.mp3',
+  'do-ti.mp3', 'ti-do.mp3',
+  'do-high-do.mp3', 'high-do-low-do.mp3',
+  'do-me.mp3', 'me-do.mp3',
+  'do-le.mp3', 'le-do.mp3',
+  'do-te.mp3', 'te-do.mp3',
+];
+for (const file of intervalRecordingFiles) await fileExists(path.posix.join('audio', 'pitch-intervals', file));
+
+
 const piecesData = await readJson('pieces.json');
 const announcementsData = await readJson('announcements.json');
 const eventsData = await readJson('events.json');
@@ -133,10 +148,92 @@ const requiredHtmlMarkers = [
   'id="welcomeVoice"',
   'id="songList"',
   'id="announcementList"',
-  'id="homeEvents"',
+  'id="announcementsSection"',
+  'id="homeCalendarLink"',
+  'id="allEvents"',
+  'id="addBookmark"',
+
+  'id="breathingDuration"',
+  'id="breathingDurationValue"',
+  'id="breathingInDuration"',
+  'id="breathingOutDuration"',
+  'id="screen-interval-game"',
+  'id="intervalGameModeListen"',
+  'id="intervalGameModeSing"',
+  'id="intervalGameStart"',
+  'id="intervalGameExit"',
+  'id="intervalGameOptions"',
+  'id="intervalGameRoot"',
+  'id="intervalGameSingStart"',
+  'id="intervalGameSingCheck"',
+  'id="intervalGameHighScoreList"',
+  'id="intervalGameAudio"',
 ];
 for (const marker of requiredHtmlMarkers) {
   if (!html.includes(marker)) errors.push(`site/index.html is missing required startup/app markup: ${marker}`);
+}
+
+if (!html.includes('function intervalGameEstimateMidi') ||
+    !html.includes('function intervalGameSaveScore') ||
+    !html.includes("store.set('intervalGameScores',intervalGameScores)") ||
+    !html.includes('navigator.mediaDevices.getUserMedia') ||
+    !html.includes("$$('#intervalGameOptions .interval-game-answer').forEach(")) {
+  errors.push('The interval challenge must include in-browser pitch detection and locally saved high scores.');
+}
+
+const intervalGameLevelBindings = (html.match(/\$\$\('\.interval-game-level'\)\.forEach\(/g) || []).length;
+if (intervalGameLevelBindings !== 2 || /(?<!\$)\$\('\.interval-game-level'\)\.forEach\(/.test(html)) {
+  errors.push('All three interval game difficulty buttons must be initialised in both the level display and event handler.');
+}
+
+const intervalQuestionFactoryStart = html.indexOf('function intervalGameMakeQuestions(){');
+const intervalQuestionFactoryEnd = html.indexOf('function intervalGameRenderQuestion(){', intervalQuestionFactoryStart);
+const intervalQuestionFactory = intervalQuestionFactoryStart >= 0 && intervalQuestionFactoryEnd > intervalQuestionFactoryStart
+  ? html.slice(intervalQuestionFactoryStart, intervalQuestionFactoryEnd) : '';
+if (!intervalQuestionFactory.includes('if(pool.length>1&&deck[0].id===lastId)') ||
+    !intervalQuestionFactory.includes("Math.random()<0.5?'up':'down'") ||
+    !intervalQuestionFactory.includes('lastId=definition.id')) {
+  errors.push('Listening rounds must shuffle intervals in separate decks, avoid repeating the same interval at a deck boundary, and randomise direction.');
+}
+
+const intervalGameExitControls = html.includes("id=\"intervalGameExit\"") &&
+  html.includes("$('#intervalGameExit').addEventListener('click',intervalGameReturnToSetup)") &&
+  html.includes('function intervalGameReturnToSetup(){');
+if (!intervalGameExitControls) {
+  errors.push('An active interval game must provide a working way to return to the game and difficulty settings.');
+}
+const singingRetryStart = html.indexOf('async function intervalGameStartSinging(){');
+const singingRetryEnd = html.indexOf('function intervalGameStopCapture(){', singingRetryStart);
+const singingRetryFinishStart = html.indexOf('function intervalGameFinishSinging(){');
+const singingRetryFinishEnd = html.indexOf('function intervalGameCheckSinging(){', singingRetryFinishStart);
+const singingRetryCode = singingRetryStart >= 0 && singingRetryEnd > singingRetryStart &&
+  singingRetryFinishStart >= 0 && singingRetryFinishEnd > singingRetryFinishStart
+  ? html.slice(singingRetryStart, singingRetryEnd) + html.slice(singingRetryFinishStart, singingRetryFinishEnd) : '';
+if (!singingRetryCode.includes("$('#intervalGameRoot').disabled=false;") ||
+    !singingRetryCode.includes("$('#intervalGameSingStart').textContent='Try again'") ||
+    !singingRetryCode.includes('intervalGameState.singingAttempted=true;') ||
+    !singingRetryCode.includes("$('#intervalGameNext').classList.remove('hidden')")) {
+  errors.push('The singing challenge must let singers replay Do, retry an incorrect note, and move on when they choose.');
+}
+
+if (!html.includes('Back 5 seconds') ||
+    !html.includes('Forward 5 seconds') ||
+    !html.includes('Jump back 5 seconds') ||
+    !html.includes('Jump forward 5 seconds') ||
+    !html.includes("$('#miniRewind').addEventListener('click',()=>seekBy(-5))") ||
+    !html.includes("$('#miniForward').addEventListener('click',()=>seekBy(5))") ||
+    !html.includes("$('#rewind').addEventListener('click',()=>seekBy(-5))") ||
+    !html.includes("$('#forward').addEventListener('click',()=>seekBy(5))")) {
+  errors.push('Practice playback and mini-player skip controls must move in five-second increments.');
+}
+
+const bookmarkSaveStart = html.indexOf('function saveBookmark(){');
+const bookmarkSaveEnd = html.indexOf("$('#addBookmark').addEventListener('click',saveBookmark)", bookmarkSaveStart);
+if (bookmarkSaveStart < 0 || bookmarkSaveEnd < 0 ||
+    html.includes('id="addSectionBookmark"') ||
+    !html.slice(bookmarkSaveStart, bookmarkSaveEnd).includes('optional') ||
+    !html.includes("$('#addBookmark').addEventListener('click',saveBookmark)")) {
+  errors.push('Bookmarks must use one action that saves the current position and allows an optional name.');
 }
 
 if (!html.includes("const seen=new Map(),excluded=new Set(['soprano','solo','descant']);")) {
@@ -144,11 +241,49 @@ if (!html.includes("const seen=new Map(),excluded=new Set(['soprano','solo','des
 }
 if (!html.includes('function pieceVoiceId(p){') ||
     !html.includes("(voice==='soprano-1'||voice==='soprano-2')&&ids.has('soprano')") ||
-    !html.includes('const partLyrics=piece.lyricsByVoice?.[pieceVoiceId(piece)];') ||
     !html.includes('const voiceId=pieceVoiceId(piece);')) {
-  errors.push('Soprano 1 and Soprano 2 must fall back to a song’s single Soprano lyrics/audio/starting note.');
+  errors.push('Soprano 1 and Soprano 2 must continue to share the single Soprano audio and starting-note data.');
 }
 
+if (!html.includes("$$('#warmupExerciseList li').forEach(")) {
+  errors.push('Warm-up exercise list updates must use querySelectorAll for every list item.');
+}
+if (html.includes('A short vocal warm-up. Follow the piano at a comfortable volume.') ||
+    html.includes('Choose from 10 seconds to 10 minutes in 10-second steps.') ||
+    html.includes('aria-describedby="breathingDurationHelp"')) {
+  errors.push('Removed warm-up copy must not reappear or leave a dangling help-text reference.');
+}
+if (!html.includes("Breathe in through your nose") ||
+    !html.includes("Breathe out through your mouth") ||
+    !html.includes(".breathing-controls .primarybtn,.breathing-controls .smallbtn") ||
+    !html.includes(".tab{font-size:12px;line-height:1.2}") ||
+    !html.includes(".controlhint{font-size:12px;line-height:1.3}")) {
+  errors.push('Breathing prompts and readable app-wide button styles must be present.');
+}
+const breathingSectionCollapsed = html.includes('<details class="warmup-breath-exercise panel warmup-collapsible" id="breathingSection">');
+const vocalSectionCollapsed = html.includes('<details class="warmup-vocal-section panel warmup-collapsible" id="quickVocalSection">');
+if (!breathingSectionCollapsed || !vocalSectionCollapsed ||
+    !html.includes("if(name==='warmups'){const breathing=$('#breathingSection');if(breathing)breathing.open=false;const vocal=$('#quickVocalSection');if(vocal)vocal.open=false;}")) {
+  errors.push('Breathing and Quick vocal warm-up sections must be collapsed by default and when the Warm-ups screen is reopened.');
+}
+if (!/id="breathingDuration"[^>]*type="range"[^>]*min="10"[^>]*max="600"[^>]*step="10"/.test(html)) {
+  errors.push('Breathing duration must be adjustable from 10 seconds to 10 minutes in 10-second steps.');
+}
+if (!/id="breathingInDuration"[^>]*aria-label="Inhale duration"/.test(html) ||
+    !/id="breathingOutDuration"[^>]*aria-label="Exhale duration"/.test(html) ||
+    !html.includes("store.get('breathingInSeconds',4)") ||
+    !html.includes("store.get('breathingOutSeconds',6)") ||
+    !html.includes("const inhaleMs=breathingInSeconds*1000,exhaleMs=breathingOutSeconds*1000;") ||
+    !html.includes("$('#breathingInDuration').addEventListener('change',event=>breathingSetRhythm(event.target.value,breathingOutSeconds))") ||
+    !html.includes("$('#breathingOutDuration').addEventListener('change',event=>breathingSetRhythm(breathingInSeconds,event.target.value))") ||
+    !html.includes('value="8"')) {
+  errors.push('The breathing exercise must let users choose and save independent inhale and exhale durations from 1 to 8 seconds.');
+}
+if (!html.includes('id="warmupRestart" aria-label="Restart vocal warm-up"') ||
+    !html.includes('id="warmupNext" aria-label="Next exercise">Next</button>') ||
+    !html.includes("$('#warmupNext').textContent=isLastWarmup?'Finish':'Next'")) {
+  errors.push('Vocal warm-up controls must use short visible labels with clear accessible names.');
+}
 const showScreenStart = html.indexOf('function showScreen(');
 const paintNavStart = html.indexOf('function paintNav(', showScreenStart);
 const showScreenSource = showScreenStart >= 0 && paintNavStart > showScreenStart
@@ -236,23 +371,38 @@ if (!errors.some(error => error.startsWith('JavaScript syntax error in site/sw.j
 if (!html.includes("$('#seek').addEventListener('input',e=>{seeking=true;const d=seekDuration(),target=Number(e.target.value)/1000*d;$('#timeNow').textContent=fmt(target);if(d>0)seekTo(target)});") ||
     !html.includes("$('#miniSeek').addEventListener('input',e=>{miniSeeking=true;const d=seekDuration();const target=Number(e.target.value)/1000*d;$('#miniTime').textContent=fmt(target)+' · '+fmt(d);if(d>0)seekTo(target)});") ||
     !html.includes("audio.addEventListener('seeked',paintTime);") ||
-    !html.includes("$('#rewind').addEventListener('click',()=>seekBy(-10));") ||
-    !html.includes("$('#forward').addEventListener('click',()=>seekBy(10));") ||
-    !html.includes("$('#miniRewind').addEventListener('click',()=>seekBy(-10));") ||
-    !html.includes("$('#miniForward').addEventListener('click',()=>seekBy(10));")) {
+    !html.includes("$('#rewind').addEventListener('click',()=>seekBy(-5));") ||
+    !html.includes("$('#forward').addEventListener('click',()=>seekBy(5));") ||
+    !html.includes("$('#miniRewind').addEventListener('click',()=>seekBy(-5));") ||
+    !html.includes("$('#miniForward').addEventListener('click',()=>seekBy(5));")) {
   errors.push('Both sliders and all skip buttons must route through the audio seek functions and update after seeking finishes.');
 }
-if (!html.includes("$('#mini').classList.toggle('visible',!!piece);") ||
-    !html.includes("window.scrollTo({top:0,behavior:'instant'});paintTime();")) {
-  errors.push('The floating player must remain available while a song is selected and update on navigation.');
+if (!html.includes("$('#mini').classList.toggle('visible',!!piece&&['practice','loop','tempo','bookmarks'].includes(currentScreen));") ||
+    !html.includes("window.scrollTo({top:0,behavior:'instant'});paintTime();") ||
+    !html.includes('<button class="home-dates-link" type="button" id="homeCalendarLink" data-goto="calendar" aria-label="Open choir announcements and upcoming dates">') ||
+    html.includes('id="homeEventsSection"') ||
+    !html.includes("section.classList.toggle('hidden',!items.length&&!announcementsLoadFailed)") ||
+    !html.includes("if(section)section.classList.remove('hidden')") ||
+    html.includes("meta.textContent=(p.voices||[]).map(v=>v.name).join(' · ')")) {
+  errors.push('Home must use a compact link to the full announcements-and-dates screen, omit the large upcoming-dates block and vocal-part inventory, and hide empty announcements.');
 }
+
+if (!html.includes("const wasWelcomeOpen=!$('#welcomeBackdrop').classList.contains('hidden')") ||
+    !html.includes("if(wasWelcomeOpen)window.scrollTo({top:0,behavior:'instant'});") ||
+    !html.includes("if('scrollRestoration'in history)history.scrollRestoration='manual';")) {
+  errors.push('First load and first-time profile setup must return the Home page to the top.');
+}
+const practiceNavUsesQuerySelectorAll =
+  html.includes("$('.tab').forEach(b=>{if(b.dataset.tab===activeTab)b.setAttribute('aria-current','page')") ||
+  html.includes("document.querySelectorAll('.tab').forEach(b=>{if(b.dataset.tab===activeTab)b.setAttribute('aria-current','page')");
 if (!html.includes("function paintNav(name){const activeTab=['bookmarks','loop','tempo','score','lyrics'].includes(name)?'practice':name;") ||
-    !html.includes("$$('.tab').forEach(b=>{if(b.dataset.tab===activeTab)b.setAttribute('aria-current','page')")) {
+    !practiceNavUsesQuerySelectorAll) {
   errors.push('Practice navigation must use querySelectorAll and remain selected on Bookmarks, Loop, Tempo, Lyrics and Score sub-screens.');
 }
 if (!html.includes("function jumpToLoopStart(restart=false){if(!loopActive())return;seekTo(aPoint);") ||
-    !html.includes("go.onclick=()=>{showScreen('practice');seekTo(b.time)}")) {
-  errors.push('Loop restart and bookmark navigation must use the shared audio seek function.');
+    !html.includes("go.onclick=()=>seekTo(b.time)") ||
+    html.includes("go.onclick=()=>{showScreen('practice');seekTo(b.time)}")) {
+  errors.push('Loop restart and bookmark Go must use the shared audio seek function without leaving the Bookmarks screen.');
 }
 if (!/const\s+SHELL_CACHE\s*=\s*['"]pro-musica-shell-v\d+['"]/.test(sw)) {
   errors.push('site/sw.js must declare a versioned app-shell cache.');
@@ -278,12 +428,15 @@ const collectStrings = value => {
 if (piecesData && Array.isArray(piecesData.pieces)) {
   for (const piece of piecesData.pieces) {
     if (Array.isArray(piece?.voices) && piece.voices.some(v => v?.id === 'soprano')) {
-      if (typeof piece.lyricsByVoice?.soprano !== 'string' || !piece.lyricsByVoice.soprano.trim()) {
-        errors.push(`Song "${piece.title}" has a single Soprano audio part but no shared Soprano lyrics.`);
-      }
       if (typeof piece.files?.only?.soprano !== 'string' || typeof piece.files?.loud?.soprano !== 'string') {
         errors.push(`Song "${piece.title}" has a single Soprano part but is missing the shared Soprano audio tracks.`);
       }
+    }
+    if (piece && (typeof piece.lyrics !== 'string' || !piece.lyrics.trim())) {
+      errors.push(`Song "${piece.title}" must have one non-empty shared lyrics text.`);
+    }
+    if (piece && Object.prototype.hasOwnProperty.call(piece, 'lyricsByVoice')) {
+      errors.push(`Song "${piece.title}" must not contain part-specific lyrics.`);
     }
     if (!piece || typeof piece.title !== 'string' || !piece.title.trim()) {
       errors.push('Each song entry in pieces.json must have a title.');

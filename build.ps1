@@ -769,29 +769,6 @@ foreach ($f in $files) {
         }
     }
 
-    # Optional part-specific lyrics override the shared lyrics for that singer.
-    # Preferred filenames: "<clean song title> - <part name>.txt", for example
-    # "Joy to the World - Alto.txt" or "Joy to the World - Soprano 1.txt".
-    # Also accept the exact score filename stem for songs that include an ordering prefix.
-    $lyricsByVoice = [ordered]@{}
-    foreach ($v in $voices) {
-        $partName = [string]$v.Name
-        $sourcePartName = [string]$v.SourceName
-        $partLyricsCandidates = @(
-            (Join-Path $Songs ($title + ' - ' + $partName + '.txt')),
-            (Join-Path $Songs ($stem + ' - ' + $partName + '.txt')),
-            (Join-Path $Songs ($title + ' - ' + $sourcePartName + '.txt')),
-            (Join-Path $Songs ($stem + ' - ' + $sourcePartName + '.txt'))
-        ) | Select-Object -Unique
-        foreach ($partLyricsSrc in $partLyricsCandidates) {
-            if (Test-Path -LiteralPath $partLyricsSrc) {
-                $partText = ([IO.File]::ReadAllText($partLyricsSrc)).Trim()
-                if ($partText) { $lyricsByVoice[[string]$v.Id] = $partText }
-                break
-            }
-        }
-    }
-    if ($lyricsByVoice.Count -gt 0) { $entry['lyricsByVoice'] = $lyricsByVoice }
     $pieces.Add($entry)
 }
 
@@ -1104,100 +1081,6 @@ foreach ($f in $files) {
         }
     }
 
-    # Optional part-specific lyrics override the shared lyrics for that singer.
-    # Preferred filenames: "<clean song title> - <part name>.txt", for example
-    # "Joy to the World - Alto.txt" or "Joy to the World - Soprano 1.txt".
-    # Also accept the exact score filename stem for songs that include an ordering prefix.
-    $lyricsByVoice = [ordered]@{}
-    foreach ($v in @($info.voices)) {
-        $partName = [string]$v.name
-                $partLyricsCandidates = @(
-            (Join-Path $Songs ($title + ' - ' + $partName + '.txt')),
-            (Join-Path $Songs ($stem + ' - ' + $partName + '.txt'))
-        )
-        # Cached metadata can have one shared Soprano voice while lyrics files are named for Soprano 1 and 2.
-        if ([string]$v.id -eq 'soprano') {
-            $partLyricsCandidates += @(
-                (Join-Path $Songs ($title + ' - Soprano 1.txt')),
-                (Join-Path $Songs ($stem + ' - Soprano 1.txt')),
-                (Join-Path $Songs ($title + ' - Soprano 2.txt')),
-                (Join-Path $Songs ($stem + ' - Soprano 2.txt'))
-            )
-        }
-        foreach ($partLyricsSrc in $partLyricsCandidates) {
-            if (Test-Path -LiteralPath $partLyricsSrc) {
-                $partText = ([IO.File]::ReadAllText($partLyricsSrc)).Trim()
-                if ($partText) {
-                    if ([string]$v.id -eq 'soprano') {
-                        $firstLineEnd = $partText.IndexOf([char]10)
-                        if ($firstLineEnd -ge 0) {
-                            $header = $partText.Substring(0, $firstLineEnd).TrimEnd([char]13)
-                            $body = $partText.Substring($firstLineEnd)
-                            $header = $header.Replace(' — Soprano 1', ' — Soprano').Replace(' - Soprano 1', ' — Soprano').Replace(' – Soprano 1', ' — Soprano')
-                            $partText = $header + $body
-                        }
-                    }
-                    $lyricsByVoice[[string]$v.id] = $partText
-                }
-                break
-            }
-        }
-    if ($lyricsByVoice.Count -gt 0) { $entry['lyricsByVoice'] = $lyricsByVoice }
-    $pieces.Add($entry)
-}
-
-foreach ($d in (Get-ChildItem -LiteralPath $audio -Directory)) {
-    if (-not $keep.ContainsKey($d.Name)) {
-        Write-Host ('Removing ' + $d.Name)
-        Remove-Item -LiteralPath $d.FullName -Recurse -Force
-    }
-}
-
-$out = [ordered]@{ title = $ChoirName; built = [int][double]::Parse((Get-Date -UFormat %s)); tags = @($tags.ToArray()); pieces = $pieces }
-[IO.File]::WriteAllText((Join-Path $Site 'pieces.json'), (ConvertTo-Json -InputObject $out -Depth 12 -Compress), $Utf8)
-
-# Report tag assignments on every build so new songs are easy to identify.
-$tagNamesById = @{}
-foreach ($tag in $tags) {
-    $tagNamesById[[string]$tag['id']] = [string]$tag['name']
-}
-Write-Host "`nSong tag check:"
-$taggedCount = 0
-$untaggedCount = 0
-foreach ($cataloguePiece in $pieces) {
-    $assignedIds = @($cataloguePiece['tagIds'])
-    if ($assignedIds.Count -eq 0) {
-        $untaggedCount++
-        Write-Host ("  UNTAGGED: " + $cataloguePiece['title']) -ForegroundColor Yellow
-        continue
-    }
-    $assignedNames = @()
-    foreach ($tagId in $assignedIds) {
-        if ($tagNamesById.ContainsKey([string]$tagId)) {
-            $assignedNames += $tagNamesById[[string]$tagId]
-        }
-    }
-    if ($assignedNames.Count -gt 0) {
-        $taggedCount++
-        Write-Host ("  TAGGED:   " + $cataloguePiece['title'] + " -> " + ($assignedNames -join ", ")) -ForegroundColor Green
-    } else {
-        $untaggedCount++
-        Write-Host ("  UNTAGGED: " + $cataloguePiece['title'] + " (tag reference missing)") -ForegroundColor Yellow
-    }
-}
-Write-Host ("  Summary: {0} tagged, {1} untagged." -f $taggedCount, $untaggedCount)
-
-$total = (Get-ChildItem -LiteralPath $audio -Recurse -File | Measure-Object Length -Sum).Sum / 1MB
-Write-Host ("`nDone: {0} pieces, {1:N0} MB. Upload the 'site' folder." -f $pieces.Count, $total)
-, '$1 — Soprano', 1)
-                    }
-                    $lyricsByVoice[[string]$v.id] = $partText
-                }
-                break
-            }
-        }
-    }
-    if ($lyricsByVoice.Count -gt 0) { $entry['lyricsByVoice'] = $lyricsByVoice }
     $pieces.Add($entry)
 }
 
