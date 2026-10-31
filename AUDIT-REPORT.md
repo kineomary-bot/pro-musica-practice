@@ -86,7 +86,7 @@ The batch launcher changes the working directory to the script directory, and th
 ## Code changes made
 
 - Reworked the main screen styling to reduce rounded surfaces and simplify controls while retaining the teal/white palette.
-- Added collection filtering and a collection-download action. The builder reads optional `songs/collections.json` and adds a `collection` property to each catalogue entry; unmapped songs are `Uncategorised`.
+- Added simple tag filtering and tag-filtered offline downloads. The builder reads `songs/tags.json`, validates tag IDs and song references, writes the tag list to the catalogue, and adds a `tagIds` array to each song. Songs can have multiple tags; untagged songs remain visible under All songs and in the Everything else filter.
 - Added recently opened songs, member-controlled practice status, per-song playback-position bookmarks, named bookmarks, and a central bookmark list. These are stored locally in the browser.
 - Added combined Lyrics/Sheet Music tabs to the Practice screen while retaining the existing separate navigation destinations as shortcuts into those tabs.
 - Replaced the placeholder Playback & Vocal Parts screen with a Voice Mixer, including per-part controls, presets and per-song saved balances. The mixer uses the builder's isolated `files.only` / `files.stems` MP3s and synchronises them against the main audio element.
@@ -104,8 +104,36 @@ The batch launcher changes the working directory to the script directory, and th
 ## Known limitations / follow-up required
 
 - The official logo URL could not be retrieved from this environment. The bundled `choir-logo.svg` and PNG app icons are temporary black-and-white musical-note placeholders, not a verified copy of the official Pro Musica logo. Replace these assets with the actual logo before publishing.
-- `songs/collections.json` is intentionally empty because the desired concert groupings have not been supplied.
-- Collection downloads and Cache API behaviour need real-browser testing, including quota failures, interrupted downloads, and offline access.
+- `songs/tags.json` assigns both existing songs to the `Christmas 2026` tag. Any other songs remain visible and untagged until the choir decides how to group them.
+- Tag-filtered downloads and Cache API behaviour need real-browser testing, including quota failures, interrupted downloads, and offline access.
 - The mixer requires generated isolated-part audio for each song. Its synchronization, volume balance and loop behaviour require testing on target browsers with real recordings.
 - The `pieces.json` catalogue and generated audio are not included in the source ZIP; run `Make practice tracks.bat` on Windows with MuseScore 4 to build them.
 - No app publishing/deployment was performed.
+
+
+# Announcements and calendar update — 2026-10-29
+
+## Code changes
+
+- Added an Announcements section and the next three events to the Home screen.
+- Added an Announcements & dates screen, opened through the Home links, that displays all current notices and upcoming events.
+- Added editable `site/announcements.json` and `site/events.json` files. Announcements support a posted date, optional expiry date, and optional link. Events support a date, time, venue, category, details, and optional link.
+- Seeded the calendar with the established Christmas concert date: 6 December 2026 at 16:00, NG Kerk Hermanus. Announcements intentionally start empty so no sample notice is mistaken for a real choir message.
+- Past events are omitted from upcoming lists but remain in the source JSON. Announcements with an expiry date stop appearing after that date.
+- Bumped the service-worker shell cache to v14 and included announcement/event JSON in network-first cache handling, with cached fallback when offline.
+
+## Validation status
+
+- Inline app JavaScript syntax passed a parser check.
+- New JSON configuration files parse, and the event data contains the Christmas concert entry.
+- No duplicate HTML IDs were found.
+- The existing Windows/MuseScore build was not run, and live browser, mobile and offline interactions have not yet been tested. These require acceptance testing after deployment.
+
+
+# Choir dates and noticeboard update — 2026-10-29
+
+- Added Year-End Function (14 November 2026, 11:30), Kerssangdiens (29 November 2026, 18:00, NG Kerk Hermanus), Hospital Performances (5 December 2026, 15:00), retaining Christmas in Music and Song (6 December 2026, 16:00, NG Kerk Hermanus).
+- Added an Extra practice announcement for Wednesday 4 November, posted 29 October and set to expire after 4 November.
+- Styled the Home announcement block with a pale coral background and the upcoming dates block with a pale teal background. Home event cards use compact spacing to keep the summary prominent without taking over the song library layout.
+- Bumped the service-worker shell cache to v15.
+- Static syntax/data checks remain the available validation; browser/mobile visual acceptance testing is still required.

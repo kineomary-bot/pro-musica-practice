@@ -28,7 +28,7 @@ $ErrorActionPreference = 'Stop'
 [System.Threading.Thread]::CurrentThread.CurrentCulture = [System.Globalization.CultureInfo]::InvariantCulture
 Add-Type -AssemblyName System.IO.Compression
 Add-Type -AssemblyName System.IO.Compression.FileSystem
-$BuildVersion = 'ps1-9-quieter-background-voice-isolation'
+$BuildVersion = 'ps1-10-shared-soprano-part-aliases'
 $Utf8 = New-Object System.Text.UTF8Encoding($false)
 
 # ------------------------------------------------------------ MuseScore
@@ -500,17 +500,29 @@ function Build-Piece([IO.FileInfo]$src, [string]$outdir) {
     $info = Get-ScoreInfo $src.FullName
     $voices = @(); $seen = @{}
     foreach ($p in $info.Parts) {
-        $id = Get-Slug $p.Name
-        $base = $id; $n = 2
-        while ($seen.ContainsKey($id)) { $id = "$base-$n"; $n++ }
-        $seen[$id] = $true
-        $voices += [pscustomobject]@{
-            Id = $id; Name = $p.Name; Part = $p.Id
-            StartingMidi = $p.StartingMidi; StartingNote = $p.StartingNote
+        # If the score has one part simply named "Soprano", both soprano sections
+        # sing that line. Expose it under both app voice IDs while retaining the
+        # same underlying MuseScore part ID for audio export.
+        $displayNames = if ($p.Name.Trim() -ieq 'Soprano') {
+            @('Soprano 1', 'Soprano 2')
+        } else {
+            @($p.Name)
+        }
+        foreach ($displayName in $displayNames) {
+            $id = Get-Slug $displayName
+            $base = $id; $n = 2
+            while ($seen.ContainsKey($id)) { $id = "$base-$n"; $n++ }
+            $seen[$id] = $true
+            $voices += [pscustomobject]@{
+                Id = $id; Name = $displayName; SourceName = $p.Name; Part = $p.Id
+                StartingMidi = $p.StartingMidi; StartingNote = $p.StartingNote
+            }
         }
     }
 
-    $partIds = @($voices | ForEach-Object { [string]$_.Part })
+    # A shared source part can be exposed as more than one app voice; export
+    # validation still needs the actual distinct MuseScore part IDs only.
+    $partIds = @($voices | ForEach-Object { [string]$_.Part } | Select-Object -Unique)
     $opts = "$BuildVersion|$BackgroundDb|$($NoOnly.IsPresent)|$Bitrate|$([bool]$script:Ffmpeg)"
     $stamp = (Get-FileHash -LiteralPath $src.FullName -Algorithm SHA1).Hash + '|' + $opts
     $stampFile = Join-Path $outdir '.stamp'
@@ -628,17 +640,87 @@ if (-not $ChoirName) {
 if (-not $ChoirName) { $ChoirName = 'Choir Practice' }
 
 $pieces = New-Object System.Collections.Generic.List[object]
-# Optional collection mapping: songs/collections.json maps source score filenames (without
-# extension) to concert/collection names. Unmapped songs appear under "Uncategorised".
-$collectionMap = @{}
-$collectionFile = Join-Path $Songs 'collections.json'
-if (Test-Path -LiteralPath $collectionFile) {
-    try {
-        $parsedCollections = ConvertFrom-Json -InputObject ([IO.File]::ReadAllText($collectionFile))
-        foreach ($prop in $parsedCollections.PSObject.Properties) {
-            if ($prop.Name -and $prop.Value) { $collectionMap[$prop.Name] = [string]$prop.Value }
+$tags = New-Object System.Collections.Generic.List[object]
+$tagAssignments = @{}
+$tagIdsSeen = @{}
+
+# Build aliases from source score filenames, cleaned titles and stable song IDs.
+# This allows a tag to refer to a song by any of those readable identifiers.
+$songAliasToId = @{}
+$ambiguousSongAliases = @{}
+foreach ($sourceFile in $files) {
+    $sourceStem = [IO.Path]::GetFileNameWithoutExtension($sourceFile.Name)
+    $sourceTitle = ($sourceStem -replace '^\s*\d+\s*[-_.)]*\s*', '').Trim()
+    if (-not $sourceTitle) { $sourceTitle = $sourceStem }
+    $sourceId = Get-Slug $sourceStem
+    foreach ($alias in @($sourceStem, $sourceTitle, $sourceId)) {
+        if ([string]::IsNullOrWhiteSpace([string]$alias)) { continue }
+        if ($songAliasToId.ContainsKey([string]$alias) -and $songAliasToId[[string]$alias] -ne $sourceId) {
+            $ambiguousSongAliases[[string]$alias] = $true
+        } else {
+            $songAliasToId[[string]$alias] = $sourceId
         }
-    } catch { throw "Could not read $collectionFile. Use a JSON object mapping score filenames (without extension) to collection names. Details: $($_.Exception.Message)" }
+    }
+}
+
+# songs/tags.json defines optional tags for grouping songs. Songs may have multiple tags.
+# Songs with no configured tag stay visible under All songs and appear in the Untagged filter.
+$tagFile = Join-Path $Songs 'tags.json'
+if (-not (Test-Path -LiteralPath $tagFile)) {
+    throw "Missing $tagFile. Create it with a JSON object containing a 'tags' array (an empty array is valid)."
+}
+try {
+    $parsedTagConfig = ConvertFrom-Json -InputObject ([IO.File]::ReadAllText($tagFile))
+} catch {
+    throw "Could not read $tagFile. Use JSON with a top-level 'tags' array. Details: $($_.Exception.Message)"
+}
+if ($null -eq $parsedTagConfig -or $parsedTagConfig.PSObject.Properties.Name -notcontains 'tags') {
+    throw "Could not read $tagFile. It must contain a top-level 'tags' array."
+}
+foreach ($rawTag in @($parsedTagConfig.tags)) {
+    $tagId = ([string]$rawTag.id).Trim().ToLowerInvariant()
+    $tagName = ([string]$rawTag.name).Trim()
+    if ($tagId -notmatch '^[a-z0-9]+(?:-[a-z0-9]+)*$') {
+        throw "Invalid tag ID '$tagId' in $tagFile. Use lowercase letters, numbers and hyphens, for example 'christmas-2026'."
+    }
+    if ([string]::IsNullOrWhiteSpace($tagName)) {
+        throw "Tag '$tagId' needs a non-empty name in $tagFile."
+    }
+    if ($tagIdsSeen.ContainsKey($tagId)) {
+        throw "Duplicate tag ID '$tagId' in $tagFile."
+    }
+    if ($null -eq $rawTag.songs -or $rawTag.songs -isnot [Array]) {
+        throw "Tag '$tagId' must have a 'songs' array. Use an empty array if no songs have been tagged yet."
+    }
+
+    $assignedSongIds = New-Object System.Collections.Generic.List[string]
+    foreach ($songReferenceValue in @($rawTag.songs)) {
+        $songReference = ([string]$songReferenceValue).Trim()
+        if ([string]::IsNullOrWhiteSpace($songReference)) {
+            throw "Tag '$tagId' contains a blank song reference in $tagFile."
+        }
+        if ($ambiguousSongAliases.ContainsKey($songReference)) {
+            throw "Song reference '$songReference' is ambiguous. Use the exact source filename or stable song ID in $tagFile."
+        }
+        if (-not $songAliasToId.ContainsKey($songReference)) {
+            throw "Tag '$tagId' references '$songReference', but no matching .mscz file exists in $Songs."
+        }
+        $songId = [string]$songAliasToId[$songReference]
+        if (-not $assignedSongIds.Contains($songId)) { $assignedSongIds.Add($songId) }
+        if (-not $tagAssignments.ContainsKey($songId)) {
+            $tagAssignments[$songId] = New-Object System.Collections.Generic.List[string]
+        }
+        if (-not $tagAssignments[$songId].Contains($tagId)) {
+            $tagAssignments[$songId].Add($tagId)
+        }
+    }
+
+    $tagIdsSeen[$tagId] = $true
+    $tags.Add([ordered]@{
+        id = $tagId
+        name = $tagName
+        songs = @($assignedSongIds.ToArray())
+    })
 }
 $keep = @{}
 $slugOwners = @{}
@@ -661,10 +743,11 @@ foreach ($f in $files) {
     } else {
         $info = Build-Piece $f $dir
     }
-    $collection = 'Uncategorised'
-    if ($collectionMap.ContainsKey($stem)) { $collection = $collectionMap[$stem] }
-    elseif ($collectionMap.ContainsKey($title)) { $collection = $collectionMap[$title] }
-    $entry = [ordered]@{ id = $pid2; title = $title; dir = "audio/$pid2/"; collection = $collection }
+    $songTagIds = @()
+    if ($tagAssignments.ContainsKey($pid2)) {
+        $songTagIds = @($tagAssignments[$pid2].ToArray())
+    }
+    $entry = [ordered]@{ id = $pid2; title = $title; dir = "audio/$pid2/"; tagIds = $songTagIds }
     foreach ($p in $info.PSObject.Properties) { $entry[$p.Name] = $p.Value }
     # optional extras next to the .mscz: <name>.pdf = the original score, <name>.txt = the words
     $origSrc = Join-Path $Songs ($stem + '.pdf')
@@ -686,26 +769,6 @@ foreach ($f in $files) {
         }
     }
 
-    # Optional part-specific lyrics override the shared lyrics for that singer.
-    # Preferred filenames: "<clean song title> - <part name>.txt", for example
-    # "Joy to the World - Alto.txt" or "Joy to the World - Soprano 1.txt".
-    # Also accept the exact score filename stem for songs that include an ordering prefix.
-    $lyricsByVoice = [ordered]@{}
-    foreach ($v in @($info.voices)) {
-        $partName = [string]$v.name
-        $partLyricsCandidates = @(
-            (Join-Path $Songs ($title + ' - ' + $partName + '.txt')),
-            (Join-Path $Songs ($stem + ' - ' + $partName + '.txt'))
-        )
-        foreach ($partLyricsSrc in $partLyricsCandidates) {
-            if (Test-Path -LiteralPath $partLyricsSrc) {
-                $partText = ([IO.File]::ReadAllText($partLyricsSrc)).Trim()
-                if ($partText) { $lyricsByVoice[[string]$v.id] = $partText }
-                break
-            }
-        }
-    }
-    if ($lyricsByVoice.Count -gt 0) { $entry['lyricsByVoice'] = $lyricsByVoice }
     $pieces.Add($entry)
 }
 
@@ -716,7 +779,351 @@ foreach ($d in (Get-ChildItem -LiteralPath $audio -Directory)) {
     }
 }
 
-$out = [ordered]@{ title = $ChoirName; built = [int][double]::Parse((Get-Date -UFormat %s)); pieces = $pieces }
+$out = [ordered]@{ title = $ChoirName; built = [int][double]::Parse((Get-Date -UFormat %s)); tags = @($tags.ToArray()); pieces = $pieces }
 [IO.File]::WriteAllText((Join-Path $Site 'pieces.json'), (ConvertTo-Json -InputObject $out -Depth 12 -Compress), $Utf8)
+
+# Report tag assignments on every build so new songs are easy to identify.
+$tagNamesById = @{}
+foreach ($tag in $tags) {
+    $tagNamesById[[string]$tag['id']] = [string]$tag['name']
+}
+Write-Host "`nSong tag check:"
+$taggedCount = 0
+$untaggedCount = 0
+foreach ($cataloguePiece in $pieces) {
+    $assignedIds = @($cataloguePiece['tagIds'])
+    if ($assignedIds.Count -eq 0) {
+        $untaggedCount++
+        Write-Host ("  UNTAGGED: " + $cataloguePiece['title']) -ForegroundColor Yellow
+        continue
+    }
+    $assignedNames = @()
+    foreach ($tagId in $assignedIds) {
+        if ($tagNamesById.ContainsKey([string]$tagId)) {
+            $assignedNames += $tagNamesById[[string]$tagId]
+        }
+    }
+    if ($assignedNames.Count -gt 0) {
+        $taggedCount++
+        Write-Host ("  TAGGED:   " + $cataloguePiece['title'] + " -> " + ($assignedNames -join ", ")) -ForegroundColor Green
+    } else {
+        $untaggedCount++
+        Write-Host ("  UNTAGGED: " + $cataloguePiece['title'] + " (tag reference missing)") -ForegroundColor Yellow
+    }
+}
+Write-Host ("  Summary: {0} tagged, {1} untagged." -f $taggedCount, $untaggedCount)
+
+$total = (Get-ChildItem -LiteralPath $audio -Recurse -File | Measure-Object Length -Sum).Sum / 1MB
+Write-Host ("`nDone: {0} pieces, {1:N0} MB. Upload the 'site' folder." -f $pieces.Count, $total)
+) {
+            @('Soprano 1', 'Soprano 2')
+        } else {
+            @($p.Name)
+        }
+        foreach ($displayName in $displayNames) {
+            $id = Get-Slug $displayName
+            $base = $id; $n = 2
+            while ($seen.ContainsKey($id)) { $id = "$base-$n"; $n++ }
+            $seen[$id] = $true
+            $voices += [pscustomobject]@{
+                Id = $id; Name = $displayName; SourceName = $p.Name; Part = $p.Id
+                StartingMidi = $p.StartingMidi; StartingNote = $p.StartingNote
+            }
+        }
+    }
+
+    # A shared source part can be exposed as more than one app voice; export
+    # validation still needs the actual distinct MuseScore part IDs only.
+    $partIds = @($voices | ForEach-Object { [string]$_.Part } | Select-Object -Unique)
+    $opts = "$BuildVersion|$BackgroundDb|$($NoOnly.IsPresent)|$Bitrate|$([bool]$script:Ffmpeg)"
+    $stamp = (Get-FileHash -LiteralPath $src.FullName -Algorithm SHA1).Hash + '|' + $opts
+    $stampFile = Join-Path $outdir '.stamp'
+    $infoFile = Join-Path $outdir 'info.json'
+    if ((Test-Path -LiteralPath $stampFile) -and (Test-Path -LiteralPath $infoFile) -and
+        ([IO.File]::ReadAllText($stampFile) -eq $stamp)) {
+        # Audio exports are already valid and unchanged. Refresh score-derived metadata in
+        # the cached info file without needlessly re-exporting every MP3.
+        $cached = ConvertFrom-Json -InputObject ([IO.File]::ReadAllText($infoFile))
+        foreach ($cachedVoice in @($cached.voices)) {
+            $voiceDetails = $voices | Where-Object { $_.Id -eq [string]$cachedVoice.id } | Select-Object -First 1
+            if ($voiceDetails) {
+                Set-Prop $cachedVoice 'startingMidi' $voiceDetails.StartingMidi
+                Set-Prop $cachedVoice 'startingNote' $voiceDetails.StartingNote
+            }
+        }
+        [IO.File]::WriteAllText($infoFile, (ConvertTo-Json -InputObject $cached -Depth 10 -Compress), $Utf8)
+        Write-Host '  audio unchanged; refreshed starting-note metadata'
+        return $cached
+    }
+
+    if (Test-Path -LiteralPath $outdir) { Remove-Item -LiteralPath $outdir -Recurse -Force }
+    New-Item -ItemType Directory -Path $outdir | Out-Null
+
+    $td = Join-Path ([IO.Path]::GetTempPath()) ('choir-' + [guid]::NewGuid().ToString('N'))
+    New-Item -ItemType Directory -Path $td | Out-Null
+    $script:DiagnosticDir = $td
+    $buildSucceeded = $false
+    try {
+        $jobs = @()
+        $loud = [ordered]@{}; $only = [ordered]@{}
+        $vAll = Join-Path $td 'all.mscz'
+        New-Variant $src.FullName $vAll 'all' '' $partIds
+
+        # Export every audio file individually. MuseScore 4 JSON batch jobs are not reliable
+        # for audio exports; non-empty MP3s from a batch can even be silent, so checking only
+        # whether a file exists is not enough to justify using that route.
+        Export-Audio $vAll (Join-Path $outdir 'all.mp3')
+        foreach ($v in $voices) {
+            foreach ($mode in 'loud', 'only') {
+                if ($mode -eq 'only' -and $NoOnly) { continue }
+                $f = Join-Path $td ($mode + '-' + $v.Id + '.mscz')
+                New-Variant $src.FullName $f $mode $v.Part $partIds
+                $out = $mode + '-' + $v.Id + '.mp3'
+                Export-Audio $f (Join-Path $outdir $out)
+                if ($mode -eq 'loud') { $loud[$v.Id] = $out } else { $only[$v.Id] = $out }
+            }
+        }
+        $mid = Join-Path $td 'beats.mid'
+        $jobs += @{ In = $src.FullName; Out = (Join-Path $outdir 'score.pdf') }
+        $jobs += @{ In = $src.FullName; Out = $mid }
+        Invoke-Exports $jobs
+        $bm = Get-BeatMap $mid $info.FirstMeasure
+        $buildSucceeded = $true
+    } catch {
+        Write-Host "`nBuild failed while working with temporary score files. Diagnostics kept at: $td"
+        Write-Host "Please keep this folder until the failure has been diagnosed."
+        throw
+    } finally {
+        if ($buildSucceeded) {
+            Remove-Item -LiteralPath $td -Recurse -Force -ErrorAction SilentlyContinue
+        }
+    }
+
+    if ($script:Ffmpeg -and $Bitrate -ne 'off') {
+        foreach ($mp3 in (Get-ChildItem -LiteralPath $outdir -Filter '*.mp3')) { Compress-Mp3 $mp3.FullName }
+    }
+
+    # Never publish a nominally isolated voice file if MuseScore exported the full mix again.
+    $allHash = (Get-FileHash -LiteralPath (Join-Path $outdir 'all.mp3') -Algorithm SHA256).Hash
+    foreach ($v in $voices) {
+        if ($NoOnly) { continue }
+        $onlyFile = Join-Path $outdir ('only-' + $v.Id + '.mp3')
+        if ((Get-FileHash -LiteralPath $onlyFile -Algorithm SHA256).Hash -eq $allHash) {
+            throw ("The isolated track for '$($v.Name)' is byte-for-byte identical to all.mp3. The build has stopped rather than publishing a misleading voice track. Check the score's MuseScore mixer/audio settings and rebuild.")
+        }
+    }
+
+    $voiceList = @()
+    foreach ($v in $voices) {
+        $voiceList += [ordered]@{
+            id = $v.Id; name = $v.Name
+            startingMidi = $v.StartingMidi; startingNote = $v.StartingNote
+        }
+    }
+    $result = [ordered]@{
+        voices = $voiceList
+        files = [ordered]@{ all = 'all.mp3'; loud = $loud; only = $only; stems = $only }
+        score = 'score.pdf'
+        bpm = $bm.Bpm
+        duration = $bm.Duration
+        beats = $bm.Beats
+    }
+    [IO.File]::WriteAllText($infoFile, (ConvertTo-Json -InputObject $result -Depth 10 -Compress), $Utf8)
+    [IO.File]::WriteAllText($stampFile, $stamp, $Utf8)
+    return (ConvertFrom-Json -InputObject ([IO.File]::ReadAllText($infoFile)))
+}
+
+# ------------------------------------------------------------ main
+
+$script:Mscore = Find-MuseScore
+if (-not $script:Ffmpeg) { Write-Host 'Note: ffmpeg not found, so audio files will be large. (Optional: install ffmpeg.)' }
+
+if (-not (Test-Path -LiteralPath $Songs)) { New-Item -ItemType Directory -Path $Songs | Out-Null }
+$audio = Join-Path $Site 'audio'
+if (-not (Test-Path -LiteralPath $audio)) { New-Item -ItemType Directory -Path $audio -Force | Out-Null }
+
+$files = @(Get-ChildItem -LiteralPath $Songs -Filter '*.mscz' | Where-Object { -not $_.Name.StartsWith('.') } | Sort-Object Name)
+if ($files.Count -eq 0) { throw "No .mscz files found in $Songs" }
+
+if (-not $ChoirName) {
+    $cn = Join-Path $PSScriptRoot 'choir-name.txt'
+    if (Test-Path -LiteralPath $cn) { $ChoirName = ([IO.File]::ReadAllText($cn)).Trim() }
+}
+if (-not $ChoirName) { $ChoirName = 'Choir Practice' }
+
+$pieces = New-Object System.Collections.Generic.List[object]
+$tags = New-Object System.Collections.Generic.List[object]
+$tagAssignments = @{}
+$tagIdsSeen = @{}
+
+# Build aliases from source score filenames, cleaned titles and stable song IDs.
+# This allows a tag to refer to a song by any of those readable identifiers.
+$songAliasToId = @{}
+$ambiguousSongAliases = @{}
+foreach ($sourceFile in $files) {
+    $sourceStem = [IO.Path]::GetFileNameWithoutExtension($sourceFile.Name)
+    $sourceTitle = ($sourceStem -replace '^\s*\d+\s*[-_.)]*\s*', '').Trim()
+    if (-not $sourceTitle) { $sourceTitle = $sourceStem }
+    $sourceId = Get-Slug $sourceStem
+    foreach ($alias in @($sourceStem, $sourceTitle, $sourceId)) {
+        if ([string]::IsNullOrWhiteSpace([string]$alias)) { continue }
+        if ($songAliasToId.ContainsKey([string]$alias) -and $songAliasToId[[string]$alias] -ne $sourceId) {
+            $ambiguousSongAliases[[string]$alias] = $true
+        } else {
+            $songAliasToId[[string]$alias] = $sourceId
+        }
+    }
+}
+
+# songs/tags.json defines optional tags for grouping songs. Songs may have multiple tags.
+# Songs with no configured tag stay visible under All songs and appear in the Untagged filter.
+$tagFile = Join-Path $Songs 'tags.json'
+if (-not (Test-Path -LiteralPath $tagFile)) {
+    throw "Missing $tagFile. Create it with a JSON object containing a 'tags' array (an empty array is valid)."
+}
+try {
+    $parsedTagConfig = ConvertFrom-Json -InputObject ([IO.File]::ReadAllText($tagFile))
+} catch {
+    throw "Could not read $tagFile. Use JSON with a top-level 'tags' array. Details: $($_.Exception.Message)"
+}
+if ($null -eq $parsedTagConfig -or $parsedTagConfig.PSObject.Properties.Name -notcontains 'tags') {
+    throw "Could not read $tagFile. It must contain a top-level 'tags' array."
+}
+foreach ($rawTag in @($parsedTagConfig.tags)) {
+    $tagId = ([string]$rawTag.id).Trim().ToLowerInvariant()
+    $tagName = ([string]$rawTag.name).Trim()
+    if ($tagId -notmatch '^[a-z0-9]+(?:-[a-z0-9]+)*$') {
+        throw "Invalid tag ID '$tagId' in $tagFile. Use lowercase letters, numbers and hyphens, for example 'christmas-2026'."
+    }
+    if ([string]::IsNullOrWhiteSpace($tagName)) {
+        throw "Tag '$tagId' needs a non-empty name in $tagFile."
+    }
+    if ($tagIdsSeen.ContainsKey($tagId)) {
+        throw "Duplicate tag ID '$tagId' in $tagFile."
+    }
+    if ($null -eq $rawTag.songs -or $rawTag.songs -isnot [Array]) {
+        throw "Tag '$tagId' must have a 'songs' array. Use an empty array if no songs have been tagged yet."
+    }
+
+    $assignedSongIds = New-Object System.Collections.Generic.List[string]
+    foreach ($songReferenceValue in @($rawTag.songs)) {
+        $songReference = ([string]$songReferenceValue).Trim()
+        if ([string]::IsNullOrWhiteSpace($songReference)) {
+            throw "Tag '$tagId' contains a blank song reference in $tagFile."
+        }
+        if ($ambiguousSongAliases.ContainsKey($songReference)) {
+            throw "Song reference '$songReference' is ambiguous. Use the exact source filename or stable song ID in $tagFile."
+        }
+        if (-not $songAliasToId.ContainsKey($songReference)) {
+            throw "Tag '$tagId' references '$songReference', but no matching .mscz file exists in $Songs."
+        }
+        $songId = [string]$songAliasToId[$songReference]
+        if (-not $assignedSongIds.Contains($songId)) { $assignedSongIds.Add($songId) }
+        if (-not $tagAssignments.ContainsKey($songId)) {
+            $tagAssignments[$songId] = New-Object System.Collections.Generic.List[string]
+        }
+        if (-not $tagAssignments[$songId].Contains($tagId)) {
+            $tagAssignments[$songId].Add($tagId)
+        }
+    }
+
+    $tagIdsSeen[$tagId] = $true
+    $tags.Add([ordered]@{
+        id = $tagId
+        name = $tagName
+        songs = @($assignedSongIds.ToArray())
+    })
+}
+$keep = @{}
+$slugOwners = @{}
+foreach ($f in $files) {
+    $stem = [IO.Path]::GetFileNameWithoutExtension($f.Name)
+    $title = ($stem -replace '^\s*\d+\s*[-_.)]*\s*', '').Trim()
+    if (-not $title) { $title = $stem }
+    $pid2 = Get-Slug $stem
+    if ($keep.ContainsKey($pid2)) {
+        throw ("Song filename collision: '$stem' and '$($slugOwners[$pid2])' both map to '$pid2'. Rename one file so each song has a unique slug.")
+    }
+    $keep[$pid2] = $true
+    $slugOwners[$pid2] = $stem
+    Write-Host $f.Name
+    $dir = Join-Path $audio $pid2
+    if ($Only -and ($f.Name.IndexOf($Only, [StringComparison]::OrdinalIgnoreCase) -lt 0)) {
+        $inf = Join-Path $dir 'info.json'
+        if (-not (Test-Path -LiteralPath $inf)) { Write-Host '  (skipped, not built yet)'; continue }
+        $info = ConvertFrom-Json -InputObject ([IO.File]::ReadAllText($inf))
+    } else {
+        $info = Build-Piece $f $dir
+    }
+    $songTagIds = @()
+    if ($tagAssignments.ContainsKey($pid2)) {
+        $songTagIds = @($tagAssignments[$pid2].ToArray())
+    }
+    $entry = [ordered]@{ id = $pid2; title = $title; dir = "audio/$pid2/"; tagIds = $songTagIds }
+    foreach ($p in $info.PSObject.Properties) { $entry[$p.Name] = $p.Value }
+    # optional extras next to the .mscz: <name>.pdf = the original score, <name>.txt = the words
+    $origSrc = Join-Path $Songs ($stem + '.pdf')
+    $origDst = Join-Path $dir 'original.pdf'
+    if (Test-Path -LiteralPath $origSrc) {
+        Copy-Item -LiteralPath $origSrc -Destination $origDst -Force
+        $entry['original'] = 'original.pdf'
+    } elseif (Test-Path -LiteralPath $origDst) { Remove-Item -LiteralPath $origDst }
+    # Shared lyrics remain supported as <score filename>.txt or <clean song title>.txt.
+    $sharedLyricsCandidates = @(
+        (Join-Path $Songs ($stem + '.txt')),
+        (Join-Path $Songs ($title + '.txt'))
+    )
+    foreach ($txtSrc in $sharedLyricsCandidates) {
+        if (Test-Path -LiteralPath $txtSrc) {
+            $sharedText = ([IO.File]::ReadAllText($txtSrc)).Trim()
+            if ($sharedText) { $entry['lyrics'] = $sharedText }
+            break
+        }
+    }
+
+    $pieces.Add($entry)
+}
+
+foreach ($d in (Get-ChildItem -LiteralPath $audio -Directory)) {
+    if (-not $keep.ContainsKey($d.Name)) {
+        Write-Host ('Removing ' + $d.Name)
+        Remove-Item -LiteralPath $d.FullName -Recurse -Force
+    }
+}
+
+$out = [ordered]@{ title = $ChoirName; built = [int][double]::Parse((Get-Date -UFormat %s)); tags = @($tags.ToArray()); pieces = $pieces }
+[IO.File]::WriteAllText((Join-Path $Site 'pieces.json'), (ConvertTo-Json -InputObject $out -Depth 12 -Compress), $Utf8)
+
+# Report tag assignments on every build so new songs are easy to identify.
+$tagNamesById = @{}
+foreach ($tag in $tags) {
+    $tagNamesById[[string]$tag['id']] = [string]$tag['name']
+}
+Write-Host "`nSong tag check:"
+$taggedCount = 0
+$untaggedCount = 0
+foreach ($cataloguePiece in $pieces) {
+    $assignedIds = @($cataloguePiece['tagIds'])
+    if ($assignedIds.Count -eq 0) {
+        $untaggedCount++
+        Write-Host ("  UNTAGGED: " + $cataloguePiece['title']) -ForegroundColor Yellow
+        continue
+    }
+    $assignedNames = @()
+    foreach ($tagId in $assignedIds) {
+        if ($tagNamesById.ContainsKey([string]$tagId)) {
+            $assignedNames += $tagNamesById[[string]$tagId]
+        }
+    }
+    if ($assignedNames.Count -gt 0) {
+        $taggedCount++
+        Write-Host ("  TAGGED:   " + $cataloguePiece['title'] + " -> " + ($assignedNames -join ", ")) -ForegroundColor Green
+    } else {
+        $untaggedCount++
+        Write-Host ("  UNTAGGED: " + $cataloguePiece['title'] + " (tag reference missing)") -ForegroundColor Yellow
+    }
+}
+Write-Host ("  Summary: {0} tagged, {1} untagged." -f $taggedCount, $untaggedCount)
+
 $total = (Get-ChildItem -LiteralPath $audio -Recurse -File | Measure-Object Length -Sum).Sum / 1MB
 Write-Host ("`nDone: {0} pieces, {1:N0} MB. Upload the 'site' folder." -f $pieces.Count, $total)

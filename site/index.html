@@ -12,7 +12,7 @@
 <link rel="icon" href="icon-192.png"><link rel="apple-touch-icon" href="apple-touch-icon.png">
 <style>
 :root{color-scheme:light;--bg:#f8f5f1;--paper:#fffdfb;--ink:#26343a;--muted:#637579;--line:#dce7e4;--teal:#367f79;--teal2:#80c4b7;--soft:#e4f1ee;--coral:#e3856b;--sand:#edcbd2;--shadow:0 5px 14px rgba(38,73,72,.06)}
-*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}html{min-height:100%;background:#fff}body{margin:0;background:#fff;color:var(--ink);font:16px/1.45 Arial,Helvetica,sans-serif;padding-bottom:calc(158px + env(safe-area-inset-bottom))}button,input{font:inherit}button{cursor:pointer;color:inherit}button:focus-visible,a:focus-visible,input:focus-visible{outline:3px solid var(--coral);outline-offset:3px}.app{max-width:650px;margin:0 auto;min-height:100dvh}.topbar{background:linear-gradient(115deg,#064750,#08747a 66%,#6aa69b);color:#fff;padding:calc(14px + env(safe-area-inset-top)) 19px 18px;border-radius:0 0 24px 24px;box-shadow:0 8px 22px #075b641c}.brandline{display:flex;align-items:center;gap:11px}.brandmark{width:40px;height:40px;display:grid;place-items:center;border:1px solid #ffffff55;border-radius:50%;font-size:22px}.brandname{font:600 21px/1.15 Arial,Helvetica,sans-serif;letter-spacing:.005em}.tagline{font-size:12px;opacity:.83;letter-spacing:.04em;margin-top:4px}.top-actions{margin-left:auto}.iconbtn{width:42px;height:42px;border-radius:50%;border:1px solid #ffffff50;background:#ffffff15;color:inherit;font-size:19px}.content{padding:20px 16px 30px}.screen{display:none}.screen.active{display:block}.eyebrow{font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.15em;color:var(--muted);margin:0 0 7px}.heading{font:600 29px/1.15 Arial,Helvetica,sans-serif;letter-spacing:-.025em;margin:0 0 7px}.subtext{margin:0 0 20px;color:var(--muted);font-size:14px}.search{display:flex;align-items:center;gap:10px;border:1px solid var(--line);background:var(--paper);border-radius:15px;padding:0 14px;margin:16px 0 20px;box-shadow:0 2px 7px #143d4308}.search input{border:0;background:transparent;outline:none;min-width:0;flex:1;height:50px;color:var(--ink)}.search span{color:var(--muted);font-size:18px}.sectionrow{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:0 0 10px}.sectionrow h2{font:600 20px Arial,Helvetica,sans-serif;margin:0}.quietbtn{border:0;background:transparent;color:var(--teal);font-size:13px;font-weight:750;padding:8px}.songlist{display:grid;gap:10px}.song-item{display:flex;align-items:stretch;gap:8px}.song{flex:1;min-width:0;width:100%;display:flex;align-items:center;gap:12px;text-align:left;padding:12px;border:1px solid var(--line);border-radius:16px;background:var(--paper);min-height:76px;box-shadow:0 3px 10px #123d4307}.song.selected{background:#f3f6f5;border-color:#a9d1c7}.offlinebtn{flex:none;min-width:76px;max-width:92px;border:1px solid var(--line);border-radius:14px;background:var(--paper);padding:8px;font-size:11px;line-height:1.25;font-weight:750;color:var(--teal)}.offlinebtn:disabled{opacity:.65;cursor:wait}.offlinebtn.saved{background:var(--soft);border-color:#a9d1c7}.offlinebtn .offico{display:block;font-size:19px;margin-bottom:3px}.cover{width:48px;height:48px;flex:none;border-radius:12px;display:grid;place-items:center;background:linear-gradient(145deg,#0b6570,#b6d6ca);color:#fff;font-size:23px}.songtext{flex:1;min-width:0}.songtitle{display:block;font-weight:750;line-height:1.25;overflow-wrap:anywhere}.songmeta{display:block;color:var(--muted);font-size:12px;margin-top:4px}.chev{color:var(--teal);font-size:24px}.empty{padding:25px 12px;text-align:center;color:var(--muted);background:var(--paper);border:1px dashed var(--line);border-radius:15px}.hero{border-radius:22px;overflow:hidden;background:linear-gradient(150deg,#064750,#0b6d76 58%,#6aa69b);color:#fff;position:relative;padding:23px 20px 20px;margin:13px 0 16px;box-shadow:var(--shadow)}.hero:before{content:"";position:absolute;right:-50px;bottom:-86px;width:230px;height:170px;border:1px solid #ffffff38;border-radius:50%;box-shadow:0 -13px 0 -12px #ffffff35,0 -27px 0 -26px #ffffff30,0 -41px 0 -40px #ffffff28;transform:rotate(-15deg)}.hero-kicker{font-size:11px;letter-spacing:.16em;text-transform:uppercase;opacity:.8;font-weight:800}.hero h1{font:600 30px/1.12 Arial,Helvetica,sans-serif;margin:12px 0 5px;max-width:88%;position:relative}.hero p{font-size:13px;margin:0;opacity:.85;position:relative}.hero-bottom{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:22px;position:relative}.pill{border:1px solid #ffffff70;background:#ffffff17;color:#fff;border-radius:999px;padding:8px 12px;font-size:12px}.playhero{border:0;border-radius:999px;background:#fff;color:var(--teal);padding:12px 20px;min-height:48px;font-weight:800;box-shadow:0 3px 10px #002e3324}.controlgrid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:7px;margin:12px 0}.controlcard{background:var(--paper);border:1px solid var(--line);border-radius:13px;padding:10px 7px;text-align:center;min-height:76px;min-width:0;box-shadow:0 3px 10px #123d4307}.controlicon{display:block;font-size:19px;line-height:1.1;color:var(--teal);margin-bottom:5px}.controltitle{display:block;font-weight:750;font-size:12px;line-height:1.2;overflow-wrap:anywhere}.controlhint{display:block;color:var(--muted);font-size:10px;line-height:1.25;margin-top:4px}.panel{background:var(--paper);border:1px solid var(--line);border-radius:18px;padding:16px;margin:12px 0;box-shadow:0 3px 12px #123d4307}.panelhead{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:12px}.panelhead h2{font:600 20px Arial,Helvetica,sans-serif;margin:0}.muted{color:var(--muted);font-size:13px}.voice-mixer{display:grid;gap:14px}.voice-row{display:grid;grid-template-columns:minmax(0,1fr) 52px;gap:5px 12px;align-items:center;padding:10px 0;border-bottom:1px solid var(--line)}.voice-row:last-child{border-bottom:0}.voice-row-top{display:flex;align-items:center;gap:9px;min-width:0;font-weight:750}.voice-row-top input{width:22px;height:22px;accent-color:var(--teal);flex:none}.voice-row input[type=range]{grid-column:1;grid-row:2;width:100%;accent-color:var(--teal);min-width:0}.voice-percent{grid-column:2;grid-row:1 / span 2;text-align:right;font-size:13px;color:var(--muted);font-variant-numeric:tabular-nums}.voice-row input:disabled{opacity:.4}.partselect{display:flex;flex-wrap:wrap;gap:8px;margin:12px 0}.partchip{border:1px solid var(--line);border-radius:999px;background:#fff;padding:9px 13px;min-height:42px;font-size:13px}.partchip[aria-pressed=true]{background:var(--teal);border-color:var(--teal);color:#fff}.transport{display:flex;align-items:center;gap:13px}.playbtn{width:58px;height:58px;flex:none;border:0;border-radius:50%;background:var(--coral);color:white;font-size:24px;box-shadow:0 5px 13px #cf78643b;display:grid;place-items:center}.pause-icon{display:inline-flex;gap:5px;align-items:center;justify-content:center;width:22px;height:22px}.pause-icon i{display:block;width:6px;height:20px;background:currentColor;border-radius:2px}.seek{min-width:0;flex:1;accent-color:var(--teal);height:30px}.times{display:flex;justify-content:space-between;color:var(--muted);font-size:12px;font-variant-numeric:tabular-nums;margin:3px 0 14px 71px}.skiprow{display:grid;grid-template-columns:1fr 1fr;gap:9px}.smallbtn{border:1px solid var(--line);background:#fff;border-radius:12px;padding:10px;min-height:43px;font-size:13px;font-weight:700}.smallbtn:active{background:var(--soft)}.row{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:8px 0}.row label{font-weight:700}.range{width:100%;accent-color:var(--teal);min-width:0}.range-row{display:flex;align-items:center;gap:12px}.roundstep{width:42px;height:42px;flex:none;border:1px solid var(--line);border-radius:50%;background:#fff;font-size:22px}.value{font:600 18px Arial,Helvetica,sans-serif;font-variant-numeric:tabular-nums}.toggle{width:50px;height:30px;appearance:none;background:#d5e3dd;border-radius:99px;position:relative;margin:0;flex:none;cursor:pointer}.toggle:after{content:"";position:absolute;left:3px;top:3px;width:24px;height:24px;border-radius:50%;background:white;box-shadow:0 1px 3px #0002;transition:transform .15s}.toggle:checked{background:var(--teal2)}.toggle:checked:after{transform:translateX(20px)}.tabbar{position:fixed;z-index:20;left:0;right:0;bottom:0;padding:8px 7px calc(8px + env(safe-area-inset-bottom));display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:2px;background:#fffefaed;backdrop-filter:blur(16px);border-top:1px solid #dce7e2}.tab{border:0;background:transparent;border-radius:12px;min-width:0;min-height:51px;color:var(--muted);font-size:10px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px}.tab .ico{font-size:19px;line-height:1.1}.tab[aria-current=page]{color:var(--teal);background:#f0f4f3;font-weight:800}.mini{position:fixed;z-index:19;bottom:calc(69px + env(safe-area-inset-bottom));left:9px;right:9px;max-width:632px;margin:0 auto;display:none;flex-direction:column;gap:6px;padding:9px 12px 7px;border:1px solid #cbded7;border-radius:17px;background:#fffffff2;backdrop-filter:blur(18px);box-shadow:0 7px 24px #123d4320}.mini.visible{display:flex}.mini-main{display:flex;align-items:center;gap:8px;width:100%;min-width:0}.minicover{width:35px;height:35px;border-radius:10px;background:linear-gradient(145deg,#0b6570,#b6d6ca);display:grid;place-items:center;color:white;flex:none}.minitext{min-width:0;flex:1}.minititle{display:block;font-size:13px;font-weight:800;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.minitime{display:block;font-size:11px;color:var(--muted);margin-top:2px}.miniplay{border:0;border-radius:50%;width:38px;height:38px;background:var(--teal);color:#fff;flex:none}.miniskip{position:relative;border:0;background:transparent;color:#005e59;width:31px;height:38px;flex:none;font-size:25px;line-height:1;padding:0}.miniskip span{position:absolute;font-size:9px;font-weight:800;left:50%;top:19px;transform:translateX(-50%);background:#fffffff2;padding:0 1px}.mini-seek{display:block;width:100%;height:30px;min-width:0;margin:0;accent-color:#c94716;cursor:pointer;touch-action:auto}.mini-seek:focus-visible{outline:3px solid var(--coral);outline-offset:1px}.viewer{display:block;width:100%;height:calc(100dvh - 220px);min-height:520px;border:1px solid var(--line);border-radius:14px;background:white;margin-top:12px}.viewerfallback{padding:18px;background:var(--paper);border:1px solid var(--line);border-radius:14px}.lyrics{white-space:pre-wrap;font:20px/1.8 Arial,Helvetica,sans-serif;text-align:center;padding:18px 10px}.settinglink{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:14px 0;border-bottom:1px solid var(--line)}.settinglink:last-child{border-bottom:0}.footer-note{font-size:12px;color:var(--muted);text-align:center;padding:20px 10px}.profile-panel{display:grid;gap:12px}.profile-field{display:grid;gap:6px;font-weight:700;font-size:14px}.profile-field input,.profile-field select{width:100%;min-height:48px;border:1px solid var(--line);border-radius:12px;background:#fffdf8;padding:10px 12px;color:var(--ink);font-size:16px}.primarybtn{border:0;border-radius:13px;background:var(--teal);color:#fff;font-weight:800;padding:13px 16px;min-height:48px}.modal-backdrop{position:fixed;inset:0;z-index:100;background:#092f34b8;display:flex;align-items:center;justify-content:center;padding:20px;overflow:auto}.welcome-modal{width:min(100%,430px);max-height:calc(100dvh - 40px);overflow:auto;background:var(--paper);border-radius:24px;padding:24px;box-shadow:0 24px 80px #00272b55}.welcome-modal .brandmark{background:var(--soft);color:var(--teal);border-color:var(--line);margin-bottom:14px}.welcome-modal h2{font:600 27px/1.15 Arial,Helvetica,sans-serif;margin:0 0 8px}.welcome-modal p{color:var(--muted);font-size:14px;margin:0 0 18px}.welcome-modal form{display:grid;gap:14px}.welcome-modal .primarybtn{width:100%}.helper-note{font-size:12px;color:var(--muted);font-weight:400}.hidden{display:none!important}.collapsible{padding:0!important;overflow:hidden}.collapsible>summary{list-style:none;display:flex;align-items:center;justify-content:space-between;gap:12px;padding:16px;cursor:pointer;font-weight:700}.collapsible>summary::-webkit-details-marker{display:none}.collapsible>summary h2{font:600 20px Arial,Helvetica,sans-serif;margin:0}.collapse-chevron{font-size:20px;transition:transform .15s}.collapsible[open]>summary .collapse-chevron{transform:rotate(180deg)}.collapsible-body{padding:0 16px 16px}.collapsible-body>.panel{margin:0;padding:0;border:0;box-shadow:none}.collapsible-body>.panelhead{margin-bottom:12px}.collapsible{padding:0!important;overflow:hidden}.collapsible>summary{list-style:none;display:flex;align-items:center;justify-content:space-between;gap:12px;padding:16px;cursor:pointer;font-weight:700}.collapsible>summary::-webkit-details-marker{display:none}.collapsible>summary h2{font:600 20px Arial,Helvetica,sans-serif;margin:0}.collapse-chevron{font-size:20px;transition:transform .15s}.collapsible[open]>summary .collapse-chevron{transform:rotate(180deg)}.collapsible-body{padding:0 16px 16px}.collapsible-body>.panel{margin:0;padding:0;border:0;box-shadow:none}.collapsible-body>.panelhead{margin-bottom:12px}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}html{min-height:100%;background:#fff}body{margin:0;background:#fff;color:var(--ink);font:16px/1.45 Arial,Helvetica,sans-serif;padding-bottom:calc(158px + env(safe-area-inset-bottom))}button,input{font:inherit}button{cursor:pointer;color:inherit}button:focus-visible,a:focus-visible,input:focus-visible{outline:3px solid var(--coral);outline-offset:3px}.app{max-width:650px;margin:0 auto;min-height:100dvh}.topbar{background:linear-gradient(115deg,#064750,#08747a 66%,#6aa69b);color:#fff;padding:calc(14px + env(safe-area-inset-top)) 19px 18px;border-radius:0 0 24px 24px;box-shadow:0 8px 22px #075b641c}.brandline{display:flex;align-items:center;gap:11px}.brandmark{width:40px;height:40px;display:grid;place-items:center;border:1px solid #ffffff55;border-radius:50%;font-size:22px}.brandname{font:600 21px/1.15 Arial,Helvetica,sans-serif;letter-spacing:.005em}.tagline{font-size:12px;opacity:.83;letter-spacing:.04em;margin-top:4px}.top-actions{margin-left:auto}.iconbtn{width:42px;height:42px;border-radius:50%;border:1px solid #ffffff50;background:#ffffff15;color:inherit;font-size:19px}.content{padding:20px 16px 30px}.screen{display:none}.screen.active{display:block}.eyebrow{font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.15em;color:var(--muted);margin:0 0 7px}.heading{font:600 29px/1.15 Arial,Helvetica,sans-serif;letter-spacing:-.025em;margin:0 0 7px}.subtext{margin:0 0 20px;color:var(--muted);font-size:14px}.search{display:flex;align-items:center;gap:10px;border:1px solid var(--line);background:var(--paper);border-radius:15px;padding:0 14px;margin:16px 0 20px;box-shadow:0 2px 7px #143d4308}.search input{border:0;background:transparent;outline:none;min-width:0;flex:1;height:50px;color:var(--ink)}.search span{color:var(--muted);font-size:18px}.sectionrow{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:0 0 10px}.sectionrow h2{font:600 20px Arial,Helvetica,sans-serif;margin:0}.quietbtn{border:0;background:transparent;color:var(--teal);font-size:13px;font-weight:750;padding:8px}.songlist{display:grid;gap:10px}.song-item{display:flex;align-items:stretch;gap:8px}.song{flex:1;min-width:0;width:100%;display:flex;align-items:center;gap:12px;text-align:left;padding:12px;border:1px solid var(--line);border-radius:16px;background:var(--paper);min-height:76px;box-shadow:0 3px 10px #123d4307}.song.selected{background:#f3f6f5;border-color:#a9d1c7}.offlinebtn{flex:none;min-width:76px;max-width:92px;border:1px solid var(--line);border-radius:14px;background:var(--paper);padding:8px;font-size:11px;line-height:1.25;font-weight:750;color:var(--teal)}.offlinebtn:disabled{opacity:.65;cursor:wait}.offlinebtn.saved{background:var(--soft);border-color:#a9d1c7}.offlinebtn .offico{display:block;font-size:19px;margin-bottom:3px}.cover{width:48px;height:48px;flex:none;border-radius:12px;display:grid;place-items:center;background:linear-gradient(145deg,#0b6570,#b6d6ca);color:#fff;font-size:23px}.songtext{flex:1;min-width:0}.songtitle{display:block;font-weight:750;line-height:1.25;overflow-wrap:anywhere}.songmeta{display:block;color:var(--muted);font-size:12px;margin-top:4px}.chev{color:var(--teal);font-size:24px}.empty{padding:25px 12px;text-align:center;color:var(--muted);background:var(--paper);border:1px dashed var(--line);border-radius:15px}.hero{border-radius:22px;overflow:hidden;background:linear-gradient(150deg,#064750,#0b6d76 58%,#6aa69b);color:#fff;position:relative;padding:23px 20px 20px;margin:13px 0 16px;box-shadow:var(--shadow)}.hero:before{content:"";position:absolute;right:-50px;bottom:-86px;width:230px;height:170px;border:1px solid #ffffff38;border-radius:50%;box-shadow:0 -13px 0 -12px #ffffff35,0 -27px 0 -26px #ffffff30,0 -41px 0 -40px #ffffff28;transform:rotate(-15deg)}.hero-kicker{font-size:11px;letter-spacing:.16em;text-transform:uppercase;opacity:.8;font-weight:800}.hero h1{font:600 30px/1.12 Arial,Helvetica,sans-serif;margin:12px 0 5px;max-width:88%;position:relative}.hero p{font-size:13px;margin:0;opacity:.85;position:relative}.hero-bottom{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:22px;position:relative}.pill{border:1px solid #ffffff70;background:#ffffff17;color:#fff;border-radius:999px;padding:8px 12px;font-size:12px}.playhero{border:0;border-radius:999px;background:#fff;color:var(--teal);padding:12px 20px;min-height:48px;font-weight:800;box-shadow:0 3px 10px #002e3324}.controlgrid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:7px;margin:12px 0}.controlcard{background:var(--paper);border:1px solid var(--line);border-radius:13px;padding:10px 7px;text-align:center;min-height:76px;min-width:0;box-shadow:0 3px 10px #123d4307}.controlicon{display:block;font-size:19px;line-height:1.1;color:var(--teal);margin-bottom:5px}.controltitle{display:block;font-weight:750;font-size:12px;line-height:1.2;overflow-wrap:anywhere}.controlhint{display:block;color:var(--muted);font-size:10px;line-height:1.25;margin-top:4px}.panel{background:var(--paper);border:1px solid var(--line);border-radius:18px;padding:16px;margin:12px 0;box-shadow:0 3px 12px #123d4307}.panelhead{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:12px}.panelhead h2{font:600 20px Arial,Helvetica,sans-serif;margin:0}.muted{color:var(--muted);font-size:13px}.voice-mixer{display:grid;gap:14px}.voice-row{display:grid;grid-template-columns:minmax(0,1fr) 52px;gap:5px 12px;align-items:center;padding:10px 0;border-bottom:1px solid var(--line)}.voice-row:last-child{border-bottom:0}.voice-row-top{display:flex;align-items:center;gap:9px;min-width:0;font-weight:750}.voice-row-top input{width:22px;height:22px;accent-color:var(--teal);flex:none}.voice-row input[type=range]{grid-column:1;grid-row:2;width:100%;accent-color:var(--teal);min-width:0}.voice-percent{grid-column:2;grid-row:1 / span 2;text-align:right;font-size:13px;color:var(--muted);font-variant-numeric:tabular-nums}.voice-row input:disabled{opacity:.4}.partselect{display:flex;flex-wrap:wrap;gap:8px;margin:12px 0}.partchip{border:1px solid var(--line);border-radius:999px;background:#fff;padding:9px 13px;min-height:42px;font-size:13px}.partchip[aria-pressed=true]{background:var(--teal);border-color:var(--teal);color:#fff}.transport{display:flex;align-items:center;gap:13px}.playbtn{width:58px;height:58px;flex:none;border:0;border-radius:50%;background:var(--coral);color:white;font-size:24px;box-shadow:0 5px 13px #cf78643b;display:grid;place-items:center}.pause-icon{display:inline-flex;gap:5px;align-items:center;justify-content:center;width:22px;height:22px}.pause-icon i{display:block;width:6px;height:20px;background:currentColor;border-radius:2px}.seek{min-width:0;flex:1;accent-color:var(--teal);height:30px;touch-action:pan-y}.times{display:flex;justify-content:space-between;color:var(--muted);font-size:12px;font-variant-numeric:tabular-nums;margin:3px 0 14px 71px}.skiprow{display:grid;grid-template-columns:1fr 1fr;gap:9px}.smallbtn{border:1px solid var(--line);background:#fff;border-radius:12px;padding:10px;min-height:43px;font-size:13px;font-weight:700}.smallbtn:active{background:var(--soft)}.row{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:8px 0}.row label{font-weight:700}.range{width:100%;accent-color:var(--teal);min-width:0}.range-row{display:flex;align-items:center;gap:12px}.roundstep{width:42px;height:42px;flex:none;border:1px solid var(--line);border-radius:50%;background:#fff;font-size:22px}.value{font:600 18px Arial,Helvetica,sans-serif;font-variant-numeric:tabular-nums}.toggle{width:50px;height:30px;appearance:none;background:#d5e3dd;border-radius:99px;position:relative;margin:0;flex:none;cursor:pointer}.toggle:after{content:"";position:absolute;left:3px;top:3px;width:24px;height:24px;border-radius:50%;background:white;box-shadow:0 1px 3px #0002;transition:transform .15s}.toggle:checked{background:var(--teal2)}.toggle:checked:after{transform:translateX(20px)}.tabbar{position:fixed;z-index:20;left:0;right:0;bottom:0;padding:8px 7px calc(8px + env(safe-area-inset-bottom));display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:2px;background:#fffefaed;backdrop-filter:blur(16px);border-top:1px solid #dce7e2}.tab{border:0;background:transparent;border-radius:12px;min-width:0;min-height:51px;color:var(--muted);font-size:10px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px}.tab .ico{font-size:19px;line-height:1.1}.tab[aria-current=page]{color:var(--teal);background:#f0f4f3;font-weight:800}.mini{position:fixed;z-index:19;bottom:calc(69px + env(safe-area-inset-bottom));left:9px;right:9px;max-width:632px;margin:0 auto;display:none;flex-direction:column;gap:6px;padding:9px 12px 7px;border:1px solid #cbded7;border-radius:17px;background:#fffffff2;backdrop-filter:blur(18px);box-shadow:0 7px 24px #123d4320}.mini.visible{display:flex}.mini-main{display:flex;align-items:center;gap:8px;width:100%;min-width:0}.minicover{width:35px;height:35px;border-radius:10px;background:linear-gradient(145deg,#0b6570,#b6d6ca);display:grid;place-items:center;color:white;flex:none}.minitext{min-width:0;flex:1}.minititle{display:block;font-size:13px;font-weight:800;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.minitime{display:block;font-size:11px;color:var(--muted);margin-top:2px}.miniplay{border:0;border-radius:50%;width:38px;height:38px;background:var(--teal);color:#fff;flex:none}.miniskip{position:relative;border:0;background:transparent;color:#005e59;width:31px;height:38px;flex:none;font-size:25px;line-height:1;padding:0}.miniskip span{position:absolute;font-size:9px;font-weight:800;left:50%;top:19px;transform:translateX(-50%);background:#fffffff2;padding:0 1px}.mini-seek{display:block;width:100%;height:30px;min-width:0;margin:0;accent-color:#c94716;cursor:pointer;touch-action:pan-y}.mini-seek:focus-visible{outline:3px solid var(--coral);outline-offset:1px}.viewer{display:block;width:100%;height:calc(100dvh - 220px);min-height:520px;border:1px solid var(--line);border-radius:14px;background:white;margin-top:12px}.viewerfallback{padding:18px;background:var(--paper);border:1px solid var(--line);border-radius:14px}.lyrics{white-space:pre-wrap;font:20px/1.8 Arial,Helvetica,sans-serif;text-align:center;padding:18px 10px}.settinglink{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:14px 0;border-bottom:1px solid var(--line)}.settinglink:last-child{border-bottom:0}.footer-note{font-size:12px;color:var(--muted);text-align:center;padding:20px 10px}.profile-panel{display:grid;gap:12px}.profile-field{display:grid;gap:6px;font-weight:700;font-size:14px}.profile-field input,.profile-field select{width:100%;min-height:48px;border:1px solid var(--line);border-radius:12px;background:#fffdf8;padding:10px 12px;color:var(--ink);font-size:16px}.primarybtn{border:0;border-radius:13px;background:var(--teal);color:#fff;font-weight:800;padding:13px 16px;min-height:48px}.modal-backdrop{position:fixed;inset:0;z-index:100;background:#092f34b8;display:flex;align-items:center;justify-content:center;padding:20px;overflow:auto}.welcome-modal{width:min(100%,430px);max-height:calc(100dvh - 40px);overflow:auto;background:var(--paper);border-radius:24px;padding:24px;box-shadow:0 24px 80px #00272b55}.welcome-modal .brandmark{background:var(--soft);color:var(--teal);border-color:var(--line);margin-bottom:14px}.welcome-modal h2{font:600 27px/1.15 Arial,Helvetica,sans-serif;margin:0 0 8px}.welcome-modal p{color:var(--muted);font-size:14px;margin:0 0 18px}.welcome-modal form{display:grid;gap:14px}.welcome-modal .primarybtn{width:100%}.helper-note{font-size:12px;color:var(--muted);font-weight:400}.hidden{display:none!important}.collapsible{padding:0!important;overflow:hidden}.collapsible>summary{list-style:none;display:flex;align-items:center;justify-content:space-between;gap:12px;padding:16px;cursor:pointer;font-weight:700}.collapsible>summary::-webkit-details-marker{display:none}.collapsible>summary h2{font:600 20px Arial,Helvetica,sans-serif;margin:0}.collapse-chevron{font-size:20px;transition:transform .15s}.collapsible[open]>summary .collapse-chevron{transform:rotate(180deg)}.collapsible-body{padding:0 16px 16px}.collapsible-body>.panel{margin:0;padding:0;border:0;box-shadow:none}.collapsible-body>.panelhead{margin-bottom:12px}.collapsible{padding:0!important;overflow:hidden}.collapsible>summary{list-style:none;display:flex;align-items:center;justify-content:space-between;gap:12px;padding:16px;cursor:pointer;font-weight:700}.collapsible>summary::-webkit-details-marker{display:none}.collapsible>summary h2{font:600 20px Arial,Helvetica,sans-serif;margin:0}.collapse-chevron{font-size:20px;transition:transform .15s}.collapsible[open]>summary .collapse-chevron{transform:rotate(180deg)}.collapsible-body{padding:0 16px 16px}.collapsible-body>.panel{margin:0;padding:0;border:0;box-shadow:none}.collapsible-body>.panelhead{margin-bottom:12px}
 @media(min-width:560px){.topbar{padding-left:24px;padding-right:24px}.content{padding:24px}.viewer{height:calc(100dvh - 190px);min-height:480px}}
 @media(max-width:360px){.content{padding-left:12px;padding-right:12px}.heading{font-size:26px}.hero h1{font-size:27px}.voice-row{gap:5px 8px}.brandname{font-size:19px}}
 .playmode-label{display:block;font-size:13px;font-weight:800;margin:2px 0 7px}.playmode-select{display:block;width:100%;min-height:48px;padding:10px 12px;border:1px solid #c7dad4;border-radius:12px;background:#fff;color:var(--ink);font:inherit;font-weight:700}.playmode-select:focus{outline:3px solid #cf786455;outline-offset:2px}
@@ -109,6 +109,12 @@ input,select,textarea,.section-card,.bookmark-card,.modal,.sheet,.screen-card{
 
 /* High-contrast colour pass: bright accents, readable text, no pale-on-pale copy */
 :root{--bg:#fffdf7;--paper:#ffffff;--ink:#172b30;--muted:#465b60;--line:#c8d9d7;--teal:#006b67;--teal2:#42c7b4;--soft:#e0f7f2;--coral:#c94716;--sand:#ffbf47;--shadow:0 4px 12px rgba(12,55,58,.09)}
+.home-dates-link{display:flex;align-items:center;gap:10px;width:100%;margin:0 0 16px;padding:8px 11px;border:1px solid var(--line);background:var(--paper);color:var(--ink);text-align:left}
+.home-dates-icon{display:grid;place-items:center;flex:none;width:34px;height:34px;background:var(--soft);color:var(--teal);font-size:19px}
+.home-dates-copy{display:grid;gap:1px;flex:1;min-width:0}
+.home-dates-copy strong{font-size:13px;font-weight:800;line-height:1.25}
+.home-dates-copy small{color:var(--muted);font-size:11px;line-height:1.3}
+.home-dates-arrow{color:var(--teal);font-size:23px;line-height:1}
 .home-intro{background:#064750;border-left-color:#ff8a3d}
 .home-intro .eyebrow{color:#72f0d6}
 .home-intro .heading{color:#ffffff}
@@ -145,6 +151,252 @@ input,select,textarea,.section-card,.bookmark-card,.modal,.sheet,.screen-card{
 .practice-step-hint{margin:0 0 14px;max-width:48ch}
 .starting-note-panel{border-left:4px solid #e3856b}
 .starting-note-panel .panelhead{margin-bottom:8px}
+.song-tags{display:block;margin-top:4px;font-size:11px;line-height:1.3;color:var(--muted);font-weight:650;overflow-wrap:anywhere}.song-tags.untagged{color:#8b5a00}
+
+/* Choir noticeboard and calendar */
+.board-section{margin:18px 0 22px}
+.board-list{display:grid;gap:9px}
+.notice-card,.event-card{display:flex;align-items:flex-start;gap:12px;padding:13px;border:1px solid var(--line);background:var(--paper);min-width:0}
+.notice-card{border-left:3px solid var(--coral)}
+.notice-main,.event-main{flex:1;min-width:0}
+.notice-title,.event-title{font:600 17px/1.25 Georgia,"Times New Roman",serif;margin:0 0 6px;overflow-wrap:anywhere}
+.notice-message,.event-details{font-size:13px;line-height:1.5;color:#425c5d;margin:0;white-space:pre-wrap;overflow-wrap:anywhere}
+.board-meta{display:block;margin-top:8px;color:var(--muted);font-size:11px}
+.board-link{display:inline-block;margin-top:8px;color:var(--teal);font-size:12px;font-weight:800;text-decoration:underline;text-underline-offset:3px}
+.board-label{display:inline-block;margin-bottom:5px;color:#83576a;font-size:10px;letter-spacing:.1em;font-weight:800;text-transform:uppercase}
+.event-date{display:flex;flex:none;flex-direction:column;align-items:center;justify-content:center;width:54px;min-height:64px;padding:6px 3px;background:#e4f1ee;color:#245d5c;text-align:center}
+.event-date-month{font-size:10px;font-weight:800;letter-spacing:.08em;text-transform:uppercase}
+.event-date-day{font:600 25px/.98 Georgia,"Times New Roman",serif;margin:3px 0}
+.event-date-year{font-size:10px;color:#425c5d}
+.event-meta{display:block;color:var(--muted);font-size:12px;margin:0 0 7px;overflow-wrap:anywhere}
+.board-empty{padding:14px;border:1px dashed var(--line);color:var(--muted);font-size:13px;background:var(--paper)}
+.board-section .sectionrow{align-items:center}
+.board-section .sectionrow h2{min-width:0}
+@media(max-width:360px){.notice-card,.event-card{padding:10px;gap:9px}.event-date{width:47px}}
+
+.controlicon.bookmark-icon svg{display:block;width:21px;height:21px;margin:0 auto;fill:none;stroke:currentColor;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round}
+
+/* Vocal Training section */
+.training-grid{display:grid;gap:12px;margin:16px 0 22px}
+.training-card{display:flex;align-items:flex-start;gap:14px;width:100%;min-height:112px;padding:17px 15px;text-align:left;border:1px solid var(--line);border-left:4px solid var(--teal);background:var(--paper);color:var(--ink)}
+.training-card-icon{display:grid;place-items:center;flex:none;width:42px;height:42px;background:var(--soft);color:var(--teal);font-size:23px}
+.training-card-copy{min-width:0;flex:1}
+.training-card-title{display:block;margin:0 0 7px;font:600 20px/1.2 Georgia,"Times New Roman",serif}
+.training-card-hint{display:block;color:var(--muted);font-size:13px;line-height:1.45}
+.training-card-arrow{align-self:center;color:var(--teal);font-size:24px}
+.training-note{padding:13px 14px;border-left:3px solid var(--coral);background:#fff4e9;color:#334b50;font-size:13px;line-height:1.5}
+
+/* Breathing phase cue and clear pause-control icon */
+.warmup-breath-cue{display:flex;align-items:center;justify-content:center;gap:13px;width:max-content;max-width:100%;margin:12px auto 3px;padding:8px 15px;background:var(--soft);border:1px solid #b7ceca}
+.warmup-breath-cue[hidden]{display:none!important}
+.warmup-breath-cue[data-phase="in"]{border-left:4px solid var(--teal)}
+.warmup-breath-cue[data-phase="out"]{border-left:4px solid var(--coral)}
+.warmup-breath-label{font-size:15px;font-weight:800;color:var(--ink)}
+.warmup-breath-count{display:grid;place-items:center;width:38px;height:38px;background:#fff;color:var(--teal);font:600 25px/1 Georgia,"Times New Roman",serif;font-variant-numeric:tabular-nums}
+.warmup-breath-cue[data-phase="out"] .warmup-breath-count{color:#a33d1c}
+.warmup-controls .primarybtn{display:inline-flex;align-items:center;justify-content:center;gap:9px}
+.warmup-pause-icon{display:inline-flex;align-items:center;justify-content:center;gap:4px;width:18px;height:18px}
+.warmup-pause-icon i{display:block;width:4px;height:14px;background:currentColor;border-radius:1px}
+/* Guided whole-choir warm-up player */
+.warmup-summary-title{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:15px}
+.warmup-summary-title h2{margin:4px 0 0;font:600 20px/1.2 Georgia,"Times New Roman",serif}
+.warmup-kicker,.warmup-exercise-meta,.warmup-timer-label{font-size:10px;letter-spacing:.13em;font-weight:850;color:var(--teal)}
+.warmup-duration{font:600 23px Georgia,"Times New Roman",serif;color:var(--teal);font-variant-numeric:tabular-nums}
+.warmup-progress-track{height:11px;overflow:hidden;background:#dce9e5;border-radius:2px}
+.warmup-progress-track span{display:block;width:0;height:100%;background:var(--teal);transition:width .2s linear}
+.warmup-summary-stats{display:flex;justify-content:space-between;gap:12px;margin-top:9px;color:var(--muted);font-size:12px}
+.warmup-summary-stats strong{color:var(--ink);font-variant-numeric:tabular-nums}
+.warmup-exercise{border-left:4px solid var(--coral);padding:18px}
+.warmup-exercise-meta{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap}
+.warmup-exercise h2{font:600 25px/1.15 Georgia,"Times New Roman",serif;margin:12px 0;color:var(--ink)}
+.warmup-exercise p{font-size:15px;line-height:1.6;margin:0 0 12px}
+.warmup-breath-exercise{text-align:left;margin-bottom:16px}
+.warmup-collapsible{padding:0;overflow:hidden}
+.warmup-section-toggle{list-style:none;display:flex;align-items:center;justify-content:space-between;gap:12px;min-height:58px;padding:13px 16px;cursor:pointer;user-select:none}
+.warmup-section-toggle::-webkit-details-marker{display:none}
+.warmup-section-name{font:600 18px/1.2 Georgia,"Times New Roman",serif;color:var(--ink)}
+.warmup-section-end{display:flex;align-items:center;gap:12px;flex:0 0 auto}
+.warmup-section-duration{font-size:14px;font-weight:800;color:var(--teal);font-variant-numeric:tabular-nums}
+.warmup-chevron{width:9px;height:9px;border-right:2px solid var(--teal);border-bottom:2px solid var(--teal);transform:rotate(45deg) translateY(-2px);transition:transform .15s ease}
+.warmup-collapsible[open]>.warmup-section-toggle .warmup-chevron{transform:rotate(225deg) translate(-2px,-1px)}
+.warmup-collapsible-content{padding:0 14px 14px}
+.warmup-vocal-section{margin:12px 0}
+.warmup-vocal-section .warmup-summary{margin:0 0 12px}
+.warmup-vocal-section .warmup-exercise,.warmup-vocal-section .warmup-timer-panel,.warmup-vocal-section .warmup-plan{margin:12px 0}
+.warmup-breath-exercise h2{font:600 22px/1.2 Georgia,"Times New Roman",serif;margin:6px 0 8px;color:var(--ink)}
+.warmup-breath-exercise p{font-size:15px;line-height:1.6;margin:0 0 12px}
+.warmup-breath-exercise .warmup-timer-label{text-align:center}
+.breathing-rhythm-controls{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin:8px 2px 2px}
+.breathing-rhythm-field{display:grid;gap:5px;min-width:0;color:var(--ink);font-size:13px;font-weight:800}
+.breathing-rhythm-field select{width:100%;min-height:44px;padding:8px 10px;border:1px solid var(--line);background:#fff;color:var(--ink);font:inherit;font-weight:700}
+.breathing-rhythm-help{margin:3px 2px 10px!important;color:var(--muted);font-size:11px!important}
+.breathing-duration-control{margin:8px 2px 10px}
+.breathing-duration-heading{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:5px;color:var(--muted);font-size:13px;font-weight:750}
+.breathing-duration-heading output{color:var(--teal);font-size:16px;font-weight:850;font-variant-numeric:tabular-nums}
+#breathingDuration{display:block;width:100%;margin:0;accent-color:var(--teal);cursor:pointer}
+.breathing-duration-help{margin:3px 0 0!important;color:var(--muted);font-size:11px!important}
+.warmup-breath-exercise .warmup-timer{text-align:center;font-size:clamp(42px,11vw,58px)}
+.warmup-breath-exercise .warmup-breath-cue{margin:8px auto 4px}
+.warmup-breath-exercise .warmup-timer-status{text-align:center;margin:4px 0 8px}
+#warmupExerciseInstructions{white-space:pre-line}
+.warmup-exercise .warmup-coaching{padding-top:11px;border-top:1px solid var(--line);font-size:13px;color:var(--muted);margin-bottom:0}
+.warmup-timer-panel{text-align:center;padding:20px}
+.warmup-timer-label{color:var(--muted)}
+.warmup-timer{margin:4px 0 0;font:600 clamp(54px,15vw,76px)/1.1 Georgia,"Times New Roman",serif;font-variant-numeric:tabular-nums;letter-spacing:-.04em;color:var(--teal)}
+.warmup-timer-status{min-height:22px;margin:5px 0 16px;color:var(--muted);font-size:13px}
+.warmup-controls{display:grid;grid-template-columns:1fr 1fr;gap:9px}
+.warmup-controls .primarybtn{grid-column:1/-1;width:100%;font-size:15px}
+.breathing-controls{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin-top:8px}
+.breathing-controls .primarybtn,.breathing-controls .smallbtn{grid-column:auto;display:flex;align-items:center;justify-content:center;gap:6px;width:100%;height:44px;min-width:0;padding:8px 6px;font-size:13px;white-space:nowrap}
+.warmup-next{grid-column:1/-1;min-height:47px;padding:10px 14px;border:1px solid var(--teal);background:var(--soft);color:var(--teal);font-weight:800}
+.warmup-plan ol{list-style:none;padding:0;margin:0;display:grid;gap:0}
+.warmup-plan li{padding:0;border-bottom:1px solid var(--line);font-size:13px;color:var(--muted)}
+.warmup-plan li:last-child{border-bottom:0}
+.warmup-plan li.current{background:var(--soft);color:var(--ink);font-weight:800;border-left:3px solid var(--teal)}
+.warmup-plan li button.warmup-step{display:flex;justify-content:space-between;gap:12px;align-items:center;width:100%;padding:10px 8px;border:0;background:transparent;color:inherit;font:inherit;text-align:left;cursor:pointer}
+.warmup-plan li button.warmup-step:hover{background:var(--soft)}
+.warmup-plan li button.warmup-step:focus-visible{outline:2px solid var(--teal);outline-offset:-2px}
+.warmup-plan li button.warmup-step span{white-space:nowrap;font-variant-numeric:tabular-nums}
+.warmup-accompaniment-note{padding:0 2px;color:var(--muted);font-size:12px;line-height:1.5}
+@media(min-width:560px){.warmup-controls{grid-template-columns:1fr 1fr 1fr}.warmup-controls .primarybtn,.warmup-controls .warmup-next{grid-column:auto}}
+
+/* Warm-up visual hierarchy and controls aligned with the app's standard buttons */
+.warmup-breath-cue{
+ display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;gap:12px;
+ width:100%;margin:14px 0 10px;padding:14px 17px;text-align:left;
+ background:var(--soft);border:1px solid #9bbab5;border-left:6px solid var(--teal);
+}
+.warmup-breath-cue[data-phase="out"]{background:#fff0df;border-color:#e5b18f;border-left-color:var(--coral)}
+.warmup-breath-label{display:block;font-size:15px;line-height:1.25;font-weight:850;letter-spacing:.09em;text-transform:uppercase;color:var(--teal)}
+.warmup-breath-cue[data-phase="out"] .warmup-breath-label{color:#984b35}
+.warmup-breath-count-wrap{display:flex;flex-direction:column;align-items:center;justify-content:center;min-width:76px;padding:0 2px}
+.warmup-breath-count{display:block;width:auto;height:auto;background:transparent;color:var(--teal);font:750 clamp(64px,18vw,82px)/.88 system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;font-variant-numeric:tabular-nums;letter-spacing:-.065em}
+.warmup-breath-cue[data-phase="out"] .warmup-breath-count{color:#a33d1c}
+.warmup-breath-unit{margin-top:5px;font-size:10px;line-height:1;font-weight:850;letter-spacing:.15em;color:var(--muted)}
+.warmup-timer{font:600 clamp(32px,9vw,42px)/1.1 Georgia,"Times New Roman",serif;letter-spacing:-.025em}
+.warmup-controls{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px}
+.warmup-controls button{display:flex;align-items:center;justify-content:center;gap:4px;min-width:0;min-height:44px;padding:7px 4px;border-radius:3px;font-family:inherit;font-size:11px;font-weight:750;white-space:nowrap}
+.warmup-controls .primarybtn{grid-column:auto;width:100%;min-width:0;background:var(--teal);border:1px solid var(--teal);color:#fff;font-size:11px;font-weight:800}
+.warmup-controls .smallbtn,.warmup-controls .warmup-next{grid-column:auto;width:100%;min-width:0;border:1px solid #b7ceca;background:#fff;color:var(--ink);padding:7px 4px}
+.warmup-controls #warmupRestart{font-size:10px;letter-spacing:-.025em}
+.warmup-restart-icon{font-size:16px;line-height:1;font-weight:700;flex:0 0 auto}
+.warmup-controls .warmup-next{min-height:44px;font-family:inherit;font-size:11px;font-weight:750}
+.warmup-controls .smallbtn:active,.warmup-controls .warmup-next:active{background:var(--soft)}
+.warmup-controls .primarybtn:focus-visible,.warmup-controls .smallbtn:focus-visible,.warmup-controls .warmup-next:focus-visible{outline:3px solid var(--coral);outline-offset:2px}
+.warmup-step-guide{margin:14px 0;padding:13px 14px;background:#f4f8f6;border:1px solid var(--line);border-left:3px solid var(--teal)}
+.warmup-step-guide[hidden]{display:none!important}
+.warmup-step-guide h3{margin:0 0 8px;font-size:13px;line-height:1.3;font-weight:850;color:var(--teal)}
+.warmup-step-guide ol{margin:0;padding-left:22px;display:grid;gap:7px}
+.warmup-step-guide li{padding-left:3px;font-size:13px;line-height:1.45;color:var(--ink)}
+.warmup-step-guide li strong{font-weight:800}
+
+/* Readable text and consistent controls across the app */
+button{font-size:14px;line-height:1.3}
+.quietbtn{font-size:14px}
+.smallbtn,.partchip{font-size:14px}
+.offlinebtn{font-size:12px;line-height:1.3}
+.tab{font-size:12px;line-height:1.2}
+.controltitle{font-size:13px;line-height:1.25}
+.controlhint{font-size:12px;line-height:1.3}
+.miniskip span{font-size:11px}
+.warmup-plan li button.warmup-step{font-size:14px;line-height:1.3}
+.warmup-breath-label{font-size:16px;line-height:1.3;letter-spacing:0;text-transform:none}
+.warmup-controls button{font-size:12px;line-height:1.25}
+.warmup-controls .primarybtn,.warmup-controls .warmup-next{font-size:12px}
+.warmup-controls #warmupRestart{font-size:12px;letter-spacing:0}
+.breathing-controls{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.breathing-controls .primarybtn,.breathing-controls .smallbtn{
+ box-sizing:border-box;display:flex;align-items:center;justify-content:center;
+ width:100%;min-width:0;height:48px;min-height:48px;padding:10px 12px;
+ font-size:14px;line-height:1.2;white-space:nowrap
+}
+
+/* Interval learning lessons */
+.interval-mode-row{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:0 0 12px}
+.interval-mode-label{font-size:13px;font-weight:750;color:var(--muted)}
+.interval-mode-switch{display:inline-grid;grid-template-columns:1fr 1fr;gap:3px;padding:3px;border:1px solid var(--line);background:#f2f6f4;border-radius:999px}
+.interval-mode-button{min-width:76px;min-height:38px;padding:7px 15px;border:0;border-radius:999px;background:transparent;color:var(--muted);font-size:13px;font-weight:750}
+.interval-mode-button[aria-pressed="true"]{background:var(--teal);color:#fff;box-shadow:0 2px 5px #123d431c}
+.interval-scale-panel{padding-bottom:13px}
+.interval-scale{display:grid;grid-template-columns:repeat(8,minmax(0,1fr));gap:5px;margin:15px 0 9px}
+.interval-scale-note{display:flex;min-width:0;min-height:58px;flex-direction:column;align-items:center;justify-content:center;gap:3px;background:#edf4f1;border:1px solid #d3e3dd;color:#155c5a}
+.interval-scale-note strong{font:700 clamp(11px,2.8vw,15px)/1.1 Arial,Helvetica,sans-serif}
+.interval-scale-note small{font-size:10px;color:#6a8580}
+.interval-scale-octave{background:#e0efeb;border-color:#a8cbc0}
+.interval-scale-caption{margin:0}
+.interval-instructions{display:grid;gap:4px}
+.interval-instructions strong{font-size:13px}
+.interval-lessons-heading{margin-top:22px}
+.interval-lessons{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.interval-card{min-width:0;padding:14px 12px;background:var(--paper);border:1px solid var(--line);box-shadow:var(--shadow)}
+.interval-card-minor-change{background:#fff7f3;border-color:#dfc2b9;box-shadow:inset 3px 0 0 #b87978}
+.interval-card-minor-change .interval-quality{background:#f1dfda;color:#784a53}
+.interval-card-minor-change .interval-number{color:#925f63}
+.interval-card-top{display:flex;align-items:center;justify-content:space-between;gap:6px;margin-bottom:10px}
+.interval-number{font:700 11px Arial,Helvetica,sans-serif;letter-spacing:.12em;color:var(--muted)}
+.interval-quality{padding:4px 7px;background:var(--soft);color:#246761;font-size:10px;font-weight:800;white-space:nowrap}
+.interval-card h3{margin:0 0 5px;font:600 20px/1.2 Georgia,"Times New Roman",serif;color:var(--ink)}
+.interval-card p{min-height:38px;margin:0 0 12px;color:var(--muted);font-size:12px;line-height:1.4}
+.interval-actions{display:grid;grid-template-columns:1fr;gap:6px}
+.interval-play{display:flex;align-items:center;justify-content:flex-start;gap:9px;min-width:0;min-height:40px;padding:8px 10px;border:1px solid var(--line);background:#fff;color:var(--teal);font-size:13px;font-weight:800;text-align:left}
+.interval-play span{color:var(--ink);font-weight:700}
+.interval-play[aria-pressed="true"]{background:var(--teal);border-color:var(--teal);color:#fff}
+.interval-play[aria-pressed="true"] span{color:#fff}
+.interval-card-octave{grid-column:1/-1;display:grid;grid-template-columns:minmax(0,1fr) minmax(220px,.9fr);align-items:center;gap:5px 22px;background:linear-gradient(110deg,#fffdfb,#f1f7f4)}
+.interval-card-octave .interval-card-top{grid-column:1/-1;margin-bottom:2px}
+.interval-card-octave .interval-card-copy p{min-height:0;margin-bottom:0}
+.interval-card-octave .interval-actions{grid-template-columns:repeat(2,minmax(0,1fr))}
+.interval-status{margin:12px 2px 4px;min-height:22px}
+@media(max-width:520px){
+ .interval-scale{gap:3px}
+ .interval-scale-note{min-height:52px}
+ .interval-scale-note small{font-size:9px}
+ .interval-mode-button{min-width:70px}
+ .interval-card-octave{grid-template-columns:1fr;gap:4px}
+ .interval-card-octave .interval-actions{grid-template-columns:repeat(2,minmax(0,1fr));margin-top:10px}
+}
+@media(max-width:350px){.interval-lessons{grid-template-columns:1fr}.interval-card-octave{grid-column:auto}.interval-card-octave .interval-actions{grid-template-columns:1fr}}
+/* Interval challenge */
+.interval-game-setup-panel{display:grid;gap:10px}
+.interval-game-label{font-size:11px;font-weight:850;letter-spacing:.12em;text-transform:uppercase;color:#83576a}
+.interval-game-mode-switch{display:grid;grid-template-columns:1fr 1fr;gap:7px}
+.interval-game-level-switch{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:7px}
+.interval-game-choice{min-width:0;min-height:46px;padding:9px 7px;border:1px solid var(--line);background:#fff;color:var(--ink);font-size:13px;font-weight:750}
+.interval-game-choice[aria-pressed="true"]{background:var(--teal);border-color:var(--teal);color:#fff}
+.interval-game-explain{min-height:36px;margin:0 0 5px;line-height:1.45}
+.interval-game-best-panel{margin-top:12px}
+.interval-game-high-scores{margin:0;padding-left:23px;display:grid;gap:7px}
+.interval-game-high-scores li{padding-left:4px;color:var(--ink);font-size:13px}
+.interval-game-high-scores li span{color:var(--muted);font-size:11px}
+.interval-game-start{width:100%;margin:2px 0 12px}
+.interval-game-round-exit{display:flex;justify-content:flex-start;margin:-5px 0 4px}
+.interval-game-round-panel{padding:17px}
+.interval-game-progress-head{display:flex;align-items:center;justify-content:space-between;gap:12px;font-size:12px;color:var(--muted);font-weight:750}
+.interval-game-progress-head strong{font-size:17px;color:var(--teal);font-variant-numeric:tabular-nums}
+.interval-game-progress{height:8px;margin:8px 0 20px;background:#e7eeeb;overflow:hidden}
+.interval-game-progress span{display:block;width:10%;height:100%;background:var(--teal);transition:width .2s}
+.interval-game-question-kicker{margin-bottom:8px}
+.interval-game-prompt{margin:0 0 7px;font:600 25px/1.2 Georgia,"Times New Roman",serif}
+.interval-game-play{display:flex;align-items:center;justify-content:center;width:100%;min-height:50px;margin:14px 0 12px;border-color:#b5d1c8;background:#edf4f1;color:#155c5a;font-weight:800}
+.interval-game-options{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+.interval-game-answer{min-width:0;min-height:54px;padding:10px 7px;border:1px solid var(--line);background:#fff;color:var(--ink);font-weight:750;font-size:14px}
+.interval-game-answer.correct{background:#e3f2e7;border-color:#84b99a;color:#245d39}
+.interval-game-answer.wrong{background:#f8e8e3;border-color:#d9a59a;color:#824c48}
+.interval-game-answer:disabled{opacity:1;cursor:default}
+.interval-game-sing-actions{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:14px 0 8px}
+.interval-game-sing-actions button{min-height:50px;padding:8px}
+.interval-game-check{width:100%;min-height:46px}
+.interval-game-mic-status{min-height:38px;margin:10px 0 4px;line-height:1.45}
+.interval-game-feedback{min-height:26px;margin:15px 0 8px;font-size:14px;font-weight:750;color:var(--teal)}
+.interval-game-next{width:100%}
+.interval-game-results{padding:22px 18px;text-align:center}
+.interval-game-results h2{margin:0 0 10px;font:600 25px/1.2 Georgia,"Times New Roman",serif}
+.interval-game-final-score{display:flex;align-items:baseline;justify-content:center;gap:5px;margin:10px 0;color:var(--teal)}
+.interval-game-final-score strong{font:600 64px/1 Georgia,"Times New Roman",serif;font-variant-numeric:tabular-nums}
+.interval-game-final-score span{font-size:17px;color:var(--muted);font-weight:700}
+.interval-game-result-actions{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:18px}
+.interval-game-result-actions button{min-height:47px}
+@media(max-width:380px){.interval-game-mode-switch{grid-template-columns:1fr}.interval-game-sing-actions{grid-template-columns:1fr}.interval-game-result-actions{grid-template-columns:1fr}.interval-game-prompt{font-size:22px}}
 </style>
 </head>
 <body>
@@ -153,65 +405,292 @@ input,select,textarea,.section-card,.bookmark-card,.modal,.sheet,.screen-card{
 <main class="content">
 <section class="screen active" id="screen-home">
  <section class="home-intro" aria-labelledby="homeHeadline"><p class="eyebrow" id="homeGreeting">PRO MUSICA · PRACTICE ROOM</p><h1 class="heading" id="homeHeadline">Know your notes.<br><span>Own your part.</span></h1><p class="subtext">Practise with purpose.<br>Sing with confidence.</p><span class="home-intro-mark" aria-hidden="true">♪</span></section>
+ <section class="board-section hidden" id="announcementsSection" aria-labelledby="announcementsHeading">
+  <div class="sectionrow"><h2 id="announcementsHeading">Announcements</h2><button class="quietbtn" type="button" data-goto="calendar">All announcements</button></div>
+  <div class="board-list" id="announcementList" aria-live="polite"><p class="board-empty">Loading announcements…</p></div>
+ </section>
+
+  <button class="home-dates-link" type="button" id="homeCalendarLink" data-goto="calendar" aria-label="Open choir announcements and upcoming dates">
+   <span class="home-dates-icon" aria-hidden="true">▦</span>
+   <span class="home-dates-copy"><strong>Choir noticeboard</strong><small>Announcements and upcoming dates</small></span>
+   <span class="home-dates-arrow" aria-hidden="true">›</span>
+  </button>
  <label class="search"><span aria-hidden="true">⌕</span><input id="search" type="search" placeholder="Search all songs…" autocomplete="off" aria-label="Search songs"></label>
- <div class="library-tools"><label for="collectionFilter">Concert / collection</label><select id="collectionFilter" aria-label="Filter songs by concert"><option value="all">All songs</option></select><button class="smallbtn" id="downloadCollection">Download collection</button></div>
+ <div class="library-tools"><label for="tagFilter">Tags</label><select id="tagFilter" aria-label="Filter songs by tag"><option value="all">All songs</option></select><button class="smallbtn" id="downloadTag">Download shown songs</button></div>
  <div class="sectionrow"><h2 id="libraryHeading">All songs</h2><span class="muted" id="songCount"></span></div><div class="songlist" id="songList"></div><p class="empty hidden" id="empty">Your song library will appear here after practice tracks are created.</p>
  <div class="panel"><div class="panelhead"><h2>Recently practised</h2></div><div id="recentSongs" class="compact-list"><p class="muted">Songs you open will appear here.</p></div></div>
  <p class="footer-note">A little practice. A fuller sound.</p>
+</section>
+<section class="screen" id="screen-vocal-training">
+ <p class="eyebrow">Build your musicianship</p>
+ <h1 class="heading">Vocal Training</h1>
+ <p class="subtext">Develop your voice, strengthen your pitch and feel more confident singing with the choir.</p>
+ <div class="training-grid">
+  <button class="training-card" type="button" data-goto="warmups">
+   <span class="training-card-icon" aria-hidden="true">♫</span>
+   <span class="training-card-copy"><span class="training-card-title">Warm-ups</span><span class="training-card-hint">Prepare your voice with guided breathing, resonance, range, articulation and ensemble exercises.</span></span>
+   <span class="training-card-arrow" aria-hidden="true">›</span>
+  </button>
+  <button class="training-card" type="button" data-goto="intervals">
+   <span class="training-card-icon" aria-hidden="true">♪</span>
+   <span class="training-card-copy"><span class="training-card-title">Learn the intervals</span><span class="training-card-hint">Explore major and natural minor scales, then listen to and sing each interval in both directions.</span></span>
+   <span class="training-card-arrow" aria-hidden="true">›</span>
+  </button>
+  <button class="training-card" type="button" data-goto="interval-game">
+   <span class="training-card-icon" aria-hidden="true">✦</span>
+   <span class="training-card-copy"><span class="training-card-title">Interval challenge</span><span class="training-card-hint">Test your ear or sing the interval. Choose a level, build your score and beat your personal best.</span></span>
+   <span class="training-card-arrow" aria-hidden="true">›</span>
+  </button>
+ </div>
+</section>
+<section class="screen" id="screen-calendar">
+ <button class="quietbtn" type="button" data-back="home">‹ Home</button>
+ <p class="eyebrow">Stay in the loop</p>
+ <h1 class="heading">Announcements &amp; dates</h1>
+ <p class="subtext">The latest choir notices and upcoming events.</p>
+ <section class="board-section" aria-labelledby="allAnnouncementsHeading">
+  <div class="sectionrow"><h2 id="allAnnouncementsHeading">Announcements</h2></div>
+  <div class="board-list" id="allAnnouncements" aria-live="polite"><p class="board-empty">Loading announcements…</p></div>
+ </section>
+ <section class="board-section" aria-labelledby="allEventsHeading">
+  <div class="sectionrow"><h2 id="allEventsHeading">Upcoming dates</h2></div>
+  <div class="board-list" id="allEvents" aria-live="polite"><p class="board-empty">Loading dates…</p></div>
+ </section>
+</section>
+<section class="screen" id="screen-warmups">
+ <button class="quietbtn" type="button" data-back="vocal-training">‹ Vocal Training</button>
+ <p class="eyebrow">Prepare your voice</p>
+ <h1 class="heading">Quick warm-up</h1>
+ 
+ <details class="warmup-breath-exercise panel warmup-collapsible" id="breathingSection">
+  <summary class="warmup-section-toggle"><span class="warmup-section-name">Breathing exercise</span><span class="warmup-section-end"><span class="warmup-section-duration" id="breathingExerciseLength">0:30</span><span class="warmup-chevron" aria-hidden="true"></span></span></summary>
+  <div class="warmup-collapsible-content" aria-live="polite">
+    <div class="breathing-rhythm-controls" aria-label="Choose your breathing rhythm">
+     <label class="breathing-rhythm-field" for="breathingInDuration"><span>Breathe in</span><select id="breathingInDuration" aria-label="Inhale duration"><option value="1">1 second</option><option value="2">2 seconds</option><option value="3">3 seconds</option><option value="4" selected>4 seconds</option><option value="5">5 seconds</option><option value="6">6 seconds</option><option value="7">7 seconds</option><option value="8">8 seconds</option></select></label>
+     <label class="breathing-rhythm-field" for="breathingOutDuration"><span>Breathe out</span><select id="breathingOutDuration" aria-label="Exhale duration"><option value="1">1 second</option><option value="2">2 seconds</option><option value="3">3 seconds</option><option value="4">4 seconds</option><option value="5">5 seconds</option><option value="6" selected>6 seconds</option><option value="7">7 seconds</option><option value="8">8 seconds</option></select></label>
+    </div>
+    <p class="breathing-rhythm-help">Choose 1 to 8 seconds for each part of your breathing rhythm.</p>
+    <div class="breathing-duration-control">
+   <label class="breathing-duration-heading" for="breathingDuration"><span>Exercise length</span><output id="breathingDurationValue" for="breathingDuration">0:30</output></label>
+   <input id="breathingDuration" type="range" min="10" max="600" step="10" value="30">
+     </div>
+  <div class="warmup-timer-label">TIME LEFT</div>
+  <div class="warmup-timer" id="breathingTime" role="timer" aria-live="off">0:30</div>
+  <div class="warmup-breath-cue" id="breathingCue" data-phase="in" aria-live="off">
+   <span class="warmup-breath-label" id="breathingLabel">Breathe in through your nose</span>
+   <span class="warmup-breath-count-wrap"><span class="warmup-breath-count" id="breathingCount">4</span><span class="warmup-breath-unit">SECONDS</span></span>
+  </div>
+  <p class="warmup-timer-status" id="breathingStatus" aria-live="polite">Ready when you are.</p>
+  <div class="warmup-controls breathing-controls">
+   <button class="primarybtn" type="button" id="breathingPlayPause">▶ Start</button>
+   <button class="smallbtn" type="button" id="breathingRestart"><span class="warmup-restart-icon" aria-hidden="true">↻</span> Restart</button>
+  </div>
+  </div>
+ </details>
+
+ <details class="warmup-vocal-section panel warmup-collapsible" id="quickVocalSection">
+  <summary class="warmup-section-toggle"><span class="warmup-section-name">Quick vocal warm-up</span><span class="warmup-section-end"><span class="warmup-section-duration">5:48</span><span class="warmup-chevron" aria-hidden="true"></span></span></summary>
+  <div class="warmup-collapsible-content">
+ <div class="warmup-summary">
+  <div class="warmup-progress-track" role="progressbar" aria-label="Vocal warm-up progress" aria-valuemin="0" aria-valuemax="348" aria-valuenow="0" id="warmupProgress"><span id="warmupProgressFill"></span></div>
+  <div class="warmup-summary-stats"><span id="warmupStepCount">Exercise 1 of 4</span><span>Total remaining <strong id="warmupTotalRemaining">5:48</strong></span></div>
+ </div>
+ <div class="warmup-exercise panel" aria-live="polite">
+  <div class="warmup-exercise-meta"><span id="warmupExerciseLength">1:25</span></div>
+  <h2 id="warmupExerciseTitle">Humming</h2>
+  <p id="warmupExerciseInstructions">Hum along with the piano run, following the notes up and back down.</p>
+  <p class="warmup-coaching" id="warmupCoaching" hidden></p>
+ </div>
+ <div class="warmup-timer-panel panel">
+  <div class="warmup-timer-label">TIME LEFT IN THIS EXERCISE</div>
+  <div class="warmup-timer" id="warmupTime" role="timer" aria-live="off">1:25</div>
+  <p class="warmup-timer-status" id="warmupTimerStatus" aria-live="polite">Ready when you are.</p>
+  <div class="warmup-controls">
+   <button class="primarybtn" type="button" id="warmupPlayPause">▶ Start</button>
+   <button class="smallbtn" type="button" id="warmupRestart" aria-label="Restart vocal warm-up"><span class="warmup-restart-icon" aria-hidden="true">↻</span> Restart</button>
+   <button class="smallbtn warmup-next" type="button" id="warmupNext" aria-label="Next exercise">Next</button>
+  </div>
+ </div>
+ <div class="warmup-plan panel">
+  <div class="panelhead"><h2>Vocal exercises</h2></div>
+  <ol id="warmupExerciseList">
+   <li class="current"><button class="warmup-step" type="button" data-warmup-step="0" aria-current="step"><span>Humming</span><span>1:25</span></button></li>
+   <li><button class="warmup-step" type="button" data-warmup-step="1"><span>“Mum”</span><span>1:25</span></button></li>
+   <li><button class="warmup-step" type="button" data-warmup-step="2"><span>Lip-roll arpeggio</span><span>1:29</span></button></li>
+   <li><button class="warmup-step" type="button" data-warmup-step="3"><span>Arpeggio on “Goog”</span><span>1:29</span></button></li>
+  </ol>
+  </div>
+ </details>
+ <audio id="warmupAccompaniment" preload="none" hidden></audio>
+</section>
+<section class="screen" id="screen-intervals">
+ <button class="quietbtn" type="button" data-back="vocal-training">‹ Vocal Training</button>
+ <p class="eyebrow">Learning</p>
+ <h1 class="heading">Learn the intervals</h1>
+ <p class="subtext">Listen to how the notes relate to Do, sing each pair back, and hear the same interval in the opposite direction.</p>
+ <div class="interval-mode-row">
+  <span class="interval-mode-label">Choose a scale</span>
+  <div class="interval-mode-switch" role="group" aria-label="Choose major or minor scale">
+   <button class="interval-mode-button" type="button" id="intervalMajorMode" aria-pressed="true">Major</button>
+   <button class="interval-mode-button" type="button" id="intervalMinorMode" aria-pressed="false">Minor</button>
+  </div>
+ </div>
+ <div class="panel interval-scale-panel">
+  <div class="panelhead"><h2 id="intervalScaleTitle">The major scale</h2><span class="muted">Ascending</span></div>
+  <div class="interval-scale" id="intervalScale" aria-label="Do, Re, Mi, Fa, Sol, La, Ti, high Do">
+   <span class="interval-scale-note"><strong>Do</strong><small>1</small></span>
+   <span class="interval-scale-note"><strong>Re</strong><small>2</small></span>
+   <span class="interval-scale-note"><strong>Mi</strong><small>3</small></span>
+   <span class="interval-scale-note"><strong>Fa</strong><small>4</small></span>
+   <span class="interval-scale-note"><strong>Sol</strong><small>5</small></span>
+   <span class="interval-scale-note"><strong>La</strong><small>6</small></span>
+   <span class="interval-scale-note"><strong>Ti</strong><small>7</small></span>
+   <span class="interval-scale-note interval-scale-octave"><strong>Do′</strong><small>8</small></span>
+  </div>
+  <p class="muted interval-scale-caption" id="intervalScaleCaption">Do is middle C (C4). The final Do is C5, one octave higher.</p>
+ </div>
+ <div class="training-note interval-instructions">
+  <strong>Listen, then sing</strong>
+  <span>Play the upward example and sing both notes. Then try the downward example. In the minor scale, Me, Le and Te are the lowered third, sixth and seventh degrees.</span>
+ </div>
+ <div class="sectionrow interval-lessons-heading"><h2>Explore the intervals</h2></div>
+ <div class="interval-lessons" id="intervalLessons"></div>
+ <p class="interval-status muted" id="intervalStatus" role="status" aria-live="polite">Select a note pair to listen to it.</p>
+ <audio id="intervalLessonAudio" preload="none"></audio>
+</section>
+<section class="screen" id="screen-interval-game">
+ <button class="quietbtn" type="button" data-back="vocal-training">‹ Vocal Training</button>
+ <p class="eyebrow">Play and learn</p>
+ <h1 class="heading">Interval challenge</h1>
+ <p class="subtext">Ten questions. One score to beat. Play by ear or sing the notes yourself.</p>
+ <div id="intervalGameSetup">
+  <div class="panel interval-game-setup-panel">
+   <div class="interval-game-label">Choose your game</div>
+   <div class="interval-game-mode-switch" role="group" aria-label="Choose game type">
+    <button class="interval-game-choice" type="button" id="intervalGameModeListen" aria-pressed="true">Listen and identify</button>
+    <button class="interval-game-choice" type="button" id="intervalGameModeSing" aria-pressed="false">Sing the interval</button>
+   </div>
+   <p class="muted interval-game-explain" id="intervalGameModeHint">Listen to two notes and choose the interval you heard.</p>
+   <div class="interval-game-label">Choose your level</div>
+   <div class="interval-game-level-switch" role="group" aria-label="Choose difficulty">
+    <button class="interval-game-choice interval-game-level" type="button" data-game-level="easy" aria-pressed="true">Easy</button>
+    <button class="interval-game-choice interval-game-level" type="button" data-game-level="medium" aria-pressed="false">Medium</button>
+    <button class="interval-game-choice interval-game-level" type="button" data-game-level="hard" aria-pressed="false">Hard</button>
+   </div>
+   <p class="muted interval-game-explain" id="intervalGameLevelHint">Four familiar intervals: major 2nd, major 3rd, perfect 5th and octave.</p>
+  </div>
+  <div class="panel interval-game-best-panel">
+   <div class="panelhead"><h2>Your high scores</h2><span class="muted" id="intervalGameBestSummary">No score yet</span></div>
+   <ol id="intervalGameHighScoreList" class="interval-game-high-scores"><li class="muted">Complete a round to start your high-score list.</li></ol>
+   <p class="helper-note">Scores are saved on this device and browser, separately for each game and level.</p>
+  </div>
+  <button class="primarybtn interval-game-start" type="button" id="intervalGameStart">Start 10-question round</button>
+ </div>
+ <div class="hidden" id="intervalGameRound">
+
+ <div class="interval-game-round-exit"><button class="quietbtn" type="button" id="intervalGameExit">‹ Change game or level</button></div>
+
+ <div class="panel interval-game-round-panel">
+   <div class="interval-game-progress-head"><span id="intervalGameQuestionCount">Question 1 of 10</span><span>Score <strong id="intervalGameLiveScore">0</strong></span></div>
+   <div class="interval-game-progress"><span id="intervalGameProgressFill"></span></div>
+   <p class="eyebrow interval-game-question-kicker" id="intervalGameRoundMeta">Easy · Listen and identify</p>
+   <h2 class="interval-game-prompt" id="intervalGamePrompt">Which interval did you hear?</h2>
+   <p class="muted" id="intervalGameInstruction">Listen to the two notes, then choose the interval.</p>
+   <div id="intervalGameListenControls">
+    <button class="smallbtn interval-game-play" type="button" id="intervalGameReplay">▶ Play interval</button>
+    <div class="interval-game-options" id="intervalGameOptions" aria-label="Answer choices"></div>
+   </div>
+   <div class="hidden" id="intervalGameSingControls">
+    <div class="interval-game-sing-actions">
+     <button class="smallbtn" type="button" id="intervalGameRoot">♪ Play Do (C)</button>
+     <button class="primarybtn" type="button" id="intervalGameSingStart">Start singing</button>
+    </div>
+    <button class="smallbtn interval-game-check" type="button" id="intervalGameSingCheck" disabled>Check my note</button>
+    <p class="muted interval-game-mic-status" id="intervalGameMicStatus" role="status" aria-live="polite">Play Do, then sing the requested interval and hold the note.</p>
+    <p class="helper-note">You can sing in any octave. The app checks the note, not how high or low you sing it.</p>
+   </div>
+   <p class="interval-game-feedback" id="intervalGameFeedback" role="status" aria-live="polite"></p>
+   <button class="primarybtn interval-game-next hidden" type="button" id="intervalGameNext">Next question</button>
+  </div>
+ </div>
+ <div class="panel interval-game-results hidden" id="intervalGameResults">
+  <p class="eyebrow">Round complete</p>
+  <h2 id="intervalGameResultTitle">Your result</h2>
+  <div class="interval-game-final-score"><strong id="intervalGameFinalScore">0</strong><span>/ 100</span></div>
+  <p id="intervalGameResultMessage" class="muted"></p>
+  <div class="interval-game-result-actions">
+   <button class="primarybtn" type="button" id="intervalGamePlayAgain">Play again</button>
+   <button class="smallbtn" type="button" id="intervalGameReturn">Change game or level</button>
+  </div>
+ </div>
+ <audio id="intervalGameAudio" preload="none"></audio>
 </section>
 <section class="screen" id="screen-practice">
  <button class="quietbtn" id="backSongs">‹ All songs</button>
  <div class="hero"><div class="hero-kicker">Now practising</div><div class="practice-title-row"><h1 id="practiceTitle">Choose a song</h1><select id="practiceStatus" aria-label="Set practice status"><option value="New">New</option><option value="Learning">Learning</option><option value="Practising">Practising</option><option value="Ready">Ready</option></select></div><p id="practiceMeta">Pro Musica Choir</p><div class="hero-bottom"><span class="pill" id="durationPill">Ready when you are</span><button class="playhero" id="heroPlay"><span aria-hidden="true">▶</span> Start practising</button></div></div>
  <div class="panel starting-note-panel"><div class="panelhead"><h2>Starting note</h2><span class="muted" id="startingNoteName">—</span></div><p class="muted" id="startingNoteHint">Hear the first note for your selected voice part before you sing.</p><button class="starting-note-btn" id="playStartingNote" type="button" disabled><span class="starting-note-symbol" aria-hidden="true">♪</span> Play my starting note</button></div>
- <div class="panel"><div class="panelhead"><h2>Listen and sing along</h2><span class="muted" id="playbackMixStatus">My part loudest</span></div><p class="muted practice-step-hint">Play the recording, then sing along with your part. “My part loudest” keeps the other voices quieter in the background.</p><label class="playmode-label" for="playMode">Listen to</label><select id="playMode" class="playmode-select"><option value="loud">My part loudest</option><option value="only">My part only</option><option value="all">All parts together</option></select><p class="muted" id="playModeNote" style="margin:8px 0 14px">Your part is clearer, with the other voices quieter in the background.</p><div class="transport"><button class="playbtn" id="mainPlay" aria-label="Play"><span aria-hidden="true">▶</span></button><input class="seek" id="seek" type="range" min="0" max="1000" value="0" aria-label="Track position"></div><div class="times"><span id="timeNow">0:00</span><span id="timeEnd">0:00</span></div><div class="skiprow"><button class="smallbtn" id="rewind">Back 10 seconds</button><button class="smallbtn" id="forward">Forward 10 seconds</button></div></div>
+ <div class="panel"><div class="panelhead"><h2>Listen and sing along</h2><span class="muted" id="playbackMixStatus">My part loudest</span></div><label class="playmode-label" for="playMode">Listen to</label><select id="playMode" class="playmode-select"><option value="loud">My part loudest</option><option value="only">My part only</option><option value="all">All parts together</option></select><p class="muted" id="playModeNote" style="margin:8px 0 14px">Your part is clearer, with the other voices quieter in the background.</p><div class="transport"><button class="playbtn" id="mainPlay" aria-label="Play"><span aria-hidden="true">▶</span></button><input class="seek" id="seek" type="range" min="0" max="1000" value="0" aria-label="Track position"></div><div class="times"><span id="timeNow">0:00</span><span id="timeEnd">0:00</span></div><div class="skiprow"><button class="smallbtn" id="rewind">Back 5 seconds</button><button class="smallbtn" id="forward">Forward 5 seconds</button></div></div>
 
- <div class="controlgrid"><button class="controlcard" data-goto="loop"><span class="controlicon">⟳</span><span class="controltitle">Loop a section</span><span class="controlhint" id="loopHint">Repeat a passage</span></button><button class="controlcard" data-goto="tempo"><span class="controlicon">◷</span><span class="controltitle">Tempo</span><span class="controlhint" id="tempoHint">100% speed</span></button><button class="controlcard" data-goto="bookmarks"><span class="controlicon">⌑</span><span class="controltitle">Bookmarks</span><span class="controlhint">Saved practice points</span></button></div>
- <details class="panel collapsible"><summary><h2>Lyrics & sheet music</h2><span class="collapse-chevron" aria-hidden="true">⌄</span></summary><div class="collapsible-body"><div class="inline-tabs"><button class="smallbtn active" data-content-tab="lyrics">Lyrics</button><button class="smallbtn" data-content-tab="score">Sheet Music</button></div><div id="practiceLyrics" class="panel lyrics">Words for this song have not been added yet.</div><div id="practiceScore" class="hidden"><div id="practiceScoreArea"></div></div></div></details>
+ <div class="controlgrid"><button class="controlcard" data-goto="loop"><span class="controlicon">⟳</span><span class="controltitle">Loop a section</span><span class="controlhint" id="loopHint">Repeat a passage</span></button><button class="controlcard" data-goto="tempo"><span class="controlicon">◷</span><span class="controltitle">Tempo</span><span class="controlhint" id="tempoHint">100% speed</span></button><button class="controlcard" data-goto="bookmarks"><span class="controlicon bookmark-icon" aria-hidden="true"><svg viewBox="0 0 24 24" role="img" focusable="false"><path d="M6 3.75h12v17l-6-4.25-6 4.25v-17Z"></path></svg></span><span class="controltitle">Bookmarks</span><span class="controlhint">Saved practice points</span></button></div>
+ <details class="panel collapsible"><summary><h2>Lyrics and sheet music</h2><span class="collapse-chevron" aria-hidden="true">⌄</span></summary><div class="collapsible-body"><div class="inline-tabs"><button class="smallbtn active" data-content-tab="lyrics">Lyrics</button><button class="smallbtn" data-content-tab="score">Sheet Music</button></div><div id="practiceLyrics" class="panel lyrics">Words for this song have not been added yet.</div><div id="practiceScore" class="hidden"><div id="practiceScoreArea"></div></div></div></details>
  <details class="panel collapsible"><summary><h2>Metronome</h2><span class="collapse-chevron" aria-hidden="true">⌄</span></summary><div class="collapsible-body"><div class="row"><label for="metronomeEnabled">Metronome</label><label style="display:flex;align-items:center;gap:8px;font-weight:700"><input type="checkbox" id="metronomeEnabled"> On</label></div><div class="row"><label for="metronomeVolume">Metronome volume</label><span class="value" id="metronomeVolumeValue">60%</span></div><input class="range" id="metronomeVolume" type="range" min="0" max="100" step="5" value="60"><p class="muted">The click follows the score's beat map and tempo while the recording plays.</p></div></details>
 
 </section>
-<section class="screen" id="screen-bookmarks"><button class="quietbtn" data-back="practice">‹ Practice</button><p class="eyebrow">Save your place</p><h1 class="heading">Bookmarks</h1><p class="subtext">Save a point in this song or name a section to return to during practice.</p><div class="panel"><div class="bookmark-actions"><button class="smallbtn" id="addBookmark">Bookmark current position</button><button class="smallbtn" id="addSectionBookmark">Add named section</button></div><div id="songBookmarks" class="compact-list"></div></div></section>
+<section class="screen" id="screen-bookmarks"><button class="quietbtn" data-back="practice">‹ Practice</button><p class="eyebrow">Save your place</p><h1 class="heading">Bookmarks</h1><p class="subtext">Save your current position. You can optionally give the bookmark a name, such as Verse 2 or Rehearsal letter B.</p><div class="panel"><div class="bookmark-actions"><button class="smallbtn" id="addBookmark">Bookmark current position</button></div><div id="songBookmarks" class="compact-list"></div></div></section>
 <section class="screen" id="screen-loop"><button class="quietbtn" data-back="practice">‹ Practice</button><p class="eyebrow">Repeat and refine</p><h1 class="heading">Loop a section</h1><p class="subtext">Set start and end points while the recording is paused or playing.</p><div class="panel"><div class="row"><div><strong>Repeat section</strong><div class="muted" id="loopSummary">Loop is off</div></div><input class="toggle" type="checkbox" id="loopEnabled" aria-label="Enable loop"></div><div class="row"><span>Start point (A)</span><strong class="value" id="aTime">0:00</strong></div><button class="smallbtn" id="setA" style="width:100%">Set A to current position</button><div class="row" style="margin-top:16px"><span>End point (B)</span><strong class="value" id="bTime">—</strong></div><button class="smallbtn" id="setB" style="width:100%">Set B to current position</button><p class="muted" style="margin-bottom:0">When the recording reaches B, it will return to A. Set B after A.</p></div></section>
 <section class="screen" id="screen-tempo"><button class="quietbtn" data-back="practice">‹ Practice</button><p class="eyebrow">Find your pace</p><h1 class="heading">Tempo</h1><p class="subtext">Slow down difficult passages, then build back up to performance speed.</p><div class="panel"><div class="row"><label for="tempo">Playback speed</label><span class="value" id="tempoValue">100%</span></div><div class="range-row"><button class="roundstep" id="tempoDown" aria-label="Slower">−</button><input class="range" id="tempo" type="range" min="40" max="120" step="5" value="100"><button class="roundstep" id="tempoUp" aria-label="Faster">+</button></div><div class="row"><span class="muted">Slower</span><span class="muted">Original</span><span class="muted">Faster</span></div><p class="muted">The browser will preserve pitch where supported. If a phone's browser changes pitch at slower speeds, the normal-speed recording remains unchanged.</p></div></section>
 <section class="screen" id="screen-score"><button class="quietbtn" data-back="practice">‹ Practice</button><p class="eyebrow">Follow the music</p><h1 class="heading" id="scoreTitle">Sheet music</h1><p class="subtext">Your score opens separately so playback can continue while you read.</p><div id="scoreArea"></div></section>
 <section class="screen" id="screen-lyrics"><button class="quietbtn" data-back="practice">‹ Practice</button><p class="eyebrow">Sing along</p><h1 class="heading" id="lyricsTitle">Lyrics</h1><div class="panel lyrics" id="lyricsText">Words for this song have not been added yet.</div></section>
 <section class="screen" id="screen-settings"><p class="eyebrow">Your app</p><h1 class="heading">Settings</h1><p class="subtext">Your details and practice preferences.</p><div class="panel"><div class="panelhead"><h2>Your singer profile</h2></div><form id="profileSettingsForm" class="profile-panel"><label class="profile-field" for="settingsName">Your name<input id="settingsName" name="name" type="text" maxlength="70" autocomplete="name" placeholder="Enter your name" required></label><label class="profile-field" for="settingsVoice">Your vocal part<select id="settingsVoice" name="voice" required></select></label><button class="primarybtn" type="submit">Save profile</button><p class="helper-note" id="profileSaved" aria-live="polite">These details are remembered on this device and browser.</p></form></div><div class="panel"><div class="settinglink"><div><strong>Keep screen awake</strong><div class="muted">Prevent your phone from sleeping during practice, when supported.</div></div><input type="checkbox" class="toggle" id="keepAwake"></div><div class="settinglink"><div><strong>App version</strong><div class="muted">Mobile-first practice edition</div></div><span class="muted">1.3</span></div></div></section>
 </main>
-<nav class="tabbar" aria-label="Main navigation"><button class="tab" data-tab="home" aria-current="page"><span class="ico">⌂</span>Home</button><button class="tab" data-tab="practice"><span class="ico">♫</span>Practice</button><button class="tab" data-tab="settings"><span class="ico">⚙</span>Settings</button></nav>
-<div class="mini" id="mini"><div class="mini-main"><div class="minicover" aria-hidden="true">♫</div><div class="minitext"><span class="minititle" id="miniTitle">Choose a song</span><span class="minitime" id="miniTime">0:00 · 0:00</span></div><button class="miniskip" id="miniRewind" aria-label="Jump back 10 seconds" title="Back 10 seconds">↶<span>10</span></button><button class="miniplay" id="miniPlay" aria-label="Play or pause"><span aria-hidden="true">▶</span></button><button class="miniskip" id="miniForward" aria-label="Jump forward 10 seconds" title="Forward 10 seconds">↷<span>10</span></button></div><input class="mini-seek" id="miniSeek" type="range" min="0" max="1000" value="0" aria-label="Track position" step="1"></div>
+<nav class="tabbar" aria-label="Main navigation"><button class="tab" data-tab="home" aria-current="page"><span class="ico">⌂</span>Home</button><button class="tab" data-tab="practice"><span class="ico">♫</span>Practice</button><button class="tab" data-tab="vocal-training"><span class="ico">♪</span>Vocal Training</button><button class="tab" data-tab="settings"><span class="ico">⚙</span>Settings</button></nav>
+<div class="mini" id="mini"><div class="mini-main"><div class="minicover" aria-hidden="true">♫</div><div class="minitext"><span class="minititle" id="miniTitle">Choose a song</span><span class="minitime" id="miniTime">0:00 · 0:00</span></div><button class="miniskip" id="miniRewind" aria-label="Jump back 5 seconds" title="Back 5 seconds">↶<span>5</span></button><button class="miniplay" id="miniPlay" aria-label="Play or pause"><span aria-hidden="true">▶</span></button><button class="miniskip" id="miniForward" aria-label="Jump forward 5 seconds" title="Forward 5 seconds">↷<span>5</span></button></div><input class="mini-seek" id="miniSeek" type="range" min="0" max="1000" value="0" aria-label="Track position" step="1"></div>
 <div class="modal-backdrop hidden" id="welcomeBackdrop" role="dialog" aria-modal="true" aria-labelledby="welcomeTitle"><div class="welcome-modal"><div class="brandmark" aria-hidden="true">♫</div><h2 id="welcomeTitle">Welcome to Pro Musica Choir</h2><p>Let's set up your practice space. Your name and vocal part will be remembered on this device, and you can change them later in Settings.</p><form id="welcomeForm"><label class="profile-field" for="welcomeName">What should we call you?<input id="welcomeName" name="name" type="text" maxlength="70" autocomplete="name" placeholder="Your name" required></label><label class="profile-field" for="welcomeVoice">Which part do you sing?<select id="welcomeVoice" name="voice" required></select></label><button class="primarybtn" type="submit">Save and start practising</button><span class="helper-note">You can change these details at any time in Settings.</span></form></div></div><audio id="audio" preload="metadata" playsinline></audio>
 </div>
 <script>
 'use strict';
+if('scrollRestoration'in history)history.scrollRestoration='manual';
 const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)], audio=$('#audio');
 const store={get(k,d){try{const v=localStorage.getItem('pmc-'+k);return v===null?d:JSON.parse(v)}catch{return d}},set(k,v){try{localStorage.setItem('pmc-'+k,JSON.stringify(v))}catch{}}};
 let data=null,piece=null,voice=store.get('voice',null),profile=store.get('profile',null),currentScreen='home',aPoint=0,bPoint=null,loopOn=false,seeking=false,miniSeeking=false,wakeLock=null;
-let practiceStatuses=store.get('practiceStatuses',{}),bookmarks=store.get('bookmarks',{}),recentSongs=store.get('recentSongs',[]),collectionFilter='all';
+let announcementItems=[],eventItems=[],announcementsLoadFailed=false,eventsLoadFailed=false;
+let practiceStatuses=store.get('practiceStatuses',{}),bookmarks=store.get('bookmarks',{}),recentSongs=store.get('recentSongs',[]),tagFilter='all';
 const fmt=s=>{s=Math.max(0,Math.floor(Number(s)||0));return Math.floor(s/60)+':'+String(s%60).padStart(2,'0')};
-function allVoices(){const seen=new Map();(data?.pieces||[]).forEach(p=>(p.voices||[]).forEach(v=>{if(!seen.has(v.id))seen.set(v.id,v.name)}));return [...seen].map(([id,name])=>({id,name}));}
+function allVoices(){const seen=new Map(),excluded=new Set(['soprano','solo','descant']);(data?.pieces||[]).forEach(p=>(p.voices||[]).forEach(v=>{const id=String(v.id||'').toLowerCase(),name=String(v.name||'').trim().toLowerCase();if(!excluded.has(id)&&!excluded.has(name)&&!seen.has(v.id))seen.set(v.id,v.name)}));return [...seen].map(([id,name])=>({id,name}));}
 function fillVoiceSelect(select,selected){if(!select)return;select.innerHTML='';const voices=allVoices();voices.forEach(v=>{const o=document.createElement('option');o.value=v.id;o.textContent=v.name;select.append(o)});if(selected&&voices.some(v=>v.id===selected))select.value=selected;else if(voices.length)select.value=voices[0].id;}
 function syncProfileFields(){const n=profile?.name||'';$('#settingsName').value=n;fillVoiceSelect($('#settingsVoice'),voice);}
 function showWelcome(){fillVoiceSelect($('#welcomeVoice'),voice);if(voice&&[...$('#welcomeVoice').options].some(o=>o.value===voice))$('#welcomeVoice').value=voice;$('#welcomeBackdrop').classList.remove('hidden');document.body.style.overflow='hidden';setTimeout(()=>$('#welcomeName').focus(),60);}
 function updateProfileHeader(){const name=profile?.name?.trim();const selected=allVoices().find(v=>v.id===voice);$('#brandName').textContent='Pro Musica Choir';$('#profileSummary').textContent=name&&selected?name+' · '+selected.name:'Set up your singer profile in Settings';}
-function saveProfile(name,part){const chosen=allVoices().find(v=>v.id===part);profile={name:name.trim(),voice:chosen?.id||part};voice=profile.voice;store.set('profile',profile);store.set('voice',voice);$('#welcomeBackdrop').classList.add('hidden');document.body.style.overflow='';$('#welcomeName').value='';syncProfileFields();renderSongs();updateProfileHeader();$('#homeGreeting').textContent='Welcome back, '+profile.name+'.';if(piece){setPlaybackMode(playMode,true);renderStartingNote();renderLyrics();}}
-function init(){document.title='Pro Musica Choir';$('#brandName').textContent='Pro Musica Choir';const v=allVoices();if(!v.some(x=>x.id===voice))voice=v[0]?.id||null;if(profile?.voice&&v.some(x=>x.id===profile.voice))voice=profile.voice;renderSongs();syncProfileFields();updateProfileHeader();renderLibraryExtras();$('#empty').classList.toggle('hidden',data.pieces.length>0);if(!data.pieces.length)$('#empty').textContent='No songs yet. Add .mscz files to the songs folder and run Make practice tracks.';paintNav('home');if(profile?.name&&v.some(x=>x.id===profile.voice))$('#homeGreeting').textContent='Welcome back, '+profile.name+'.';else showWelcome();}
+function saveProfile(name,part){const wasWelcomeOpen=!$('#welcomeBackdrop').classList.contains('hidden');const chosen=allVoices().find(v=>v.id===part);profile={name:name.trim(),voice:chosen?.id||part};voice=profile.voice;store.set('profile',profile);store.set('voice',voice);$('#welcomeBackdrop').classList.add('hidden');document.body.style.overflow='';$('#welcomeName').value='';syncProfileFields();renderSongs();updateProfileHeader();$('#homeGreeting').textContent='Welcome back, '+profile.name+'.';if(piece){setPlaybackMode(playMode,true);renderStartingNote();renderLyrics();}if(wasWelcomeOpen)window.scrollTo({top:0,behavior:'instant'});}
+function init(){window.scrollTo({top:0,behavior:'instant'});document.title='Pro Musica Choir';$('#brandName').textContent='Pro Musica Choir';const v=allVoices();const savedVoice=profile?.voice||voice;voice=v.some(x=>x.id===savedVoice)?savedVoice:(savedVoice==='soprano'&&v.some(x=>x.id==='soprano-1')?'soprano-1':v[0]?.id||null);if(profile&&profile.voice!==voice){profile={...profile,voice};store.set('profile',profile)}store.set('voice',voice);renderSongs();syncProfileFields();updateProfileHeader();renderLibraryExtras();$('#empty').classList.toggle('hidden',data.pieces.length>0);if(!data.pieces.length)$('#empty').textContent='No songs yet. Add .mscz files to the songs folder and run Make practice tracks.';paintNav('home');if(profile?.name&&v.some(x=>x.id===profile.voice))$('#homeGreeting').textContent='Welcome back, '+profile.name+'.';else showWelcome();loadBoardData();window.scrollTo({top:0,behavior:'instant'});}
+function localDateKey(date=new Date()){return date.getFullYear()+'-'+String(date.getMonth()+1).padStart(2,'0')+'-'+String(date.getDate()).padStart(2,'0')}
+function parseBoardDate(value){const m=/^(\d{4})-(\d{2})-(\d{2})$/.exec(String(value||''));if(!m)return null;const d=new Date(Number(m[1]),Number(m[2])-1,Number(m[3]));return d.getFullYear()===Number(m[1])&&d.getMonth()===Number(m[2])-1&&d.getDate()===Number(m[3])?d:null}
+function formatBoardDate(value,weekday=true){const d=parseBoardDate(value);if(!d)return '';return d.toLocaleDateString('en-ZA',weekday?{weekday:'short',day:'numeric',month:'short',year:'numeric'}:{day:'numeric',month:'short',year:'numeric'})}
+function formatBoardTime(value){const m=/^(\d{2}):(\d{2})$/.exec(String(value||''));if(!m)return String(value||'');const hour=Number(m[1]),minute=Number(m[2]);if(hour>23||minute>59)return String(value);const h=hour%12||12;return h+':'+m[2]+' '+(hour>=12?'pm':'am')}
+function boardUrl(value){try{const url=new URL(String(value||''),location.href);return url.protocol==='http:'||url.protocol==='https:'?url.href:null}catch{return null}}
+function addBoardLink(parent,url,label){const href=boardUrl(url);if(!href)return;const a=document.createElement('a');a.className='board-link';a.href=href;a.textContent=label||'More information';if(new URL(href).origin!==location.origin){a.target='_blank';a.rel='noopener noreferrer'}parent.append(a)}
+function visibleAnnouncements(){const today=localDateKey();return announcementItems.filter(a=>a&&typeof a.title==='string'&&a.title.trim()&&typeof a.message==='string'&&a.message.trim()&&!(parseBoardDate(a.expiresOn)&&a.expiresOn<today)).sort((a,b)=>String(b.postedOn||'').localeCompare(String(a.postedOn||'')))}
+function upcomingEvents(){const today=localDateKey();return eventItems.filter(e=>e&&typeof e.title==='string'&&e.title.trim()&&parseBoardDate(e.date)&&e.date>=today).sort((a,b)=>(a.date+(a.time||'')).localeCompare(b.date+(b.time||'')))}
+async function loadBoardData(){const results=await Promise.allSettled([fetch('announcements.json').then(r=>{if(!r.ok)throw Error('announcements.json unavailable');return r.json()}),fetch('events.json').then(r=>{if(!r.ok)throw Error('events.json unavailable');return r.json()})]);if(results[0].status==='fulfilled'&&Array.isArray(results[0].value.announcements)){announcementItems=results[0].value.announcements;announcementsLoadFailed=false}else{announcementItems=[];announcementsLoadFailed=true}if(results[1].status==='fulfilled'&&Array.isArray(results[1].value.events)){eventItems=results[1].value.events;eventsLoadFailed=false}else{eventItems=[];eventsLoadFailed=true}renderAnnouncementList('announcementList',2);renderAnnouncementList('allAnnouncements',null);renderEventList('allEvents',null)}
+function renderAnnouncementList(targetId,limit){const target=$('#'+targetId);if(!target)return;target.innerHTML='';if(announcementsLoadFailed){if(targetId==='announcementList'){const section=$('#announcementsSection');if(section)section.classList.remove('hidden')}const p=document.createElement('p');p.className='board-empty';p.textContent='Announcements could not be loaded. Please check your connection and try again.';target.append(p);return}let items=visibleAnnouncements();if(targetId==='announcementList'){const section=$('#announcementsSection');if(section)section.classList.toggle('hidden',!items.length&&!announcementsLoadFailed)}if(Number.isFinite(limit))items=items.slice(0,limit);if(!items.length){const p=document.createElement('p');p.className='board-empty';p.textContent='No announcements at the moment.';target.append(p);return}items.forEach(item=>{const card=document.createElement('article');card.className='notice-card';const main=document.createElement('div');main.className='notice-main';const title=document.createElement('h3');title.className='notice-title';title.textContent=item.title;const message=document.createElement('p');message.className='notice-message';message.textContent=item.message;main.append(title,message);if(parseBoardDate(item.postedOn)){const meta=document.createElement('span');meta.className='board-meta';meta.textContent='Posted '+formatBoardDate(item.postedOn,false);main.append(meta)}if(item.url)addBoardLink(main,item.url,item.linkLabel||'More information');card.append(main);target.append(card)})}
+function renderEventList(targetId,limit){const target=$('#'+targetId);if(!target)return;target.innerHTML='';if(eventsLoadFailed){const p=document.createElement('p');p.className='board-empty';p.textContent='Upcoming dates could not be loaded. Please check your connection and try again.';target.append(p);return}let items=upcomingEvents();if(Number.isFinite(limit))items=items.slice(0,limit);if(!items.length){const p=document.createElement('p');p.className='board-empty';p.textContent='No upcoming dates have been added yet.';target.append(p);return}items.forEach(item=>{const card=document.createElement('article');card.className='event-card';const date=document.createElement('time');date.className='event-date';date.dateTime=item.date;const d=parseBoardDate(item.date);const month=document.createElement('span');month.className='event-date-month';month.textContent=d.toLocaleDateString('en-ZA',{month:'short'});const day=document.createElement('span');day.className='event-date-day';day.textContent=String(d.getDate());const year=document.createElement('span');year.className='event-date-year';year.textContent=String(d.getFullYear());date.append(month,day,year);const main=document.createElement('div');main.className='event-main';if(item.category){const category=document.createElement('span');category.className='board-label';category.textContent=item.category;main.append(category)}const title=document.createElement('h3');title.className='event-title';title.textContent=item.title;main.append(title);const meta=[];if(item.time)meta.push(formatBoardTime(item.time));if(item.venue)meta.push(item.venue);if(meta.length){const metaEl=document.createElement('p');metaEl.className='event-meta';metaEl.textContent=meta.join(' · ');main.append(metaEl)}if(item.details){const details=document.createElement('p');details.className='event-details';details.textContent=item.details;main.append(details)}if(item.url)addBoardLink(main,item.url,item.linkLabel||'More information');card.append(date,main);target.append(card)})}
 function offlineFiles(p){const files=[];const add=v=>{if(typeof v==='string'&&v.trim())files.push(v);else if(Array.isArray(v))v.forEach(add);else if(v&&typeof v==='object')Object.values(v).forEach(add)};add(p.files?.all);add(p.files?.loud);add(p.files?.only);add(p.files?.stems);add(p.score);add(p.original);return [...new Set(files)].map(f=>new URL(p.dir+f,location.href).href)}
 const OFFLINE_CACHE='pro-musica-offline-songs-v1';
 async function offlineStatus(p){if(!('caches'in window))return false;const cache=await caches.open(OFFLINE_CACHE);const urls=offlineFiles(p);if(!urls.length)return false;for(const url of urls)if(!await cache.match(url))return false;return true}
 async function updateOfflineButton(btn,p){try{const saved=await offlineStatus(p);btn.classList.toggle('saved',saved);btn.innerHTML=saved?'<span class="offico">✓</span>Downloaded':'<span class="offico">↓</span>Download for offline';btn.setAttribute('aria-label',(saved?'Remove offline copy of ':'Download ')+p.title+(saved?'':' for offline use'));}catch{btn.innerHTML='<span class="offico">↓</span>Download for offline'}}
 async function toggleOffline(p,btn){if(!('caches'in window)){alert('Offline downloads are not supported by this browser.');return}btn.disabled=true;btn.textContent='Working…';try{const cache=await caches.open(OFFLINE_CACHE),urls=offlineFiles(p),saved=await offlineStatus(p);if(saved){for(const url of urls)await cache.delete(url)}else{const fetched=[];for(const url of urls){const response=await fetch(url,{cache:'no-store'});if(!response.ok)throw new Error('Could not download '+url);fetched.push([url,response.clone()])}for(const [url,response] of fetched)await cache.put(url,response)}await renderSongs()}catch(err){console.error(err);alert('The song could not be saved offline. Check your connection and available storage.');await updateOfflineButton(btn,p)}finally{btn.disabled=false}}
-async function toggleCollectionDownload(){const collection=$('#collectionFilter').value;const pieces=(data?.pieces||[]).filter(p=>collection==='all'||(p.collection||'Uncategorised')===collection);if(!pieces.length)return;if(!('caches'in window)){alert('Offline downloads are not supported by this browser.');return}const btn=$('#downloadCollection');btn.disabled=true;try{const cache=await caches.open(OFFLINE_CACHE);const files=[];for(const p of pieces)for(const url of offlineFiles(p))files.push(url);const unique=[...new Set(files)];const already=unique.length>0&&(await Promise.all(unique.map(url=>cache.match(url)))).every(Boolean);if(already){for(const url of unique)await cache.delete(url);btn.textContent='Collection download removed'}else{let done=0;const responses=[];for(const url of unique){if(await cache.match(url)){done++;continue}const response=await fetch(url,{cache:'no-store'});if(!response.ok)throw new Error('Could not download '+url);responses.push([url,response.clone()]);done++;btn.textContent='Downloading '+done+'/'+unique.length}for(const [url,response] of responses)await cache.put(url,response);btn.textContent='Collection downloaded'}await renderSongs()}catch(e){console.error(e);alert('The collection download did not finish. Please check your connection and try again.');btn.textContent='Retry collection download'}finally{btn.disabled=false;setTimeout(()=>{if(btn.isConnected)refreshCollectionButton()},1800)}}
-async function refreshCollectionButton(){const btn=$('#downloadCollection');if(!btn||!data||!('caches'in window))return;const collection=$('#collectionFilter').value;const pieces=(data.pieces||[]).filter(p=>collection==='all'||(p.collection||'Uncategorised')===collection);if(!pieces.length){btn.textContent='No songs to download';return}try{const cache=await caches.open(OFFLINE_CACHE),urls=[...new Set(pieces.flatMap(offlineFiles))];const saved=urls.length>0&&(await Promise.all(urls.map(url=>cache.match(url)))).every(Boolean);btn.textContent=saved?'Remove collection download':'Download collection'}catch{btn.textContent='Download collection'}}
+async function toggleTagDownload(){const pieces=piecesForCurrentView();if(!pieces.length)return;if(!('caches'in window)){alert('Offline downloads are not supported by this browser.');return}const btn=$('#downloadTag');btn.disabled=true;try{const cache=await caches.open(OFFLINE_CACHE),files=[];for(const p of pieces)for(const url of offlineFiles(p))files.push(url);const unique=[...new Set(files)];const already=unique.length>0&&(await Promise.all(unique.map(url=>cache.match(url)))).every(Boolean);if(already){for(const url of unique)await cache.delete(url)}else{const responses=[];let done=0;for(const url of unique){if(await cache.match(url)){done++;continue}const response=await fetch(url,{cache:'no-store'});if(!response.ok)throw new Error('Could not download '+url);responses.push([url,response.clone()]);done++;btn.textContent='Downloading '+done+'/'+unique.length}for(const [url,response] of responses)await cache.put(url,response)}renderSongs()}catch(e){console.error(e);alert('The selected songs could not be downloaded. Check your connection and available storage.')}finally{btn.disabled=false;refreshTagDownloadButton()}}
+async function refreshTagDownloadButton(){const btn=$('#downloadTag');if(!btn||!data)return;const pieces=piecesForCurrentView();if(!pieces.length){btn.disabled=true;btn.textContent='No songs shown to download';return}btn.disabled=false;const label=tagFilter==='all'&&!$('#search').value.trim()?'all songs':'shown songs';if(!('caches'in window)){btn.textContent='Download '+label;return}try{const cache=await caches.open(OFFLINE_CACHE),urls=[...new Set(pieces.flatMap(offlineFiles))];const saved=urls.length>0&&(await Promise.all(urls.map(url=>cache.match(url)))).every(Boolean);btn.textContent=saved?'Remove offline '+label:'Download '+label}catch{btn.textContent='Download '+label}}
 
-function renderSongs(){const list=$('#songList');if(!list||!data)return;list.innerHTML='';const q=$('#search').value.trim().toLowerCase();const pieces=(data?.pieces||[]).filter(p=>p.title.toLowerCase().includes(q)&&(collectionFilter==='all'||(p.collection||'Uncategorised')===collectionFilter));$('#songCount').textContent=pieces.length+' '+(pieces.length===1?'song':'songs');$('#libraryHeading').textContent=collectionFilter==='all'?'All songs':collectionFilter;pieces.forEach(p=>{const item=document.createElement('div');item.className='song-item';const b=document.createElement('button');b.className='song'+(piece?.id===p.id?' selected':'');const cover=document.createElement('span');cover.className='cover';cover.textContent='♫';const text=document.createElement('span');text.className='songtext';const t=document.createElement('span');t.className='songtitle';t.textContent=p.title;const meta=document.createElement('span');meta.className='songmeta';meta.textContent=(p.voices||[]).map(v=>v.name).join(' · ')||'Choir recording';const status=practiceStatuses[p.id]||'New';b.classList.add('status-'+status.toLowerCase());const st=document.createElement('span');st.className='song-status';st.textContent=status;text.append(t,meta,st);const ch=document.createElement('span');ch.className='chev';ch.textContent='›';b.append(cover,text,ch);b.onclick=()=>selectPiece(p);const dl=document.createElement('button');dl.type='button';dl.className='offlinebtn';dl.textContent='Checking';dl.onclick=()=>toggleOffline(p,dl);item.append(b,dl);list.append(item);updateOfflineButton(dl,p)});$('#empty').classList.toggle('hidden',pieces.length>0);renderLibraryExtras()}
-function renderLibraryExtras(){if(!data)return;const select=$('#collectionFilter');if(select){const previous=collectionFilter;const groups=[...new Set((data.pieces||[]).map(p=>p.collection||'Uncategorised'))].sort();select.innerHTML='<option value="all">All songs</option>'+groups.map(g=>'<option value="'+escapeHtml(g)+'">'+escapeHtml(g)+'</option>').join('');select.value=groups.includes(previous)?previous:'all';collectionFilter=select.value}const recent=$('#recentSongs');if(recent){recent.innerHTML='';const list=recentSongs.map(x=>(data.pieces||[]).find(p=>p.id===x.id)).filter(Boolean).slice(0,5);if(!list.length)recent.innerHTML='<p class="muted">Songs you open will appear here.</p>';list.forEach(p=>{const row=document.createElement('div');row.className='compact-row';const label=document.createElement('span');label.textContent=p.title;const btn=document.createElement('button');btn.textContent='Practise';btn.onclick=()=>selectPiece(p);row.append(label,btn);recent.append(row)})}const central=$('#bookmarkList');if(central){central.innerHTML='';const all=[];Object.entries(bookmarks).forEach(([id,items])=>(items||[]).forEach(b=>all.push({...b,id})));if(!all.length)central.innerHTML='<p class="muted">Your saved practice points will appear here.</p>';all.slice(-12).reverse().forEach(b=>{const p=(data.pieces||[]).find(x=>x.id===b.id);if(!p)return;const row=document.createElement('div');row.className='compact-row';const label=document.createElement('span');label.textContent=p.title+' · '+fmt(b.time)+(b.label?' · '+b.label:'');const btn=document.createElement('button');btn.textContent='Open';btn.onclick=()=>{selectPiece(p);setTimeout(()=>{audio.currentTime=b.time;showScreen('practice')},100)};row.append(label,btn);central.append(row)})}refreshCollectionButton()}
+function piecesForTagFilter(){const songs=data?.pieces||[];if(tagFilter==='all')return songs;if(tagFilter==='untagged')return songs.filter(p=>!Array.isArray(p.tagIds)||p.tagIds.length===0);return songs.filter(p=>Array.isArray(p.tagIds)&&p.tagIds.includes(tagFilter))}function piecesForCurrentView(){const q=$('#search').value.trim().toLowerCase();return piecesForTagFilter().filter(p=>String(p.title||'').toLowerCase().includes(q))}function availableTags(){return [...(data?.tags||[])].filter(tag=>tag&&tag.id&&tag.name).sort((a,b)=>a.name.localeCompare(b.name))}function renderSongs(){const list=$('#songList');if(!list||!data)return;list.innerHTML='';const q=$('#search').value.trim().toLowerCase();const pieces=piecesForTagFilter().filter(p=>p.title.toLowerCase().includes(q));$('#songCount').textContent=pieces.length+' '+(pieces.length===1?'song':'songs');const selectedTag=availableTags().find(tag=>tag.id===tagFilter);$('#libraryHeading').textContent=selectedTag?selectedTag.name:tagFilter==='untagged'?'Everything else':'All songs';pieces.forEach(p=>{const item=document.createElement('div');item.className='song-item';const b=document.createElement('button');b.className='song'+(piece?.id===p.id?' selected':'');const cover=document.createElement('span');cover.className='cover';cover.textContent='♫';const text=document.createElement('span');text.className='songtext';const t=document.createElement('span');t.className='songtitle';t.textContent=p.title;const memberships=(p.tagIds||[]).map(id=>(data.tags||[]).find(tag=>tag.id===id)).filter(Boolean);const membership=document.createElement('span');membership.className='song-tags';if(tagFilter==='all'){if(memberships.length){membership.textContent=memberships.map(tag=>tag.name).join(' · ')}else{membership.textContent='Not yet tagged';membership.classList.add('untagged')}}else{membership.classList.add('hidden')}const status=practiceStatuses[p.id]||'New';b.classList.add('status-'+status.toLowerCase());const st=document.createElement('span');st.className='song-status';st.textContent=status;text.append(t,membership,st);const ch=document.createElement('span');ch.className='chev';ch.textContent='›';b.append(cover,text,ch);b.onclick=()=>selectPiece(p);const dl=document.createElement('button');dl.type='button';dl.className='offlinebtn';dl.textContent='Checking';dl.onclick=()=>toggleOffline(p,dl);item.append(b,dl);list.append(item);updateOfflineButton(dl,p)});$('#empty').classList.toggle('hidden',pieces.length>0);if(!pieces.length&&(data?.pieces||[]).length){$('#empty').textContent=tagFilter==='all'?'No songs match your search.':tagFilter==='untagged'?(q?'No songs in Everything else match your search.':'No songs in Everything else yet.'):q?'No songs with this tag match your search.':'No songs have this tag yet.'}renderLibraryExtras()}
+function renderLibraryExtras(){if(!data)return;const select=$('#tagFilter');if(select){const previous=tagFilter,tags=availableTags();select.innerHTML='<option value="all">All songs</option>'+tags.map(tag=>'<option value="'+escapeHtml(tag.id)+'">'+escapeHtml(tag.name)+'</option>').join('')+'<option value="untagged">Everything else (not yet tagged)</option>';select.value=previous==='all'||previous==='untagged'||tags.some(tag=>tag.id===previous)?previous:'all';tagFilter=select.value}const recent=$('#recentSongs');if(recent){recent.innerHTML='';const list=recentSongs.map(x=>(data.pieces||[]).find(p=>p.id===x.id)).filter(Boolean).slice(0,5);if(!list.length)recent.innerHTML='<p class="muted">Songs you open will appear here.</p>';list.forEach(p=>{const row=document.createElement('div');row.className='compact-row';const label=document.createElement('span');label.textContent=p.title;const btn=document.createElement('button');btn.textContent='Practise';btn.onclick=()=>selectPiece(p);row.append(label,btn);recent.append(row)})}const central=$('#bookmarkList');if(central){central.innerHTML='';const all=[];Object.entries(bookmarks).forEach(([id,items])=>(items||[]).forEach(b=>all.push({...b,id})));if(!all.length)central.innerHTML='<p class="muted">Your saved practice points will appear here.</p>';all.slice(-12).reverse().forEach(b=>{const p=(data.pieces||[]).find(x=>x.id===b.id);if(!p)return;const row=document.createElement('div');row.className='compact-row';const label=document.createElement('span');label.textContent=p.title+' · '+fmt(b.time)+(b.label?' · '+b.label:'');const btn=document.createElement('button');btn.textContent='Open';btn.onclick=()=>{selectPiece(p);showScreen('practice');seekTo(b.time)};row.append(label,btn);central.append(row)})}refreshTagDownloadButton()}
 function escapeHtml(v){return String(v).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
 
-function selectPiece(p){const same=piece?.id===p.id;if(!same){piece=p;aPoint=0;bPoint=null;loopOn=false;$('#loopEnabled').checked=false;paintLoop();audio.currentTime=0;audio.src='';audio.load();loadPieceAudio();}else piece=p;const now=Date.now();recentSongs=[{id:p.id,time:now},...recentSongs.filter(x=>x.id!==p.id)].slice(0,10);store.set('recentSongs',recentSongs);paintPiece();renderSongs();showScreen('practice');}
+function selectPiece(p){const same=piece?.id===p.id;if(!same){seekSequence++;piece=p;aPoint=0;bPoint=null;loopOn=false;$('#loopEnabled').checked=false;paintLoop();audio.currentTime=0;audio.src='';audio.load();loadPieceAudio();}else piece=p;const now=Date.now();recentSongs=[{id:p.id,time:now},...recentSongs.filter(x=>x.id!==p.id)].slice(0,10);store.set('recentSongs',recentSongs);paintPiece();renderSongs();showScreen('practice');}
 let playMode=store.get('playMode','loud');if(!['all','loud','only'].includes(playMode))playMode='loud';
 function setPlaybackMode(mode,keepPosition=false){
  if(!piece)return;if(!['all','loud','only'].includes(mode))mode='loud';const wasPlaying=!audio.paused,pos=audio.currentTime||0;playMode=mode;store.set('playMode',mode);audio.volume=1;
- const files=piece.files||{};let file=files.all||'all.mp3';const requested=mode==='loud'?(files.loud||{})[voice]:mode==='only'?(files.only||{})[voice]:files.all;if(requested)file=requested;const target=new URL(piece.dir+file,location.href).href;
+ const files=piece.files||{};const voiceId=pieceVoiceId(piece);let file=files.all||'all.mp3';const requested=mode==='loud'?(files.loud||{})[voiceId]:mode==='only'?(files.only||{})[voiceId]:files.all;if(requested)file=requested;const target=new URL(piece.dir+file,location.href).href;
  if(audio.src!==target){audio.pause();audio.addEventListener('loadedmetadata',function restore(){audio.removeEventListener('loadedmetadata',restore);if(keepPosition){try{audio.currentTime=Math.min(pos,audio.duration||pos)}catch{}}applyRate();if(wasPlaying)audio.play().catch(()=>{});paintTime();paintPlay();},{once:true});audio.src=target;audio.load()}else{applyRate();if(keepPosition)try{audio.currentTime=Math.min(pos,audio.duration||pos)}catch{}}
  if($('#playMode'))$('#playMode').value=mode;const labels={all:'All parts together',loud:'My part loudest',only:'My part only'};const notes={all:'Hear the full choir recording.',loud:'Your part is clearer, with the other voices quieter in the background.',only:'Hear only your selected vocal part.'};$('#playbackMixStatus').textContent=labels[mode];$('#playModeNote').textContent=(requested||mode==='all')?notes[mode]:'This song does not have a separate recording for this mode yet. The full choir recording is being used.';
 }
@@ -219,40 +698,284 @@ function loadPieceAudio(){if(!piece)return;setPlaybackMode(playMode,false)}
 function playAll(){return audio.play()}
 function pauseAll(){audio.pause()}
 function paintPiece(){if(!piece)return;renderStartingNote();$('#practiceTitle').textContent=piece.title;$('#practiceMeta').textContent=(profile?.name?profile.name+' · ':'')+(allVoices().find(v=>v.id===voice)?.name||'Your part')+' · Pro Musica Choir';$('#durationPill').textContent=piece.duration?fmt(piece.duration)+' recording':'Ready to practise';$('#miniTitle').textContent=piece.title;$('#scoreTitle').textContent=piece.title;$('#lyricsTitle').textContent=piece.title;renderLyrics();$('#practiceStatus').value=practiceStatuses[piece.id]||'New';renderSongBookmarks();const scoreFile=piece.original||piece.score;const scoreUrl=scoreFile?piece.dir+scoreFile:null;const area=$('#scoreArea');area.innerHTML='';if(scoreUrl){const note=document.createElement('p');note.className='muted';note.textContent='Preview the score below, or open it full size to zoom and turn pages in your phone’s PDF viewer.';area.append(note);const open=document.createElement('a');open.className='link';open.href=scoreUrl;open.target='_blank';open.rel='noopener';open.textContent=piece.original?'Open original score full size ↗':'Open score full size ↗';open.style.cssText='display:block;padding:14px;text-align:center;border:1px solid var(--line);border-radius:14px;color:var(--teal);font-weight:750;text-decoration:none;background:var(--paper);margin:12px 0';area.append(open);const frame=document.createElement('iframe');frame.className='viewer';frame.title='Sheet music PDF for '+piece.title;frame.loading='lazy';frame.src=scoreUrl+'#toolbar=1&navpanes=0&view=FitH';area.append(frame);const combined=$('#practiceScoreArea');if(combined){combined.innerHTML='';combined.append(note.cloneNode(true),open.cloneNode(true),frame.cloneNode(true));}if(piece.original&&piece.score){const generated=document.createElement('a');generated.className='quietbtn';generated.href=piece.dir+piece.score;generated.target='_blank';generated.rel='noopener';generated.textContent='Open generated score instead';area.append(generated)}}else{const el=document.createElement('div');el.className='viewerfallback';el.textContent='No PDF score has been added for this song yet. Add a PDF with the same name as the MuseScore file in the songs folder, then rebuild.';area.append(el);const combined=$('#practiceScoreArea');if(combined)combined.innerHTML='<p class="muted">No score is available for this song yet.</p>'}paintTime();}
-function showScreen(name){if(name==='practice'&&!piece){alert('Choose a song before starting practice.');name='home'}currentScreen=name;$$('.screen').forEach(s=>s.classList.toggle('active',s.id==='screen-'+name));paintNav(name);if(name==='home')renderSongs();if(name==='practice'&&piece)paintPiece();if((name==='score'||name==='lyrics')&&!piece){alert('Choose a song first, then open its lyrics or sheet music.');name='home';currentScreen=name;$$('.screen').forEach(s=>s.classList.toggle('active',s.id==='screen-'+name));paintNav(name)}window.scrollTo({top:0,behavior:'instant'});}
-function paintNav(name){$$('.tab').forEach(b=>{if(b.dataset.tab===name)b.setAttribute('aria-current','page');else b.removeAttribute('aria-current')});}
-function paintTime(){const d=audio.duration||piece?.duration||0,n=audio.currentTime||0;$('#timeNow').textContent=fmt(n);$('#timeEnd').textContent=fmt(d);if(!miniSeeking)$('#miniTime').textContent=fmt(n)+' · '+fmt(d);if(!seeking)$('#seek').value=d?Math.round(n/d*1000):0;if(!miniSeeking)$('#miniSeek').value=d?Math.round(n/d*1000):0;$('#mini').classList.toggle('visible',!!piece);}
+function showScreen(name){if(currentScreen==='intervals'&&name!=='intervals')stopIntervalLessonAudio();if(currentScreen==='interval-game'&&name!=='interval-game'){intervalGameAudio.pause();releaseIntervalGameAudio();}if(name==='interval-game'&&!audio.paused)audio.pause();if(name==='intervals'&&!audio.paused)audio.pause();if(name==='warmups'){const breathing=$('#breathingSection');if(breathing)breathing.open=false;const vocal=$('#quickVocalSection');if(vocal)vocal.open=false;}if(currentScreen==='warmups'&&name!=='warmups')warmupPause();if(name==='practice'&&!piece){alert('Choose a song before starting practice.');name='home'}if((name==='bookmarks'||name==='loop')&&!piece){alert('Choose a song first, then open bookmarks or looping.');name='home'}currentScreen=name;$$('.screen').forEach(s=>s.classList.toggle('active',s.id==='screen-'+name));paintNav(name);if(name==='home')renderSongs();if(name==='practice'&&piece)paintPiece();if((name==='score'||name==='lyrics')&&!piece){alert('Choose a song first, then open its lyrics or sheet music.');name='home';currentScreen=name;$$('.screen').forEach(s=>s.classList.toggle('active',s.id==='screen-'+name));paintNav(name)}window.scrollTo({top:0,behavior:'instant'});paintTime();}
+function paintNav(name){const activeTab=['bookmarks','loop','tempo','score','lyrics'].includes(name)?'practice':name;document.querySelectorAll('.tab').forEach(b=>{if(b.dataset.tab===activeTab)b.setAttribute('aria-current','page');else b.removeAttribute('aria-current')});if(['warmups','intervals','interval-game'].includes(name)){$('[data-tab="vocal-training"]').setAttribute('aria-current','page');}}
+function paintTime(){const d=audio.duration||piece?.duration||0,n=audio.currentTime||0;$('#timeNow').textContent=fmt(n);$('#timeEnd').textContent=fmt(d);if(!miniSeeking)$('#miniTime').textContent=fmt(n)+' · '+fmt(d);if(!seeking)$('#seek').value=d?Math.round(n/d*1000):0;if(!miniSeeking)$('#miniSeek').value=d?Math.round(n/d*1000):0;$('#mini').classList.toggle('visible',!!piece&&['practice','loop','tempo','bookmarks'].includes(currentScreen));}
 function paintPlay(){const paused=audio.paused;const playMarkup='<span aria-hidden="true">▶</span>';const pauseMarkup='<span class="pause-icon" aria-hidden="true"><i></i><i></i></span>';$('#mainPlay').innerHTML=paused?playMarkup:pauseMarkup;$('#mainPlay').setAttribute('aria-label',paused?'Play':'Pause');$('#miniPlay').innerHTML=paused?playMarkup:pauseMarkup;$('#miniPlay').setAttribute('aria-label',paused?'Play':'Pause');$('#heroPlay').innerHTML=paused?playMarkup+' Start practising':pauseMarkup+' Pause song';}
 function playPause(){if(!piece)return; if(audio.paused){playAll().then(()=>paintPlay()).catch(()=>{alert('This recording could not be played. Please check that the practice tracks have been built and uploaded with the app.')})}else pauseAll();}
 function applyRate(){const rate=Number($('#tempo').value)/100;audio.playbackRate=rate;audio.preservesPitch=true;audio.webkitPreservesPitch=true;audio.mozPreservesPitch=true;$('#tempoValue').textContent=Math.round(rate*100)+'%';$('#tempoHint').textContent=Math.round(rate*100)+'% speed';store.set('tempo',Math.round(rate*100));}
 function paintLoop(){const enabled=loopOn&&bPoint!==null&&bPoint>aPoint;$('#loopSummary').textContent=enabled?fmt(aPoint)+'–'+fmt(bPoint)+' · on':loopOn?'Set a valid end point B':'Loop is off';$('#loopHint').textContent=enabled?'Repeating '+fmt(aPoint)+'–'+fmt(bPoint):'Repeat a tricky passage';$('#aTime').textContent=fmt(aPoint);$('#bTime').textContent=bPoint===null?'—':fmt(bPoint);}
-function loopActive(){return loopOn&&bPoint!==null&&Number.isFinite(aPoint)&&Number.isFinite(bPoint)&&bPoint>aPoint;}function jumpToLoopStart(restart=false){if(!loopActive())return;try{audio.currentTime=aPoint;}catch(error){console.warn('Could not return to loop start',error);return;}paintTime();if(restart)playAll().catch(error=>console.warn('Could not restart loop playback',error));}function loopCheck(){if(loopActive()&&audio.currentTime>=bPoint)jumpToLoopStart(false);}
+function loopActive(){return loopOn&&bPoint!==null&&Number.isFinite(aPoint)&&Number.isFinite(bPoint)&&bPoint>aPoint;}function jumpToLoopStart(restart=false){if(!loopActive())return;seekTo(aPoint);if(restart)playAll().catch(error=>console.warn('Could not restart loop playback',error));}function loopCheck(){if(loopActive()&&audio.currentTime>=bPoint)jumpToLoopStart(false);}
 $$('.tab').forEach(b=>b.addEventListener('click',()=>{if((b.dataset.tab==='score'||b.dataset.tab==='lyrics')&&piece){showScreen('practice');const target=b.dataset.tab;$$('[data-content-tab]').forEach(x=>{x.classList.toggle('active',x.dataset.contentTab===target)});$('#practiceLyrics').classList.toggle('hidden',target!=='lyrics');$('#practiceScore').classList.toggle('hidden',target!=='score')}else showScreen(b.dataset.tab)}));
 $$('[data-goto]').forEach(b=>b.addEventListener('click',()=>showScreen(b.dataset.goto)));
 $$('[data-back]').forEach(b=>b.addEventListener('click',()=>showScreen(b.dataset.back)));
 $('#backSongs').onclick=()=>showScreen('home');$('#search').addEventListener('input',renderSongs);
-$('#heroPlay').onclick=playPause;$('#mainPlay').onclick=playPause;$('#miniPlay').onclick=playPause;$('#miniRewind').type='button';$('#miniForward').type='button';$('#rewind').type='button';$('#forward').type='button';$('#miniRewind').addEventListener('click',()=>seekBy(-10));$('#miniForward').addEventListener('click',()=>seekBy(10));$('#mini').addEventListener('click',e=>{if(!e.target.closest('button,input'))showScreen('practice')});$('#miniSeek').addEventListener('input',e=>{miniSeeking=true;const d=seekDuration();const target=Number(e.target.value)/1000*d;$('#miniTime').textContent=fmt(target)+' · '+fmt(d);if(d>0)seekTo(target)});const finishMiniSeek=e=>{miniSeeking=false;const d=seekDuration();if(d>0)seekTo(Number(e.target.value)/1000*d);paintTime()};$('#miniSeek').addEventListener('change',finishMiniSeek);$('#miniSeek').addEventListener('pointerup',finishMiniSeek);$('#miniSeek').addEventListener('keyup',e=>{if(['ArrowLeft','ArrowRight','Home','End'].includes(e.key))finishMiniSeek(e)});
-let seekSequence=0;function seekDuration(){return Number.isFinite(audio.duration)&&audio.duration>0?audio.duration:(Number(piece?.duration)>0?Number(piece.duration):0)}function seekTo(target){if(!piece)return;const seekId=++seekSequence,duration=seekDuration();target=Math.max(0,Math.min(duration||Infinity,Number(target)||0));if(loopActive())target=Math.max(aPoint,Math.min(bPoint,target));const apply=()=>{if(seekId!==seekSequence)return;const liveDuration=Number.isFinite(audio.duration)&&audio.duration>0?audio.duration:duration;const next=Math.max(0,Math.min(liveDuration||Infinity,target));try{audio.currentTime=next;paintTime()}catch(err){console.warn('Could not seek audio track',err)}};if(audio.readyState>=1)apply();else{audio.addEventListener('loadedmetadata',apply,{once:true});audio.addEventListener('canplay',apply,{once:true})}}function seekBy(seconds){if(!piece)return;const duration=seekDuration();let target=(Number(audio.currentTime)||0)+seconds;if(loopActive()){if(target>=bPoint)target=aPoint;else if(target<aPoint)target=bPoint;}else if(duration>0)target=Math.max(0,Math.min(duration,target));seekTo(target)}$('#rewind').addEventListener('click',()=>seekBy(-10));$('#forward').addEventListener('click',()=>seekBy(10));$('#seek').addEventListener('input',e=>{seeking=true;const d=seekDuration(),target=Number(e.target.value)/1000*d;$('#timeNow').textContent=fmt(target);if(d>0)seekTo(target)});const finishSeek=e=>{seeking=false;const d=seekDuration();if(d>0)seekTo(Number(e.target.value)/1000*d);paintTime()};$('#seek').addEventListener('change',finishSeek);$('#seek').addEventListener('pointerup',finishSeek);$('#seek').addEventListener('keyup',e=>{if(['ArrowLeft','ArrowRight','Home','End'].includes(e.key))finishSeek(e)});
+$('#heroPlay').onclick=playPause;$('#mainPlay').onclick=playPause;$('#miniPlay').onclick=playPause;$('#miniRewind').type='button';$('#miniForward').type='button';$('#rewind').type='button';$('#forward').type='button';$('#miniRewind').addEventListener('click',()=>seekBy(-5));$('#miniForward').addEventListener('click',()=>seekBy(5));$('#mini').addEventListener('click',e=>{if(!e.target.closest('button,input'))showScreen('practice')});$('#miniSeek').addEventListener('input',e=>{miniSeeking=true;const d=seekDuration();const target=Number(e.target.value)/1000*d;$('#miniTime').textContent=fmt(target)+' · '+fmt(d);if(d>0)seekTo(target)});const finishMiniSeek=e=>{const d=seekDuration(),target=Number(e.target.value)/1000*d;if(d>0)seekTo(target);miniSeeking=false;paintTime()};$('#miniSeek').addEventListener('change',finishMiniSeek);$('#miniSeek').addEventListener('pointerup',finishMiniSeek);$('#miniSeek').addEventListener('keyup',e=>{if(['ArrowLeft','ArrowRight','Home','End'].includes(e.key))finishMiniSeek(e)});
+let seekSequence=0;function seekDuration(){return Number.isFinite(audio.duration)&&audio.duration>0?audio.duration:(Number(piece?.duration)>0?Number(piece.duration):0)}function seekTo(target){
+ if(!piece)return;
+ const seekId=++seekSequence,duration=seekDuration();
+ target=Math.max(0,Math.min(duration||Infinity,Number(target)||0));
+ if(loopActive())target=Math.max(aPoint,Math.min(bPoint,target));
+ const apply=()=>{
+  if(seekId!==seekSequence||!piece)return;
+  const liveDuration=Number.isFinite(audio.duration)&&audio.duration>0?audio.duration:duration;
+  const next=Math.max(0,Math.min(liveDuration||Infinity,target));
+  try{audio.currentTime=next;paintTime()}
+  catch(err){console.warn('Could not seek audio track',err)}
+ };
+ if(audio.readyState>=1)apply();
+ else{
+  const waitForMedia=()=>{
+   audio.removeEventListener('loadedmetadata',waitForMedia);
+   audio.removeEventListener('canplay',waitForMedia);
+   if(seekId!==seekSequence)return;
+   apply();
+  };
+  audio.addEventListener('loadedmetadata',waitForMedia);
+  audio.addEventListener('canplay',waitForMedia);
+ }
+}function seekBy(seconds){if(!piece)return;const duration=seekDuration();let target=(Number(audio.currentTime)||0)+seconds;if(loopActive()){if(target>=bPoint)target=aPoint;else if(target<aPoint)target=bPoint;}else if(duration>0)target=Math.max(0,Math.min(duration,target));seekTo(target)}$('#rewind').addEventListener('click',()=>seekBy(-5));$('#forward').addEventListener('click',()=>seekBy(5));$('#seek').addEventListener('input',e=>{seeking=true;const d=seekDuration(),target=Number(e.target.value)/1000*d;$('#timeNow').textContent=fmt(target);if(d>0)seekTo(target)});const finishSeek=e=>{const d=seekDuration(),target=Number(e.target.value)/1000*d;if(d>0)seekTo(target);seeking=false;paintTime()};$('#seek').addEventListener('change',finishSeek);$('#seek').addEventListener('pointerup',finishSeek);$('#seek').addEventListener('keyup',e=>{if(['ArrowLeft','ArrowRight','Home','End'].includes(e.key))finishSeek(e)});
+// Quick vocal warm-up. Exercise changes are always manual.
+const warmupRoutine=[
+ {title:'Humming',seconds:85,instructions:'Hum along with the piano run, following the notes up and back down.',coaching:''},
+ {title:'“Mum”',seconds:85,instructions:'Sing “mum” on each note of the run, following it up and back down.',coaching:''},
+ {title:'Lip-roll arpeggio',seconds:89,instructions:'Follow the piano arpeggio with a relaxed lip trill.',coaching:''},
+ {title:'Arpeggio on “Goog”',seconds:89,instructions:'Sing “goog” on each note of the arpeggio.',coaching:''}
+];
+let warmupIndex=0,warmupSeconds=85,warmupTimerId=null,warmupRemainingMs=85000,warmupRunStartedAt=0,warmupRunning=false,warmupComplete=false,warmupAudioContext=null;
+let breathingDurationSeconds=30,breathingSeconds=30,breathingTimerId=null,breathingRemainingMs=30000,breathingRunStartedAt=0,breathingRunning=false,breathingLastPhase=null,breathingInSeconds=Math.max(1,Math.min(8,Math.round(Number(store.get('breathingInSeconds',4))||4))),breathingOutSeconds=Math.max(1,Math.min(8,Math.round(Number(store.get('breathingOutSeconds',6))||6))),breathingCycleElapsedMs=0,breathingCycleRunStartedAt=0;
+function warmupFormat(seconds){const n=Math.max(0,Math.ceil(Number(seconds)||0));return Math.floor(n/60)+':'+String(n%60).padStart(2,'0')}
+function warmupCurrentRemainingMs(){return Math.max(0,warmupRemainingMs-(warmupRunning?Date.now()-warmupRunStartedAt:0))}
+function warmupStopInterval(){
+ if(warmupRunning)warmupRemainingMs=warmupCurrentRemainingMs();
+ const accompaniment=$('#warmupAccompaniment');if(accompaniment)accompaniment.pause();
+ if(warmupTimerId!==null){clearInterval(warmupTimerId);warmupTimerId=null}
+ warmupRunning=false;warmupRunStartedAt=0;warmupSeconds=Math.ceil(warmupRemainingMs/1000);
+}
+const warmupAccompanimentFiles={
+ run:{
+  upper:'./audio/vocal-warmups/warmup-run-upper.mp3',
+  lower:'./audio/vocal-warmups/warmup-run-lower.mp3'
+ },
+ arpeggio:{
+  upper:'./audio/vocal-warmups/warmup-arpeggio-upper.mp3',
+  lower:'./audio/vocal-warmups/warmup-arpeggio-lower.mp3'
+ }
+};
+function warmupVoiceRange(){
+ const upperParts=new Set(['soprano-1','soprano-2','alto']);
+ const lowerParts=new Set(['tenor','bass']);
+ if(upperParts.has(voice))return 'upper';
+ if(lowerParts.has(voice))return 'lower';
+ return 'upper';
+}
+function warmupAccompanimentType(){
+ if(warmupIndex===0||warmupIndex===1)return 'run';
+ if(warmupIndex===2||warmupIndex===3)return 'arpeggio';
+ return '';
+}
+function warmupLoadAccompaniment(reset=false){
+ const player=$('#warmupAccompaniment');
+ if(!player)return;
+ const type=warmupAccompanimentType();
+ const source=type?warmupAccompanimentFiles[type][warmupVoiceRange()]:'';
+ if(player.dataset.source!==source){
+  player.pause();player.removeAttribute('src');player.dataset.source=source||'';player.currentTime=0;
+  if(source){player.src=source;player.load();}
+ }else if(reset){player.pause();player.currentTime=0;}
+}
+function warmupPlayAccompaniment(){
+ const player=$('#warmupAccompaniment');
+ if(!player||!warmupAccompanimentType())return;
+ warmupLoadAccompaniment(false);
+ const promise=player.play();
+ if(promise&&typeof promise.catch==='function')promise.catch(error=>{
+  console.warn('Warm-up piano accompaniment could not start.',error);
+  $('#warmupTimerStatus').textContent='Piano accompaniment could not be started. Check your connection and press Start again.';
+ });
+}
+
+function warmupTotalSeconds(){return warmupRoutine.reduce((sum,item)=>sum+item.seconds,0)}
+function breathingCueState(elapsedMs){
+ const inhaleMs=breathingInSeconds*1000,exhaleMs=breathingOutSeconds*1000;
+ const cycleMs=inhaleMs+exhaleMs,cyclePosition=Math.max(0,elapsedMs)%cycleMs;
+ const isInhale=cyclePosition<inhaleMs;
+ const remainingMs=isInhale?inhaleMs-cyclePosition:cycleMs-cyclePosition;
+ return {phase:isInhale?'in':'out',seconds:Math.max(1,Math.ceil(remainingMs/1000))};
+}
+function warmupPing(phase){
+ try{
+  const AudioContextClass=window.AudioContext||window.webkitAudioContext;
+  if(!AudioContextClass)return;
+  warmupAudioContext=warmupAudioContext||new AudioContextClass();
+  if(warmupAudioContext.state==='suspended')warmupAudioContext.resume().catch(()=>{});
+  const now=warmupAudioContext.currentTime;
+  const oscillator=warmupAudioContext.createOscillator(),gain=warmupAudioContext.createGain();
+  oscillator.type='sine';
+  oscillator.frequency.setValueAtTime(phase==='in'?880:660,now);
+  gain.gain.setValueAtTime(0.0001,now);
+  gain.gain.exponentialRampToValueAtTime(0.055,now+0.015);
+  gain.gain.exponentialRampToValueAtTime(0.0001,now+0.16);
+  oscillator.connect(gain);gain.connect(warmupAudioContext.destination);
+  oscillator.start(now);oscillator.stop(now+0.17);
+ }catch(error){console.warn('Warm-up breathing cue sound is unavailable.',error)}
+}
+function breathingCurrentRemainingMs(){
+ return Math.max(0,breathingRemainingMs-(breathingRunning?Date.now()-breathingRunStartedAt:0));
+}
+function breathingCycleCurrentElapsedMs(){
+ return Math.max(0,breathingCycleElapsedMs+(breathingRunning?Date.now()-breathingCycleRunStartedAt:0));
+}
+function breathingStopInterval(){
+ if(breathingRunning){breathingRemainingMs=breathingCurrentRemainingMs();breathingCycleElapsedMs=breathingCycleCurrentElapsedMs();}
+ if(breathingTimerId!==null){clearInterval(breathingTimerId);breathingTimerId=null}
+ breathingRunning=false;breathingRunStartedAt=0;breathingCycleRunStartedAt=0;breathingSeconds=Math.ceil(breathingRemainingMs/1000);
+}
+function breathingPaint(){
+ breathingSeconds=Math.ceil(breathingCurrentRemainingMs()/1000);
+ $('#breathingExerciseLength').textContent=warmupFormat(breathingDurationSeconds);
+ const remainingMs=breathingCurrentRemainingMs();
+ $('#breathingTime').textContent=warmupFormat(breathingSeconds);
+ const cue=$('#breathingCue');
+ if(remainingMs<=0){
+  $('#breathingLabel').textContent='Breathing complete';
+  $('#breathingCount').textContent='✓';
+  cue.dataset.phase='complete';
+ }else{
+  const state=breathingCueState(breathingCycleCurrentElapsedMs());
+  $('#breathingLabel').textContent=state.phase==='in'?'Breathe in through your nose':'Breathe out through your mouth';
+  $('#breathingCount').textContent=String(state.seconds);
+  cue.dataset.phase=state.phase;
+  if(breathingRunning&&state.phase!==breathingLastPhase){
+   warmupPing(state.phase);
+   breathingLastPhase=state.phase;
+  }
+ }
+ $('#breathingStatus').textContent=remainingMs<=0?'Breathing complete.':breathingRunning?'Breathing timer running.':remainingMs===breathingDurationSeconds*1000?'Ready when you are.':'Paused.';
+ $('#breathingPlayPause').innerHTML=remainingMs<=0?'↻ Start again':breathingRunning?'<span class="warmup-pause-icon" aria-hidden="true"><i></i><i></i></span> Pause':'▶ Start breathing';
+}
+function breathingTick(){
+ if(!breathingRunning)return;
+ if(breathingCurrentRemainingMs()<=0){breathingStopInterval();breathingPaint();return}
+ breathingPaint();
+}
+function breathingStart(){
+ if(breathingRunning||breathingRemainingMs<=0)return;
+ const now=Date.now();breathingRunning=true;breathingRunStartedAt=now;breathingCycleRunStartedAt=now;
+ breathingTimerId=setInterval(breathingTick,100);breathingPaint();
+}
+function breathingPause(){breathingStopInterval();breathingPaint()}
+function breathingSetDuration(value){
+ const next=Math.min(600,Math.max(10,Math.round(Number(value)/10)*10));
+ breathingStopInterval();
+ breathingDurationSeconds=next;
+ breathingRemainingMs=next*1000;
+ breathingSeconds=next;
+ breathingLastPhase=null;
+ $('#breathingDuration').value=String(next);
+ $('#breathingDurationValue').textContent=warmupFormat(next);
+ breathingPaint();
+}
+function breathingSetRhythm(inhaleValue,exhaleValue){
+ breathingInSeconds=Math.max(1,Math.min(8,Math.round(Number(inhaleValue)||4)));
+ breathingOutSeconds=Math.max(1,Math.min(8,Math.round(Number(exhaleValue)||6)));
+ store.set('breathingInSeconds',breathingInSeconds);store.set('breathingOutSeconds',breathingOutSeconds);
+ $('#breathingInDuration').value=String(breathingInSeconds);$('#breathingOutDuration').value=String(breathingOutSeconds);
+ breathingCycleElapsedMs=0;breathingCycleRunStartedAt=breathingRunning?Date.now():0;breathingLastPhase=null;
+ breathingPaint();
+}
+function breathingRestart(){
+ breathingStopInterval();breathingRemainingMs=breathingDurationSeconds*1000;breathingSeconds=breathingDurationSeconds;breathingCycleElapsedMs=0;breathingCycleRunStartedAt=0;breathingLastPhase=null;breathingPaint();
+}
+function warmupPaint(){
+ warmupSeconds=Math.ceil(warmupCurrentRemainingMs()/1000);
+ const item=warmupRoutine[warmupIndex],total=warmupTotalSeconds();
+ const later=warmupRoutine.slice(warmupIndex+1).reduce((sum,x)=>sum+x.seconds,0);
+ const remaining=warmupComplete?0:warmupSeconds+later;
+ const elapsed=Math.max(0,total-remaining);
+ $('#warmupTime').textContent=warmupFormat(warmupSeconds);
+ $('#warmupTotalRemaining').textContent=warmupFormat(remaining);
+ $('#warmupProgressFill').style.width=(elapsed/total*100)+'%';
+ $('#warmupProgress').setAttribute('aria-valuenow',String(elapsed));
+ $('#warmupProgress').setAttribute('aria-valuemax',String(total));
+ $('#warmupStepCount').textContent=warmupComplete?warmupRoutine.length+' exercises completed':'Exercise '+(warmupIndex+1)+' of '+warmupRoutine.length;
+ $('#warmupExerciseLength').textContent=warmupComplete?warmupFormat(total)+' total':warmupFormat(item.seconds);
+ $('#warmupExerciseTitle').textContent=warmupComplete?'Warm-up complete':item.title;
+ $('#warmupExerciseInstructions').textContent=warmupComplete?'You have completed the quick vocal warm-up. Take a moment, then return to your practice when you are ready.':item.instructions;
+ $('#warmupCoaching').textContent=warmupComplete?'Well done. Keep your voice comfortable and hydrated.':item.coaching;
+ $('#warmupCoaching').hidden=!warmupComplete&&!item.coaching;
+ const status=warmupComplete?'Routine complete.':warmupRunning?'Timer running.':warmupSeconds===0?'Exercise complete. Press Next when you are ready.':warmupSeconds===item.seconds?'Ready when you are.':'Paused.';
+ $('#warmupTimerStatus').textContent=status;
+ $('#warmupPlayPause').innerHTML=warmupComplete?'↻ Start again':warmupRunning?'<span class="warmup-pause-icon" aria-hidden="true"><i></i><i></i></span> Pause':warmupSeconds===0?'✓ Complete':'▶ Start';
+ const isLastWarmup=warmupIndex===warmupRoutine.length-1;
+ $('#warmupNext').textContent=isLastWarmup?'Finish':'Next';
+ $('#warmupNext').setAttribute('aria-label',isLastWarmup?'Finish routine':'Next exercise');
+ $('#warmupNext').disabled=warmupComplete;
+ $('#warmupNext').style.opacity=warmupComplete?'.55':'1';
+ $$('#warmupExerciseList li').forEach((li,i)=>{const current=!warmupComplete&&i===warmupIndex;li.classList.toggle('current',current);const button=li.querySelector('button[data-warmup-step]');if(button){if(current)button.setAttribute('aria-current','step');else button.removeAttribute('aria-current')}});
+ 
+}
+function warmupTick(){
+ if(!warmupRunning)return;
+ warmupSeconds=Math.ceil(warmupCurrentRemainingMs()/1000);
+ if(warmupSeconds===0){warmupStopInterval();warmupPaint();return}
+ warmupPaint();
+}
+function warmupPause(){warmupStopInterval();warmupPaint()}
+function warmupStart(){
+ if(warmupComplete||warmupRunning||warmupRemainingMs<=0)return;
+ warmupLoadAccompaniment(false);warmupRunning=true;warmupRunStartedAt=Date.now();
+ warmupTimerId=setInterval(warmupTick,100);warmupPlayAccompaniment();warmupPaint();
+}
+function warmupSelectExercise(index){
+ if(!Number.isInteger(index)||index<0||index>=warmupRoutine.length)return;
+ warmupStopInterval();
+ warmupIndex=index;warmupRemainingMs=warmupRoutine[index].seconds*1000;warmupSeconds=warmupRoutine[index].seconds;warmupComplete=false;warmupLoadAccompaniment(true);warmupPaint();
+}
+function warmupRestart(){
+ warmupStopInterval();warmupIndex=0;warmupRemainingMs=warmupRoutine[0].seconds*1000;warmupSeconds=warmupRoutine[0].seconds;warmupComplete=false;warmupLoadAccompaniment(true);warmupPaint();
+}
+function warmupAdvance(){
+ if(warmupComplete)return;
+ warmupStopInterval();
+ if(warmupIndex===warmupRoutine.length-1){warmupRemainingMs=0;warmupSeconds=0;warmupComplete=true;warmupPaint();return}
+ warmupIndex++;warmupRemainingMs=warmupRoutine[warmupIndex].seconds*1000;warmupSeconds=warmupRoutine[warmupIndex].seconds;warmupLoadAccompaniment(true);warmupPaint();
+}
+$('#warmupPlayPause').addEventListener('click',()=>{
+ if(warmupComplete){warmupRestart();warmupStart();return}
+ if(warmupRunning)warmupPause();else warmupStart();
+});
+$('#warmupRestart').addEventListener('click',warmupRestart);
+$('#warmupNext').addEventListener('click',warmupAdvance);
+$('#breathingPlayPause').addEventListener('click',()=>{if(breathingRemainingMs<=0){breathingRestart();breathingStart();return}if(breathingRunning)breathingPause();else breathingStart()});
+$('#breathingRestart').addEventListener('click',breathingRestart);
+$('#breathingDuration').addEventListener('input',event=>breathingSetDuration(event.target.value));
+$('#breathingInDuration').value=String(breathingInSeconds);$('#breathingOutDuration').value=String(breathingOutSeconds);
+$('#breathingInDuration').addEventListener('change',event=>breathingSetRhythm(event.target.value,breathingOutSeconds));
+$('#breathingOutDuration').addEventListener('change',event=>breathingSetRhythm(breathingInSeconds,event.target.value));
+breathingPaint();
+$('#warmupExerciseList').addEventListener('click',event=>{const button=event.target.closest('button[data-warmup-step]');if(!button)return;warmupSelectExercise(Number(button.dataset.warmupStep));});
+warmupPaint();
+
 // Metronome follows the song's exported score beat map, including tempo changes.
 let metroCtx=null,metroTimer=null,lastMetroBeat=-1,startingNoteCtx=null;
+function pieceVoiceId(p){const ids=new Set((p?.voices||[]).map(v=>String(v.id)));if(ids.has(voice))return voice;if(voice==='soprano'&&ids.has('soprano-1'))return 'soprano-1';if((voice==='soprano-1'||voice==='soprano-2')&&ids.has('soprano'))return 'soprano';return voice;}
 function selectedStartingNote(){
  if(!piece||!Array.isArray(piece.voices))return null;
- const v=piece.voices.find(x=>x.id===voice);
+ const v=piece.voices.find(x=>x.id===pieceVoiceId(piece));
  if(!v||v.startingMidi===null||v.startingMidi===undefined||v.startingMidi===''||!Number.isFinite(Number(v.startingMidi)))return null;
  return v;
 }
 function renderLyrics(){
  if(!piece)return;
- const partLyrics=piece.lyricsByVoice?.[voice];
- const chosen=typeof partLyrics==='string'&&partLyrics.trim()?partLyrics:piece.lyrics;
- const display=chosen||'Words for this song have not been added yet.';
+ const display=piece.lyrics||'Words for this song have not been added yet.';
  $('#lyricsText').textContent=display;
  $('#practiceLyrics').textContent=display;
 }
 function renderStartingNote(){
  const note=selectedStartingNote();
  $('#startingNoteName').textContent=note?(note.startingNote||'Starting pitch'):'Not available yet';
- $('#startingNoteHint').textContent=note?('Opening sung note for '+note.name+'. Play it, then sing that pitch.'):('A starting note has not been read from this song’s score for your selected voice part yet.');
+ $('#startingNoteHint').textContent=note?('Opening sung note for '+note.name+'.'):('A starting note has not been read from this song’s score for your selected voice part yet.');
  $('#playStartingNote').disabled=!note;
  $('#playStartingNote').setAttribute('aria-label',note?('Play '+(note.startingNote||'starting note')+' for '+note.name):'Starting note unavailable');
 }
@@ -274,7 +997,7 @@ async function playStartingNote(){
   gain.gain.exponentialRampToValueAtTime(0.0001,now+1.35);
   osc.connect(gain);gain.connect(startingNoteCtx.destination);
   osc.start(now);osc.stop(now+1.36);
-  $('#startingNoteHint').textContent='Playing '+(note.startingNote||'your starting note')+' for '+note.name+'. Sing the same pitch.';
+  $('#startingNoteHint').textContent='Playing '+(note.startingNote||'your starting note')+' for '+note.name+'.';
  }catch(e){console.warn('Starting note unavailable',e);$('#startingNoteHint').textContent='The starting note could not be played. Tap the button again to retry.'}
 }
 function metroClick(accent=false){try{const C=window.AudioContext||window.webkitAudioContext;if(!C)return;metroCtx=metroCtx||new C();if(metroCtx.state==='suspended')metroCtx.resume();const osc=metroCtx.createOscillator(),gain=metroCtx.createGain();const volume=(Number($('#metronomeVolume').value)||0)/100;osc.type='sine';osc.frequency.value=accent?1200:850;gain.gain.setValueAtTime(0.0001,metroCtx.currentTime);if(volume>0)gain.gain.exponentialRampToValueAtTime(Math.max(0.0001,0.22*volume),metroCtx.currentTime+0.004);gain.gain.exponentialRampToValueAtTime(0.0001,metroCtx.currentTime+0.055);osc.connect(gain);gain.connect(metroCtx.destination);osc.start();osc.stop(metroCtx.currentTime+0.06);}catch(e){console.warn('Metronome unavailable',e)}}
@@ -287,11 +1010,11 @@ $('#metronomeEnabled').checked=store.get('metronomeEnabled',false);$('#metronome
 $('#metronomeEnabled').addEventListener('change',()=>{store.set('metronomeEnabled',$('#metronomeEnabled').checked);if($('#metronomeEnabled').checked){startMetronome()}else stopMetronome()});
 $('#playMode').value=playMode;$('#playMode').addEventListener('change',e=>setPlaybackMode(e.target.value,true));
 $('#tempo').value=store.get('tempo',100);$('#tempo').addEventListener('input',applyRate);$('#tempoDown').onclick=()=>{$('#tempo').stepDown();applyRate()};$('#tempoUp').onclick=()=>{$('#tempo').stepUp();applyRate()};
-$('#loopEnabled').addEventListener('change',e=>{loopOn=e.target.checked;if(loopActive()&&audio.currentTime>=bPoint)jumpToLoopStart(false);paintLoop()});$('#setA').onclick=()=>{aPoint=audio.currentTime;bPoint=null;paintLoop()};$('#setB').onclick=()=>{if(audio.currentTime>aPoint){bPoint=audio.currentTime;paintLoop()}else{alert('Set point B after point A.');}};audio.addEventListener('timeupdate',()=>{paintTime();loopCheck()});audio.addEventListener('seeking',()=>{lastMetroBeat=-1});audio.addEventListener('durationchange',paintTime);audio.addEventListener('play',()=>{paintPlay();startMetronome()});audio.addEventListener('pause',paintPlay);audio.addEventListener('ended',()=>{paintPlay();if(loopActive()){jumpToLoopStart(true)}else pauseAll()});
-$('#collectionFilter').addEventListener('change',e=>{collectionFilter=e.target.value;renderSongs()});$('#downloadCollection').addEventListener('click',toggleCollectionDownload);
-function renderSongBookmarks(){const box=$('#songBookmarks');if(!box||!piece)return;box.innerHTML='';const items=bookmarks[piece.id]||[];if(!items.length){box.innerHTML='<p class="muted">No bookmarks for this song yet.</p>';return}items.forEach((b,i)=>{const row=document.createElement('div');row.className='compact-row';const label=document.createElement('span');label.textContent=fmt(b.time)+(b.label?' · '+b.label:'');const go=document.createElement('button');go.textContent='Go';go.onclick=()=>{audio.currentTime=b.time;showScreen('practice')};const del=document.createElement('button');del.textContent='Remove';del.onclick=()=>{bookmarks[piece.id].splice(i,1);store.set('bookmarks',bookmarks);renderSongBookmarks();renderLibraryExtras()};row.append(label,go,del);box.append(row)})}
-function saveBookmark(named){if(!piece){alert('Choose a song first.');return}let label='';if(named){label=prompt('Name this section (for example, Verse 2 or Rehearsal letter B):','');if(label===null)return;label=label.trim();if(!label){alert('Please enter a section name.');return}}const items=bookmarks[piece.id]||(bookmarks[piece.id]=[]);items.push({time:Math.round(audio.currentTime*10)/10,label});store.set('bookmarks',bookmarks);renderSongBookmarks();renderLibraryExtras()}
-$('#addBookmark').addEventListener('click',()=>saveBookmark(false));$('#addSectionBookmark').addEventListener('click',()=>saveBookmark(true));$('#practiceStatus').addEventListener('change',e=>{if(!piece)return;practiceStatuses[piece.id]=e.target.value;store.set('practiceStatuses',practiceStatuses);renderSongs()});
+$('#loopEnabled').addEventListener('change',e=>{loopOn=e.target.checked;if(loopActive()&&audio.currentTime>=bPoint)jumpToLoopStart(false);paintLoop()});$('#setA').onclick=()=>{aPoint=audio.currentTime;bPoint=null;paintLoop()};$('#setB').onclick=()=>{if(audio.currentTime>aPoint){bPoint=audio.currentTime;paintLoop()}else{alert('Set point B after point A.');}};audio.addEventListener('timeupdate',()=>{paintTime();loopCheck()});audio.addEventListener('seeking',()=>{lastMetroBeat=-1});audio.addEventListener('seeked',paintTime);audio.addEventListener('durationchange',paintTime);audio.addEventListener('play',()=>{paintPlay();startMetronome()});audio.addEventListener('pause',paintPlay);audio.addEventListener('ended',()=>{paintPlay();if(loopActive()){jumpToLoopStart(true)}else pauseAll()});
+$('#tagFilter').addEventListener('change',e=>{tagFilter=e.target.value;renderSongs()});$('#downloadTag').addEventListener('click',toggleTagDownload);
+function renderSongBookmarks(){const box=$('#songBookmarks');if(!box||!piece)return;box.innerHTML='';const items=bookmarks[piece.id]||[];if(!items.length){box.innerHTML='<p class="muted">No bookmarks for this song yet.</p>';return}items.forEach((b,i)=>{const row=document.createElement('div');row.className='compact-row';const label=document.createElement('span');label.textContent=fmt(b.time)+(b.label?' · '+b.label:'');const go=document.createElement('button');go.textContent='Go';go.onclick=()=>seekTo(b.time);const del=document.createElement('button');del.textContent='Remove';del.onclick=()=>{bookmarks[piece.id].splice(i,1);store.set('bookmarks',bookmarks);renderSongBookmarks();renderLibraryExtras()};row.append(label,go,del);box.append(row)})}
+function saveBookmark(){if(!piece){alert('Choose a song first.');return}const entered=prompt('Name this bookmark (optional). Leave blank to save it without a name:','');if(entered===null)return;const label=entered.trim();const items=bookmarks[piece.id]||(bookmarks[piece.id]=[]);items.push({time:Math.round(audio.currentTime*10)/10,label});store.set('bookmarks',bookmarks);renderSongBookmarks();renderLibraryExtras()}
+$('#addBookmark').addEventListener('click',saveBookmark);$('#practiceStatus').addEventListener('change',e=>{if(!piece)return;practiceStatuses[piece.id]=e.target.value;store.set('practiceStatuses',practiceStatuses);renderSongs()});
 $$('[data-content-tab]').forEach(btn=>btn.addEventListener('click',()=>{const tab=btn.dataset.contentTab;$$('[data-content-tab]').forEach(b=>b.classList.toggle('active',b===btn));$('#practiceLyrics').classList.toggle('hidden',tab!=='lyrics');$('#practiceScore').classList.toggle('hidden',tab!=='score')}));
 
 $('#welcomeForm').addEventListener('submit',e=>{e.preventDefault();const name=$('#welcomeName').value.trim(),part=$('#welcomeVoice').value;if(!name){$('#welcomeName').focus();return}saveProfile(name,part)});
@@ -300,5 +1023,505 @@ $('#keepAwake').checked=store.get('keepAwake',false);$('#keepAwake').addEventLis
 if('mediaSession'in navigator){navigator.mediaSession.setActionHandler('play',()=>playAll());navigator.mediaSession.setActionHandler('pause',()=>pauseAll());}
 if('serviceWorker' in navigator){addEventListener('load',()=>navigator.serviceWorker.register('./sw.js').catch(()=>{}));}
 fetch('pieces.json').then(r=>{if(!r.ok)throw Error('pieces.json not found');return r.json()}).then(d=>{data=d;init()}).catch(()=>{$('#songList').innerHTML='';$('#empty').classList.remove('hidden');$('#empty').textContent='The song library is not built yet. On your computer, run “Make practice tracks.bat” first, then upload the updated site folder.';$('#songCount').textContent='Not ready';});
+
+/* ---- interval learning lessons and audio ---- */
+const intervalLessonAudio=$('#intervalLessonAudio');
+let activeIntervalButton=null;
+let activeIntervalLabel='';
+const intervalModes={
+ major:{
+  title:'The major scale',
+  notes:['Do','Re','Mi','Fa','Sol','La','Ti','Do′'],
+  scaleLabel:'Do, Re, Mi, Fa, Sol, La, Ti, high Do',
+  caption:'Do is middle C (C4). The final Do is C5, one octave higher.',
+  lessons:[
+   {quality:'Major 2nd',from:'Do',to:'Re',description:'Move one scale step from Do to Re.',up:'do-re.mp3',down:'re-do.mp3'},
+   {quality:'Major 3rd',from:'Do',to:'Mi',description:'Skip over Re to reach Mi.',up:'do-mi.mp3',down:'mi-do.mp3'},
+   {quality:'Perfect 4th',from:'Do',to:'Fa',description:'Move from Do up to Fa.',up:'do-fa.mp3',down:'fa-do.mp3'},
+   {quality:'Perfect 5th',from:'Do',to:'Sol',description:'Do moves up to Sol, the fifth note.',up:'do-sol.mp3',down:'sol-do.mp3'},
+   {quality:'Major 6th',from:'Do',to:'La',description:'Reach La, the sixth note of the major scale.',up:'do-la.mp3',down:'la-do.mp3'},
+   {quality:'Major 7th',from:'Do',to:'Ti',description:'Ti is the leading note, one semitone below high Do.',up:'do-ti.mp3',down:'ti-do.mp3'},
+   {quality:'Perfect Octave',from:'Do',to:'High Do',description:'Reach the same note name one octave higher.',up:'do-high-do.mp3',down:'high-do-low-do.mp3',octave:true}
+  ]
+ },
+ minor:{
+  title:'The natural minor scale',
+  notes:['Do','Re','Me','Fa','Sol','Le','Te','Do′'],
+  scaleLabel:'Do, Re, Me, Fa, Sol, Le, Te, high Do',
+  caption:'In this C-minor example, Me (E♭), Le (A♭) and Te (B♭) are lowered by a semitone. Do is middle C (C4).',
+  lessons:[
+   {quality:'Major 2nd',from:'Do',to:'Re',description:'The step from Do to Re stays a major second.',up:'do-re.mp3',down:'re-do.mp3'},
+   {quality:'Minor 3rd',from:'Do',to:'Me',description:'Me is one semitone lower than Mi.',up:'do-me.mp3',down:'me-do.mp3'},
+   {quality:'Perfect 4th',from:'Do',to:'Fa',description:'The fourth remains a perfect fourth.',up:'do-fa.mp3',down:'fa-do.mp3'},
+   {quality:'Perfect 5th',from:'Do',to:'Sol',description:'The fifth remains a perfect fifth.',up:'do-sol.mp3',down:'sol-do.mp3'},
+   {quality:'Minor 6th',from:'Do',to:'Le',description:'Le is one semitone lower than La.',up:'do-le.mp3',down:'le-do.mp3'},
+   {quality:'Minor 7th',from:'Do',to:'Te',description:'Te is one semitone lower than Ti.',up:'do-te.mp3',down:'te-do.mp3'},
+   {quality:'Perfect Octave',from:'Do',to:'High Do',description:'The octave is unchanged: the same note name, one octave higher.',up:'do-high-do.mp3',down:'high-do-low-do.mp3',octave:true}
+  ]
+ }
+};
+function paintIntervalButtons(){
+ $$('#screen-intervals .interval-play').forEach(button=>{
+  button.setAttribute('aria-pressed',String(button===activeIntervalButton&&!intervalLessonAudio.paused));
+ });
+}
+function stopIntervalLessonAudio(){
+ if(!intervalLessonAudio)return;
+ intervalLessonAudio.pause();
+ intervalLessonAudio.removeAttribute('src');
+ intervalLessonAudio.load();
+ activeIntervalButton=null;
+ activeIntervalLabel='';
+ paintIntervalButtons();
+}
+function intervalButtonMarkup(file,label,direction){
+ const arrow=direction==='up'?'↑':'↓';
+ const accessible=direction==='up'?'ascending':'descending';
+ return '<button class="interval-play" type="button" data-interval-file="'+file+'" data-interval-label="'+label+'" aria-label="Play '+accessible+' '+label+' recording" aria-pressed="false">'+arrow+' <span>'+label.replace(' to ',' → ')+'</span></button>';
+}
+function renderIntervalMode(mode){
+ if(!intervalModes[mode])mode='major';
+ stopIntervalLessonAudio();
+ const config=intervalModes[mode];
+ $('#intervalScaleTitle').textContent=config.title;
+ $('#intervalScaleCaption').textContent=config.caption;
+ $('#intervalScale').setAttribute('aria-label',config.scaleLabel);
+ $('#intervalScale').innerHTML=config.notes.map((note,index)=>
+  '<span class="interval-scale-note'+(index===7?' interval-scale-octave':'')+'"><strong>'+note+'</strong><small>'+(index+1)+'</small></span>'
+ ).join('');
+ $('#intervalMajorMode').setAttribute('aria-pressed',String(mode==='major'));
+ $('#intervalMinorMode').setAttribute('aria-pressed',String(mode==='minor'));
+ $('#intervalLessons').innerHTML=config.lessons.map((lesson,index)=>{
+  const number=String(index+1).padStart(2,'0');
+  const title=lesson.from+' – '+lesson.to;
+  if(lesson.octave){
+   return '<article class="interval-card interval-card-octave"><div class="interval-card-top"><span class="interval-number">'+number+'</span><span class="interval-quality">'+lesson.quality+'</span></div><div class="interval-card-copy"><h3>'+title+'</h3><p>'+lesson.description+'</p></div><div class="interval-actions">'+intervalButtonMarkup(lesson.up,lesson.from+' to '+lesson.to,'up')+intervalButtonMarkup(lesson.down,'Do Low Do','down')+'</div></article>';
+  }
+  const changedInMinor=mode==='minor'&&['Minor 3rd','Minor 6th','Minor 7th'].includes(lesson.quality);
+  const cardClass='interval-card'+(changedInMinor?' interval-card-minor-change':'');
+  return '<article class="'+cardClass+'"><div class="interval-card-top"><span class="interval-number">'+number+'</span><span class="interval-quality">'+lesson.quality+'</span></div><h3>'+title+'</h3><p>'+lesson.description+'</p><div class="interval-actions">'+intervalButtonMarkup(lesson.up,lesson.from+' to '+lesson.to,'up')+intervalButtonMarkup(lesson.down,lesson.to+' to '+lesson.from,'down')+'</div></article>';
+ }).join('');
+ $('#intervalStatus').textContent=mode==='major'?'Major scale selected. Choose a note pair to listen.':'Natural minor selected. Notice the lowered Me, Le and Te.';
+ store.set('intervalScaleMode',mode);
+}
+function playIntervalRecording(button){
+ const file=button.dataset.intervalFile;
+ if(!file)return;
+ const label=button.dataset.intervalLabel||button.textContent.trim();
+ if(activeIntervalButton===button&&!intervalLessonAudio.paused){
+  intervalLessonAudio.pause();
+  button.setAttribute('aria-pressed','false');
+  $('#intervalStatus').textContent='Paused: '+label+'.';
+  return;
+ }
+ if(activeIntervalButton!==button){
+  intervalLessonAudio.pause();
+  intervalLessonAudio.src='./audio/pitch-intervals/'+file;
+  activeIntervalButton=button;
+  activeIntervalLabel=label;
+ }
+ intervalLessonAudio.currentTime=0;
+ intervalLessonAudio.play().then(()=>{
+  $('#intervalStatus').textContent='Playing: '+activeIntervalLabel+'. Sing along.';
+  paintIntervalButtons();
+ }).catch(()=>{
+  $('#intervalStatus').textContent='This recording could not be played. Please check your connection and try again.';
+  paintIntervalButtons();
+ });
+}
+$('#intervalMajorMode').addEventListener('click',()=>renderIntervalMode('major'));
+$('#intervalMinorMode').addEventListener('click',()=>renderIntervalMode('minor'));
+$('#screen-intervals').addEventListener('click',event=>{
+ const button=event.target.closest('.interval-play');
+ if(button)playIntervalRecording(button);
+});
+intervalLessonAudio.addEventListener('play',paintIntervalButtons);
+intervalLessonAudio.addEventListener('ended',()=>{
+ const label=activeIntervalLabel;
+ activeIntervalButton=null;
+ paintIntervalButtons();
+ $('#intervalStatus').textContent='Finished: '+label+'. Try singing it back, then listen to the reverse.';
+});
+intervalLessonAudio.addEventListener('error',()=>{
+ $('#intervalStatus').textContent='This recording could not be loaded. Please try again.';
+ paintIntervalButtons();
+});
+renderIntervalMode(store.get('intervalScaleMode','major'));
+
+/* ---- interval challenge game ---- */
+const intervalGameAudio=$('#intervalGameAudio');
+const intervalGamePoolDefinitions={
+ easy:[
+  {id:'M2',name:'Major 2nd',semitones:2,up:'do-re.mp3',down:'re-do.mp3'},
+  {id:'M3',name:'Major 3rd',semitones:4,up:'do-mi.mp3',down:'mi-do.mp3'},
+  {id:'P5',name:'Perfect 5th',semitones:7,up:'do-sol.mp3',down:'sol-do.mp3'},
+  {id:'P8',name:'Perfect Octave',semitones:12,up:'do-high-do.mp3',down:'high-do-low-do.mp3'}
+ ],
+ medium:[
+  {id:'M2',name:'Major 2nd',semitones:2,up:'do-re.mp3',down:'re-do.mp3'},
+  {id:'M3',name:'Major 3rd',semitones:4,up:'do-mi.mp3',down:'mi-do.mp3'},
+  {id:'P4',name:'Perfect 4th',semitones:5,up:'do-fa.mp3',down:'fa-do.mp3'},
+  {id:'P5',name:'Perfect 5th',semitones:7,up:'do-sol.mp3',down:'sol-do.mp3'},
+  {id:'M6',name:'Major 6th',semitones:9,up:'do-la.mp3',down:'la-do.mp3'},
+  {id:'M7',name:'Major 7th',semitones:11,up:'do-ti.mp3',down:'ti-do.mp3'},
+  {id:'P8',name:'Perfect Octave',semitones:12,up:'do-high-do.mp3',down:'high-do-low-do.mp3'}
+ ],
+ hard:[
+  {id:'M2',name:'Major 2nd',semitones:2,up:'do-re.mp3',down:'re-do.mp3'},
+  {id:'m3',name:'Minor 3rd',semitones:3,up:'do-me.mp3',down:'me-do.mp3'},
+  {id:'M3',name:'Major 3rd',semitones:4,up:'do-mi.mp3',down:'mi-do.mp3'},
+  {id:'P4',name:'Perfect 4th',semitones:5,up:'do-fa.mp3',down:'fa-do.mp3'},
+  {id:'P5',name:'Perfect 5th',semitones:7,up:'do-sol.mp3',down:'sol-do.mp3'},
+  {id:'m6',name:'Minor 6th',semitones:8,up:'do-le.mp3',down:'le-do.mp3'},
+  {id:'M6',name:'Major 6th',semitones:9,up:'do-la.mp3',down:'la-do.mp3'},
+  {id:'m7',name:'Minor 7th',semitones:10,up:'do-te.mp3',down:'te-do.mp3'},
+  {id:'M7',name:'Major 7th',semitones:11,up:'do-ti.mp3',down:'ti-do.mp3'},
+  {id:'P8',name:'Perfect Octave',semitones:12,up:'do-high-do.mp3',down:'high-do-low-do.mp3'}
+ ]
+};
+const intervalGameLevelDescriptions={
+ easy:'Four familiar intervals: major 2nd, major 3rd, perfect 5th and octave.',
+ medium:'All seven intervals from the major scale, including the 4th, 6th and 7th.',
+ hard:'Major and natural-minor intervals. Listen for the minor 3rd, 6th and 7th as well.'
+};
+let intervalGameMode='listen',intervalGameDifficulty='easy';
+let intervalGameScores=store.get('intervalGameScores',{});
+let intervalGameState={questions:[],index:0,score:0,answered:false,streak:0,singingAttempted:false};
+let intervalGameContext=null,intervalGameStream=null,intervalGameMicSource=null,intervalGameAnalyser=null;
+let intervalGameCaptureTimer=null,intervalGameCaptureTimeout=null,intervalGamePitchSamples=[];
+function intervalGameShuffle(items){
+ const result=items.slice();
+ for(let i=result.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[result[i],result[j]]=[result[j],result[i]];}
+ return result;
+}
+function intervalGameCurrentPool(){return intervalGamePoolDefinitions[intervalGameDifficulty]||intervalGamePoolDefinitions.easy}
+function intervalGameScoreKey(){return intervalGameMode+'-'+intervalGameDifficulty}
+function intervalGameRenderHighScores(){
+ const key=intervalGameScoreKey(),scores=Array.isArray(intervalGameScores[key])?intervalGameScores[key]:[];
+ const best=scores.length?Math.max(...scores.map(item=>Number(item.score)||0)):null;
+ $('#intervalGameBestSummary').textContent=best===null?'No score yet':'Best: '+best+'/100';
+ const list=$('#intervalGameHighScoreList');list.innerHTML='';
+ if(!scores.length){const item=document.createElement('li');item.className='muted';item.textContent='Complete a round to start your high-score list.';list.append(item);return}
+ scores.slice(0,5).forEach((item,index)=>{
+  const row=document.createElement('li'),label=document.createElement('strong'),date=document.createElement('span');
+  label.textContent=String(Number(item.score)||0)+' / 100';
+  date.textContent=' · '+new Date(Number(item.date)||Date.now()).toLocaleDateString('en-ZA',{day:'numeric',month:'short'});
+  row.append(label,date);list.append(row);
+ });
+}
+function intervalGameRenderSettings(){
+ $('#intervalGameModeListen').setAttribute('aria-pressed',String(intervalGameMode==='listen'));
+ $('#intervalGameModeSing').setAttribute('aria-pressed',String(intervalGameMode==='sing'));
+ $$('.interval-game-level').forEach(button=>button.setAttribute('aria-pressed',String(button.dataset.gameLevel===intervalGameDifficulty)));
+ $('#intervalGameModeHint').textContent=intervalGameMode==='listen'
+  ?'Listen to two notes and choose the interval you heard.'
+  :'Hear Do (C), then sing the requested interval into your phone. Microphone access is only used while you play this mode.';
+ $('#intervalGameLevelHint').textContent=intervalGameLevelDescriptions[intervalGameDifficulty];
+ intervalGameRenderHighScores();
+}
+function intervalGameMakeQuestions(){
+ const pool=intervalGameCurrentPool(),questions=[];
+ let lastId='';
+ while(questions.length<10){
+  const deck=intervalGameShuffle(pool);
+  if(pool.length>1&&deck[0].id===lastId){
+   const swapIndex=deck.findIndex((definition,index)=>index>0&&definition.id!==lastId);
+   if(swapIndex>0)[deck[0],deck[swapIndex]]=[deck[swapIndex],deck[0]];
+  }
+  for(const definition of deck){
+   const direction=intervalGameMode==='listen'&&intervalGameDifficulty!=='easy'
+    ?(Math.random()<0.5?'up':'down'):'up';
+   questions.push({definition,direction});
+   lastId=definition.id;
+   if(questions.length===10)break;
+  }
+ }
+ return questions;
+}
+function intervalGameRenderQuestion(){
+ const question=intervalGameState.questions[intervalGameState.index];
+ if(!question)return;
+ intervalGameState.answered=false;
+ intervalGameState.singingAttempted=false;
+ const current=intervalGameState.index+1;
+ $('#intervalGameQuestionCount').textContent='Question '+current+' of 10';
+ $('#intervalGameLiveScore').textContent=String(intervalGameState.score);
+ $('#intervalGameProgressFill').style.width=(intervalGameState.index/10*100)+'%';
+ $('#intervalGameRoundMeta').textContent=intervalGameDifficulty.charAt(0).toUpperCase()+intervalGameDifficulty.slice(1)+' · '+(intervalGameMode==='listen'?'Listen and identify':'Sing the interval');
+ $('#intervalGameFeedback').textContent='';
+ $('#intervalGameNext').classList.add('hidden');
+ $('#intervalGameNext').textContent=current===10?'See my score':'Next question';
+ $('#intervalGameListenControls').classList.toggle('hidden',intervalGameMode!=='listen');
+ $('#intervalGameSingControls').classList.toggle('hidden',intervalGameMode!=='sing');
+ if(intervalGameMode==='listen'){
+  $('#intervalGamePrompt').textContent='Which interval did you hear?';
+  $('#intervalGameInstruction').textContent=question.direction==='up'
+   ?'Listen to the two notes moving up, then choose the interval.'
+   :'Listen to the two notes moving down, then choose the interval.';
+  intervalGameAudio.pause();
+  intervalGameAudio.src='./audio/pitch-intervals/'+(question.direction==='up'?question.definition.up:question.definition.down);
+  intervalGameAudio.currentTime=0;
+  $('#intervalGameOptions').innerHTML='';
+  const choices=intervalGameShuffle([question.definition,...intervalGameShuffle(intervalGameCurrentPool().filter(item=>item.id!==question.definition.id)).slice(0,3)]);
+  choices.forEach(choice=>{
+   const button=document.createElement('button');
+   button.type='button';button.className='interval-game-answer';button.dataset.answer=choice.id;button.textContent=choice.name;
+   $('#intervalGameOptions').append(button);
+  });
+  $('#intervalGameReplay').textContent='▶ Play interval';
+ }else{
+  $('#intervalGamePrompt').textContent='Sing a '+question.definition.name+' above Do (C).';
+  $('#intervalGameInstruction').textContent='Play the reference note, then sing the target note and hold it steady for a moment.';
+  $('#intervalGameMicStatus').textContent='Ready when you are. Play Do (C) as often as you need.';
+  $('#intervalGameRoot').disabled=false;
+  $('#intervalGameSingStart').disabled=false;$('#intervalGameSingStart').textContent='Start singing';
+  $('#intervalGameSingCheck').disabled=true;$('#intervalGameSingCheck').textContent='Check my note';
+  intervalGamePitchSamples=[];
+ }
+}
+function intervalGameStartRound(){
+ releaseIntervalGameAudio();
+ intervalGameState={questions:intervalGameMakeQuestions(),index:0,score:0,answered:false,streak:0,singingAttempted:false};
+ $('#intervalGameSetup').classList.add('hidden');
+ $('#intervalGameResults').classList.add('hidden');
+ $('#intervalGameRound').classList.remove('hidden');
+ intervalGameRenderQuestion();
+}
+function intervalGameAnswer(isCorrect,detail){
+ if(intervalGameState.answered)return;
+ intervalGameState.answered=true;
+ if(isCorrect){intervalGameState.score+=10;intervalGameState.streak++}else intervalGameState.streak=0;
+ $('#intervalGameLiveScore').textContent=String(intervalGameState.score);
+ $('#intervalGameFeedback').textContent=(isCorrect?'Correct! +10 points. ':'Not quite. ')+detail;
+ if(intervalGameMode==='listen'){
+  intervalGameAudio.pause();
+  $$('#intervalGameOptions .interval-game-answer').forEach(button=>{
+   button.disabled=true;
+   if(button.dataset.answer===intervalGameState.questions[intervalGameState.index].definition.id)button.classList.add('correct');
+  });
+ }else{
+  $('#intervalGameRoot').disabled=true;
+  $('#intervalGameSingStart').disabled=true;$('#intervalGameSingStart').textContent='Note recorded';
+  $('#intervalGameSingCheck').disabled=true;
+ }
+ $('#intervalGameNext').classList.remove('hidden');
+}
+function intervalGameSaveScore(){
+ const key=intervalGameScoreKey(),previous=Array.isArray(intervalGameScores[key])?intervalGameScores[key]:[];
+ const previousBest=previous.length?Math.max(...previous.map(item=>Number(item.score)||0)):-1;
+ const record={score:intervalGameState.score,date:Date.now()};
+ intervalGameScores[key]=[...previous,record].sort((a,b)=>(Number(b.score)||0)-(Number(a.score)||0)||(Number(b.date)||0)-(Number(a.date)||0)).slice(0,5);
+ store.set('intervalGameScores',intervalGameScores);
+ const newBest=record.score>previousBest;
+ $('#intervalGameFinalScore').textContent=String(record.score);
+ $('#intervalGameResultTitle').textContent='You scored '+record.score+' out of 100';
+ $('#intervalGameResultMessage').textContent=newBest?'A new personal best for '+intervalGameDifficulty+' '+(intervalGameMode==='listen'?'listening':'singing')+'!': 'Your best for this game and level is '+Math.max(...intervalGameScores[key].map(item=>Number(item.score)||0))+'/100. Have another go and try to beat it.';
+ intervalGameRenderHighScores();
+}
+function intervalGameComplete(){
+ releaseIntervalGameAudio();
+ $('#intervalGameProgressFill').style.width='100%';
+ $('#intervalGameRound').classList.add('hidden');
+ $('#intervalGameResults').classList.remove('hidden');
+ intervalGameSaveScore();
+}
+function intervalGameNextQuestion(){
+ if(!intervalGameState.answered){
+  if(intervalGameMode!=='sing'||!intervalGameState.singingAttempted||intervalGameCaptureTimer!==null)return;
+  intervalGameState.answered=true;
+  intervalGameState.streak=0;
+ }
+ intervalGameState.index++;
+ if(intervalGameState.index>=10){intervalGameComplete();return}
+ if(intervalGameMode==='sing')releaseIntervalGameAudio();
+ intervalGameRenderQuestion();
+}
+function intervalGameChooseMode(mode){
+ if(!['listen','sing'].includes(mode))return;
+ releaseIntervalGameAudio();
+ intervalGameMode=mode;intervalGameRenderSettings();
+}
+function intervalGameChooseDifficulty(level){
+ if(!['easy','medium','hard'].includes(level))return;
+ releaseIntervalGameAudio();
+ intervalGameDifficulty=level;intervalGameRenderSettings();
+}
+function intervalGamePlayQuestion(){
+ if(intervalGameMode!=='listen'||intervalGameState.answered)return;
+ try{intervalGameAudio.currentTime=0;intervalGameAudio.play().catch(()=>{$('#intervalGameFeedback').textContent='The interval audio could not be played. Check your connection and try again.';});}
+ catch(error){$('#intervalGameFeedback').textContent='The interval audio could not be played. Check your connection and try again.';}
+}
+function intervalGameGetAudioContext(){
+ const Context=window.AudioContext||window.webkitAudioContext;
+ if(!Context)throw new Error('Your browser does not support audio input.');
+ if(!intervalGameContext)intervalGameContext=new Context();
+ return intervalGameContext;
+}
+async function intervalGamePlayRoot(){
+ try{
+  const context=intervalGameGetAudioContext();
+  if(context.state==='suspended')await context.resume();
+  const now=context.currentTime,osc=context.createOscillator(),gain=context.createGain();
+  osc.type='triangle';osc.frequency.setValueAtTime(261.6256,now);
+  gain.gain.setValueAtTime(0.0001,now);gain.gain.exponentialRampToValueAtTime(0.17,now+0.025);
+  gain.gain.setValueAtTime(0.17,now+0.45);gain.gain.exponentialRampToValueAtTime(0.0001,now+0.65);
+  osc.connect(gain);gain.connect(context.destination);osc.start(now);osc.stop(now+0.66);
+ }catch(error){$('#intervalGameMicStatus').textContent=error.message||'The reference note could not be played on this device.';}
+}
+function intervalGameEstimateMidi(buffer,sampleRate){
+ let power=0;
+ for(let i=0;i<buffer.length;i++)power+=buffer[i]*buffer[i];
+ const rms=Math.sqrt(power/buffer.length);
+ if(rms<0.012)return null;
+ const minTau=Math.max(2,Math.floor(sampleRate/1000));
+ const maxTau=Math.min(Math.floor(sampleRate/70),Math.floor(buffer.length/2)-1);
+ const difference=new Float64Array(maxTau+1),normalised=new Float64Array(maxTau+1);
+ for(let tau=minTau;tau<=maxTau;tau++){
+  let sum=0;
+  for(let i=0;i<buffer.length-maxTau;i++){const delta=buffer[i]-buffer[i+tau];sum+=delta*delta;}
+  difference[tau]=sum;
+ }
+ let running=0,chosen=0,bestTau=0,bestValue=Infinity;
+ for(let tau=minTau;tau<=maxTau;tau++){
+  running+=difference[tau];
+  normalised[tau]=running?difference[tau]*(tau-minTau+1)/running:1;
+  if(normalised[tau]<bestValue){bestValue=normalised[tau];bestTau=tau;}
+  if(normalised[tau]<0.16){
+   while(tau+1<=maxTau&&normalised[tau+1]<normalised[tau])tau++;
+   chosen=tau;break;
+  }
+ }
+ if(!chosen&&bestValue<0.3)chosen=bestTau;
+ if(!chosen)return null;
+ const left=normalised[chosen-1]||normalised[chosen],middle=normalised[chosen],right=normalised[chosen+1]||middle;
+ const denominator=left-2*middle+right;
+ const shift=denominator?0.5*(left-right)/denominator:0;
+ const refined=chosen+Math.max(-0.5,Math.min(0.5,shift));
+ const frequency=sampleRate/refined;
+ if(!Number.isFinite(frequency)||frequency<70||frequency>1000)return null;
+ return 69+12*Math.log2(frequency/440);
+}
+async function intervalGameStartSinging(){
+ if(intervalGameState.answered||intervalGameCaptureTimer!==null)return;
+ const button=$('#intervalGameSingStart');
+ button.disabled=true;button.textContent='Starting…';
+ $('#intervalGameFeedback').textContent='';
+ $('#intervalGameNext').classList.add('hidden');
+ try{
+  if(!window.isSecureContext)throw new Error('Microphone access requires the secure app address (https).');
+  if(!navigator.mediaDevices||!navigator.mediaDevices.getUserMedia)throw new Error('This browser does not support microphone access. Try a current version of Safari or Chrome.');
+  const context=intervalGameGetAudioContext();
+  if(context.state==='suspended')await context.resume();
+  if(!intervalGameStream)intervalGameStream=await navigator.mediaDevices.getUserMedia({audio:{echoCancellation:false,noiseSuppression:false,autoGainControl:false}});
+  if(!intervalGameAnalyser){
+   intervalGameAnalyser=context.createAnalyser();intervalGameAnalyser.fftSize=2048;intervalGameAnalyser.smoothingTimeConstant=0;
+   intervalGameMicSource=context.createMediaStreamSource(intervalGameStream);intervalGameMicSource.connect(intervalGameAnalyser);
+  }
+  intervalGamePitchSamples=[];
+  const buffer=new Float32Array(intervalGameAnalyser.fftSize);
+  $('#intervalGameMicStatus').textContent='Listening… sing your note steadily, then tap Check my note.';
+  $('#intervalGameSingStart').textContent='Listening…';
+  $('#intervalGameRoot').disabled=true;
+  $('#intervalGameSingCheck').disabled=false;
+  intervalGameCaptureTimer=setInterval(()=>{
+   if(!intervalGameAnalyser)return;
+   intervalGameAnalyser.getFloatTimeDomainData(buffer);
+   const midi=intervalGameEstimateMidi(buffer,context.sampleRate);
+   if(midi!==null){intervalGamePitchSamples.push(midi);if(intervalGamePitchSamples.length>30)intervalGamePitchSamples.shift();}
+  },100);
+  intervalGameCaptureTimeout=setTimeout(intervalGameFinishSinging,6000);
+ }catch(error){
+  intervalGameStopCapture();
+  button.disabled=false;button.textContent='Try again';
+  $('#intervalGameRoot').disabled=false;
+  $('#intervalGameSingCheck').disabled=true;
+  $('#intervalGameNext').classList.toggle('hidden',!intervalGameState.singingAttempted);
+  $('#intervalGameMicStatus').textContent=(error&&error.message?error.message:'Microphone access was not available.')+' You can still play Listen and identify, or try the microphone again.';
+ }
+}
+function intervalGameStopCapture(){
+ if(intervalGameCaptureTimer!==null){clearInterval(intervalGameCaptureTimer);intervalGameCaptureTimer=null;}
+ if(intervalGameCaptureTimeout!==null){clearTimeout(intervalGameCaptureTimeout);intervalGameCaptureTimeout=null;}
+ if(intervalGameMicSource){try{intervalGameMicSource.disconnect()}catch{}intervalGameMicSource=null;}
+ if(intervalGameStream){intervalGameStream.getTracks().forEach(track=>track.stop());intervalGameStream=null;}
+ intervalGameAnalyser=null;
+}
+function intervalGamePitchClassDistance(midi,targetPitchClass){
+ const wrapped=((midi-targetPitchClass+18)%12+12)%12-6;
+ return Math.abs(wrapped);
+}
+function intervalGameMidiName(midi){
+ const names=['C','C♯','D','E♭','E','F','F♯','G','A♭','A','B♭','B'];
+ return names[((Math.round(midi)%12)+12)%12];
+}
+function intervalGameFinishSinging(){
+ if(intervalGameCaptureTimer===null&&intervalGameCaptureTimeout===null)return;
+ intervalGameStopCapture();
+ $('#intervalGameSingStart').disabled=false;$('#intervalGameSingStart').textContent='Try again';
+ $('#intervalGameRoot').disabled=false;
+ $('#intervalGameSingCheck').disabled=true;
+ const samples=intervalGamePitchSamples.slice();
+ if(samples.length<4){
+  $('#intervalGameMicStatus').textContent='I could not hear a steady note. Check your microphone, play Do again and try holding the note for longer.';
+  $('#intervalGameNext').classList.toggle('hidden',!intervalGameState.singingAttempted);
+  return;
+ }
+ const question=intervalGameState.questions[intervalGameState.index],targetPitchClass=(60+question.definition.semitones)%12;
+ const distances=samples.map(midi=>intervalGamePitchClassDistance(midi,targetPitchClass));
+ const accurate=distances.filter(distance=>distance<=0.75).length>=Math.ceil(samples.length*0.6);
+ const sorted=samples.slice().sort((a,b)=>a-b),median=sorted[Math.floor(sorted.length/2)];
+ const heard=intervalGameMidiName(median),target=intervalGameMidiName(60+question.definition.semitones);
+ const detail=accurate
+  ?'You sang '+target+' in tune with the target interval.'
+  :'I heard something close to '+heard+'. The target note was '+target+'.';
+ if(accurate){
+  $('#intervalGameMicStatus').textContent='Pitch check complete.';
+  intervalGameAnswer(true,detail);
+ }else{
+  intervalGameState.singingAttempted=true;
+  $('#intervalGameMicStatus').textContent='Pitch check complete. You can sing again, or move on.';
+  $('#intervalGameFeedback').textContent='Not quite. '+detail+' Try again, or move on to the next question.';
+  $('#intervalGameNext').textContent='Next question';
+  $('#intervalGameNext').classList.remove('hidden');
+ }
+}
+function intervalGameCheckSinging(){
+ if(intervalGameCaptureTimer===null)return;
+ intervalGameFinishSinging();
+}
+function intervalGameReturnToSetup(){
+ releaseIntervalGameAudio();
+ intervalGameState={questions:[],index:0,score:0,answered:false,streak:0,singingAttempted:false};
+ $('#intervalGameRound').classList.add('hidden');
+ $('#intervalGameResults').classList.add('hidden');
+ $('#intervalGameSetup').classList.remove('hidden');
+ intervalGameRenderSettings();
+}
+function releaseIntervalGameAudio(){
+ intervalGameAudio.pause();intervalGameAudio.removeAttribute('src');intervalGameAudio.load();
+ intervalGameStopCapture();
+ if(intervalGameContext){const context=intervalGameContext;intervalGameContext=null;if(context.state!=='closed')context.close().catch(()=>{});}
+}
+$('#intervalGameModeListen').addEventListener('click',()=>intervalGameChooseMode('listen'));
+$('#intervalGameModeSing').addEventListener('click',()=>intervalGameChooseMode('sing'));
+$$('.interval-game-level').forEach(button=>button.addEventListener('click',()=>intervalGameChooseDifficulty(button.dataset.gameLevel)));
+$('#intervalGameStart').addEventListener('click',intervalGameStartRound);
+$('#intervalGameReplay').addEventListener('click',intervalGamePlayQuestion);
+$('#intervalGameOptions').addEventListener('click',event=>{
+ const button=event.target.closest('.interval-game-answer');
+ if(!button||intervalGameState.answered)return;
+ const question=intervalGameState.questions[intervalGameState.index];
+ const isCorrect=button.dataset.answer===question.definition.id;
+ if(!isCorrect)button.classList.add('wrong');
+ intervalGameAnswer(isCorrect,'The interval was a '+question.definition.name+'.');
+});
+$('#intervalGameRoot').addEventListener('click',intervalGamePlayRoot);
+$('#intervalGameSingStart').addEventListener('click',intervalGameStartSinging);
+$('#intervalGameSingCheck').addEventListener('click',intervalGameCheckSinging);
+$('#intervalGameNext').addEventListener('click',intervalGameNextQuestion);
+$('#intervalGamePlayAgain').addEventListener('click',intervalGameStartRound);
+$('#intervalGameReturn').addEventListener('click',intervalGameReturnToSetup);
+$('#intervalGameExit').addEventListener('click',intervalGameReturnToSetup);
+intervalGameRenderSettings();
 </script>
 </body></html>
